@@ -67,6 +67,7 @@ body.dark-theme .suggestion-item:hover {
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    padding: 0;
 }
 
 .suggestion-button.and {

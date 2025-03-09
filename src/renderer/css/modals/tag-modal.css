@@ -8,6 +8,7 @@
 #clear-parent-tag {
     margin-top: 10px;
     margin-bottom: 10px;
+    padding: 2px 0 2px 0;
 }
 
 #tag-form-modal input {

@@ -23,6 +23,16 @@
     text-align: center;
 }
 
+body.light-theme #fileinfo-container span {
+    background: linear-gradient(135deg, #dadada, #bac7d3);
+    color: var(--light-text);
+}
+
+body.dark-theme #fileinfo-container span {
+    background: linear-gradient(135deg, #0f0f0f, #423838);
+    color: var(--dark-text);
+}
+
 #fileinfo-container input {
     width: 100%;
     border-radius: 15px;

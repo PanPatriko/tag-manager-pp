@@ -116,7 +116,7 @@ body input:disabled {
 
 body.light-theme .custom-swal-popup {
     background-color: var(--light-bg);
-    color: var(--dark-text);
+    color: var(--light-text);
 }
 
 body.dark-theme .custom-swal-popup {

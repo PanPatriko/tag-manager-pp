@@ -74,7 +74,6 @@ modalOkButton.addEventListener('click', async () => {
     const textcolor = colorTextInput.value;
 
     if (tagNames.length === 0 || tagNames[0] === '') {
-        //alert(window.translations['tag-alert-empty-name']);
         Swal.fire({
             title: window.translations['tag-alert-empty-name-title'],
             text: window.translations['tag-alert-empty-name'],
@@ -106,13 +105,10 @@ modalOkButton.addEventListener('click', async () => {
 
 export async function openModalNewTag(tag = null) {
     isEditMode = false;
-    currentTag = tag;
     modalTitle.innerText = window.translations['tag-add'];
     tagNameInput.value = '';
     parentTagLabel.textContent = !!tag ? `${getTagHierarchyString(tag)} ID: ${tag.id}` : '';
     parentNameInput.value = !!tag ? tag.name : '';
-    // parentNameInput.disabled = !!tag;
-    // clearParentTagButton.disabled = !!tag;
     selectedParentTag = !!tag ? tag : null;
     if(tag != null) {
         colorInput.value = tag.color;
@@ -131,8 +127,6 @@ export async function openModalEditTag(tag) {
     tagNameInput.value = tag.name;
     selectedParentTag = tags.find(t => t.id === tag.parent_id);
     parentTagLabel.textContent = selectedParentTag ? `${getTagHierarchyString(selectedParentTag)} ID: ${selectedParentTag.id}` : '';
-    // parentNameInput.disabled = false;
-    // clearParentTagButton.disabled = false;
     colorInput.value = tag.color;
     colorTextInput.value = tag.textcolor;
     tagModal.classList.remove('hidden');

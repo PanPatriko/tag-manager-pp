@@ -1,5 +1,5 @@
 import { getTagHierarchyString, getTagHierarchySpan, searchTagsStartsWith } from "../tags.js";
-import {tags, files, setFiles} from "../state.js"
+import {tags, files, setFiles, setRootLoc, setCurrentLoc} from "../state.js"
 import { highlightText } from "../utils.js";
 import { displayFiles } from "../content/content.js"
 
@@ -23,12 +23,6 @@ searchInput.addEventListener('input', function() {
             const suggestionItem = document.createElement('li');
             const div = getTagHierarchySpan(tag);
             suggestionItem.className = 'suggestion-item';
-            
-            // span.textContent = getTagHierarchyString(tag);
-            // span.setAttribute('title', getTagHierarchyString(tag));
-            // //suggestionItem.style.backgroundColor = tag.color;
-            // span.style.backgroundColor = tag.color;
-            // span.style.color = tag.textcolor;
 
             const buttonsContainer = document.createElement('div');
             buttonsContainer.className = 'suggestion-buttons';
@@ -68,10 +62,17 @@ searchInput.addEventListener('focusout', function() {
 
 searchButton.addEventListener('click', async function() {
     const newFiles = await window.api.searchFiles(andTags, orTags, notTags);
+    setRootLoc(null);
+    setCurrentLoc(null);
     setFiles(newFiles);
-    displayFiles(files);
+    displayFiles();
     document.getElementById('prev-directory').disabled = true;
     document.getElementById('dir-name').textContent = "";
+    document.getElementById('directory-container').innerHTML = "";
+    let activeLoc = document.querySelector(".loc-active");
+    if(activeLoc) {
+        activeLoc.classList.remove("loc-active");
+    }
 });
 
 function createSuggestionButton(operationSign, operation, tag) {

@@ -49,10 +49,6 @@ async function addChildTag(tagId) {
 }
 
 async function confirmDeleteTag(tagId) {
-    // if (confirm(window.translations['confirm-del-tag'])) {
-    //     await window.api.deleteTag(tagId);
-    //     refreshTags()
-    // }
     const result = await Swal.fire({
         text: window.translations['confirm-del-tag'],
         icon: 'question',

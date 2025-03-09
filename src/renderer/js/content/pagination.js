@@ -31,7 +31,6 @@ prevDirButton.addEventListener('click', async () => {
             const parentLocation = await window.api.getDirectoryParent(currentLocation);
             displayDirectory(parentLocation);
         } catch(error) {
-            //alert(error);
             Swal.fire({
                 text: error,
                 icon: 'error',

@@ -1,7 +1,7 @@
 import { copiedTags, setCopiedTags, currentLocation, files, setFiles } from "../state.js"
 import { formatString } from "../i18n.js"
 import { openFileModal } from "../modals/fileTagModal.js"
-import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
+import { createFileInfo, refreshFileInfo } from "../rightSidebar/fileInfo.js"
 import { displayDirectory, displayFiles, getSelectedFiles } from "../content/content.js"
 import { adjustPosition } from "./contextMenu.js";
 
@@ -12,14 +12,12 @@ window.openFileExt = openFileExt;
 window.openFileLocation = openFileLocation;
 window.deleteFile = deleteFile;
 
-let id = null;
 let path = null;
 
 export function showFileContextMenu(x, y, fileId, filePath) {
     const existingMenu = document.querySelector('.context-menu');
     if (existingMenu) existingMenu.remove();
 
-    id = fileId;
     path = filePath;
 
     const contextMenu = document.createElement('div');
@@ -46,11 +44,6 @@ export function showFileContextMenu(x, y, fileId, filePath) {
 
 async function deleteFile(fileId) {
     if(fileId) {
-        // if(confirm(window.translations['confirm-del-file'])) {
-        //     await window.api.deleteFileById(fileId);
-        //     setFiles(files.filter(f => f.id !== fileId));
-        //     displayFiles(files);
-        // }
         const result = await Swal.fire({
             text: window.translations['confirm-del-file'],
             icon: 'question',
@@ -64,11 +57,16 @@ async function deleteFile(fileId) {
     
         if (result.isConfirmed) {
             await window.api.deleteFileById(fileId);
-            setFiles(files.filter(f => f.id !== fileId));
-            displayFiles(files);
+            if(currentLocation) {
+                await displayDirectory(currentLocation);
+                refreshFileInfo();
+            } else {
+                setFiles(files.filter(f => f.id !== fileId));
+                displayFiles();
+                createFileInfo(null);
+            }
         }
     } else {
-        //alert(window.translations['cntx-menu-delete-file-no-id']);
         Swal.fire({
             title: window.translations['cntx-menu-delete-file-no-id-title'],
             text: window.translations['cntx-menu-delete-file-no-id'],
@@ -82,21 +80,11 @@ async function deleteFile(fileId) {
 }
 
 async function openFileExt() {
-    if(id == null) {
-        window.api.openExt(path);
-    } else {
-        const file = files.find(f => f.id == id);
-        window.api.openExt(file.path);
-    }
+    window.api.openExt(path);
 }
 
 async function openFileLocation() {
-    if(id == null) {
-        window.api.openExplorer(path);
-    } else {
-        const file = files.find(f => f.id == id);
-        window.api.openExplorer(file.path);
-    }
+    window.api.openExplorer(path);
 }
 
 async function addTagForFile() {
@@ -109,7 +97,6 @@ export async function copyTags(fileId) {
         if (tags.length > 0) {
             setCopiedTags(tags);
         } else {
-            //alert(window.translations['alert-file-no-tags']);
             Swal.fire({
                 text: window.translations['alert-file-no-tags'],
                 icon: 'warning',
@@ -122,7 +109,6 @@ export async function copyTags(fileId) {
         }
     } catch (error) {
         console.error('Error fetching tags:', error);
-        //alert(window.translations['alert-fetching-tags']);
         Swal.fire({
             text: window.translations['alert-fetching-tags'],
             icon: 'warning',
@@ -137,7 +123,6 @@ export async function copyTags(fileId) {
 export async function pasteTags() {
     const selectedFiles = getSelectedFiles();
     if (selectedFiles.length === 0) {
-        //alert(window.translations['alert-no-files-selected']);
         Swal.fire({
             text: window.translations['alert-no-files-selected'],
             icon: 'warning',
@@ -149,7 +134,6 @@ export async function pasteTags() {
         return;
     }
     if (copiedTags === null) {
-        //alert(window.translations['alert-no-copied-tags']);
         Swal.fire({
             text: window.translations['alert-no-copied-tags'],
             icon: 'warning',
@@ -186,9 +170,6 @@ export async function pasteTags() {
 
     if (conflicts.length > 0) {
         const conflictMessages = conflicts.map(conflict => `File ID: ${conflict.fileId}, Tag: ${conflict.tagName}`).join('\n');
-        // alert(formatString(window.translations['alert-tags-paste-problems'], {
-        //     conflictMessages: conflictMessages
-        // }));
         const text = formatString(window.translations['alert-tags-paste-problems'], {
                 conflictMessages: conflictMessages
         })
@@ -197,9 +178,7 @@ export async function pasteTags() {
             icon: 'info',
             confirmButtonText: 'OK',
         });
-        //alert(`Tags already exist for the following files and tags:\n${conflictMessages}\nOther tags pasted successfully.`);
     } else {
-        //alert(window.translations['alert-tags-paste-success']);
         Swal.fire({
             text: window.translations['alert-tags-paste-success'],
             icon: 'success',

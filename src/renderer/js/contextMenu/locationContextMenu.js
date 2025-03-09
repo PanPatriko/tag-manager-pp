@@ -38,10 +38,6 @@ async function editLocation(locId) {
 }
 
 async function confirmDeleteLocation(locId) {
-    // if (confirm(window.translations['confirm-del-loc'])) {
-    //     await window.api.deleteLocation(locId);
-    //     refreshLocations()
-    // }
     const result = await Swal.fire({
         text: window.translations['confirm-del-loc'],
         icon: 'question',

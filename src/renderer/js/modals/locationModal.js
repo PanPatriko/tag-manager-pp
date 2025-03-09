@@ -23,7 +23,6 @@ modalOkButton.addEventListener('click', async () => {
     const path = pathInput.value.trim();
 
     if (name == null || name === '') {
-        //alert(window.translations['loc-alert-empty-name']);
         Swal.fire({
             title: window.translations['loc-alert-empty-name-title'],
             text: window.translations['loc-alert-empty-name'],
@@ -37,7 +36,6 @@ modalOkButton.addEventListener('click', async () => {
     }
 
     if (path == null || path === '') {
-        //alert(window.translations['loc-alert-empty-path']);
         Swal.fire({
             title: window.translations['loc-alert-empty-path-title'],
             text: window.translations['loc-alert-empty-path'],

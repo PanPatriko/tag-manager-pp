@@ -1,4 +1,5 @@
 import { addMissingParentTags, buildTagHierarchy, renderFileTagsTree, applyExpandedFileTags } from "../tags.js"
+import { displayFiles } from "../content/content.js"
 import { files } from "../state.js"
 
 const showFileInfoButton = document.getElementById('show-file-info');
@@ -47,6 +48,10 @@ fileNameInput.addEventListener('focusout', () => {
 });
 
 fileNameSaveButton.addEventListener('click', async () => {
+    if(!currentFile) {
+        return;
+    }
+    
     const newFileName = fileNameInput.value;
     const fileId = currentFile.id;
     const oldFilePath = currentFile.path;
@@ -64,9 +69,7 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                //alert(window.translations['file-prev-name-save-error'] + result.error);
                 Swal.fire({
-                    //title: window.translations['tag-alert-empty-name-title'],
                     text: window.translations['file-prev-name-save-error'] + result.error,
                     icon: 'error',
                     confirmButtonText: 'OK',
@@ -87,10 +90,8 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                //alert(window.translations['file-prev-name-save-error'] + result.error);
                 Swal.fire({
-                    //title: window.translations['tag-alert-empty-name-title'],
-                    text: window.translations['file-prev-name-save-error'] + result.error,
+                    text: window.translations['file-prev-name-save-error'] + error,
                     icon: 'error',
                     confirmButtonText: 'OK',
                     customClass: {
@@ -100,10 +101,8 @@ fileNameSaveButton.addEventListener('click', async () => {
             }
         }      
     } catch (error) {
-        //alert(window.translations['file-prev-name-save-error'] + result.error);
         Swal.fire({
-            //title: window.translations['tag-alert-empty-name-title'],
-            text: window.translations['file-prev-name-save-error'] + result.error,
+            text: window.translations['file-prev-name-save-error'] + error,
             icon: 'error',
             confirmButtonText: 'OK',
             customClass: {
@@ -123,7 +122,15 @@ export async function refreshFileInfo() {
         if(currentFile.id == null) {
             currentFile = await window.api.getFileByPath(currentFile.path);
         } else {
-            currentFile = await window.api.getFileById(currentFile.id);
+            let tempFile = await window.api.getFileById(currentFile.id);
+            if(!tempFile) {
+                currentFile = files.find(file => file.path === currentFile.path);
+                if(currentFile) {
+                    currentFile.id = null;
+                }
+            } else {
+                currentFile = tempFile;
+            }
         }
         setFileInfo(currentFile);
     }
@@ -132,8 +139,15 @@ export async function refreshFileInfo() {
 async function setFileInfo(file) {
     fileTagsTree.innerHTML = "";
     fileTagsTree.dataset.i18n = "file-prev-no-tags";
-    try {       
-        fileIdSpan.textContent = file.id != null ? `${file.id}` : window.translations['file-prev-no-ID'];
+    fileIdSpan.dataset.i18n = "file-prev-no-ID";
+    if(file) {  
+        if(file.id == null) {
+            fileIdSpan.textContent = window.translations['file-prev-no-ID'];
+        } else {
+            fileIdSpan.textContent = file.id;
+            fileIdSpan.dataset.i18n = null;
+        }
+
         fileNameInput.value = `${file.name}`;
         filePathInput.value = `${file.path}`;
 
@@ -146,7 +160,11 @@ async function setFileInfo(file) {
             renderFileTagsTree(tagHierarchy);
             applyExpandedFileTags()
         }
-    } catch (error) {
-        fileTagsTree.textContent = window.translations['file-prev-no-tags'];
+    } else {
+        fileIdSpan.textContent = window.translations['file-prev-no-ID'];
+        fileNameInput.value = "";
+        filePathInput.value = "";
+        const preview = document.getElementById('file-preview');
+        preview.innerHTML = ''; 
     }
 }

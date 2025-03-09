@@ -113,7 +113,7 @@ function updateSortDirectionIndicator() {
 export function getSelectedFiles() {
     const selectedFiles = document.querySelectorAll('.file-container[data-checked="true"]');
     return Array.from(selectedFiles).map(file => ({
-        id: file.dataset.id,
+        id: parseInt(file.dataset.id, 10),
         path: file.dataset.path
     }));
 }
@@ -158,13 +158,13 @@ function selectFile(fileContainer) {
 
     fileContainer.dataset.checked = 'true';
     let file;
-
     const fileId = fileContainer.dataset.id;
-    if(fileId) {
+
+    if(!fileId) {
         file = files.find(f => f.id == fileId);
     } else {
         const filePath = fileContainer.dataset.path;
-        file = files.find(f => f.path == filePath);
+        file = files.find(f => f.path === filePath);
     }
     updateSelectedFileCount();
     createFilePreview(file);
@@ -199,7 +199,6 @@ export async function displayDirectory(dirPath) {
     const dirFiles = await window.api.getFilesInPath(dirPath);
     if (dirFiles.error) {
         console.error(dirFiles.error);
-        //alert(window.translations['dir-read-error'])
         Swal.fire({
             text: dirFiles.error,
             icon: 'error',
@@ -229,8 +228,8 @@ export async function displayDirectory(dirPath) {
         prevDirBttn.disabled = false;
     }
     document.getElementById('dir-name').textContent = await path.basename(dirPath, "");
-    setFiles(dirFiles);
     setCurrentLoc(dirPath);
+    setFiles(dirFiles);
     displayFiles();
 }
 

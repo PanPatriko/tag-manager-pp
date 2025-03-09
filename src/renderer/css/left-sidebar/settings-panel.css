@@ -1,0 +1,32 @@
+#settings-panel{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#settings-panel.hidden{
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+#settings-container {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#settings-container li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+}
+
+#settings-container li span {
+    text-align: left;
+    max-width: 150px;
+    word-wrap: break-word;
+}

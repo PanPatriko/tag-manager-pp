@@ -1,0 +1,83 @@
+#location-panel {
+    overflow-y: auto;
+}
+
+#locations {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-location {
+    margin: 5px;
+    padding: 2px 0 2px 0;
+}
+
+.location-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px;
+}
+
+.loc-item {
+    border: 1px solid rgb(128, 128, 128);
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+body.light-theme .loc-item:hover {
+    background-color: lightgray;
+}
+
+body.dark-theme .loc-item:hover {
+    background-color: #4e4e4e;
+}
+
+body.light-theme .loc-active {
+    border: 1px solid blue
+}
+
+body.dark-theme .loc-active {
+    border: 1px solid red
+}
+
+#directory-container {
+    margin-left: 5px;
+    list-style-type: square;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+[for="directory-container"] {
+    margin-left: 5px;
+    font-size: large;
+}
+
+#directory-container ul {
+    margin-left: 10px;
+    padding-left: 10px;
+    list-style-type: square;
+}
+
+#directory-container button {
+    background-color: transparent;
+    margin: 0 0 0 5px;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+}
+
+#directory-container li {
+    cursor: pointer;
+    word-wrap: break-word;
+    max-width: 250px;
+}
+
+body.light-theme #directory-container span:hover, body.light-theme #directory-container button:hover {
+    color: var(--light-bg-bttn);
+}
+
+body.dark-theme #directory-container span:hover, body.dark-theme #directory-container button:hover {
+    color: var(--dark-bg-bttn);
+}

@@ -1,0 +1,19 @@
+#file-preview {
+    display: flex;
+    overflow: hidden;
+    flex: 2;
+    justify-content: center;
+    align-items: top;
+    position: relative; 
+}
+
+#file-preview img, #file-preview video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -1,0 +1,129 @@
+:root {
+    --light-bg: #f0f0f0;
+    --light-text: black;
+    --light-bg-bttn: lightgray;
+    --dark-bg: #222;
+    --dark-bg-bttn: #4e4e4e;
+    --dark-text: white;
+    --bg-bttn-hover: gray;
+    --border: 1px solid rgb(128, 128, 128);
+}
+
+* {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: 0.5s;
+}
+
+body.light-theme {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.dark-theme {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+#app {
+    display: flex;
+    height: 100vh;
+}
+
+button {
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: var(--border);
+    transition: background-color 0.5s ease, transform 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+body.light-theme button {
+    background-color: var(--light-bg-bttn);
+    color: var(--light-text);
+}
+
+body.dark-theme button {
+    background-color: var(--dark-bg-bttn);
+    color: var(--dark-text);
+}
+
+body.light-theme button:hover {
+    background-color: var(--bg-bttn-hover);
+}
+
+body.dark-theme button:hover {
+    background-color: var(--bg-bttn-hover);
+}
+
+body button:disabled {
+    cursor: not-allowed; 
+    opacity: 0.3;
+}
+
+span, label {
+    transition: 0.3s;
+}
+
+input {
+    border: var(--border);
+    transition:0.5s;
+}
+
+body.light-theme input {
+    background: linear-gradient(135deg, #dadada, #bac7d3);
+    color: var(--light-text);
+}
+
+body.dark-theme input {
+    background: linear-gradient(135deg, #0f0f0f, #423838);
+    color: var(--dark-text);
+}
+
+body input:disabled {
+    background-color: #e0e0e0; 
+    color: #616161;
+    border: 1px solid #c0c0c0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.highlight {
+    background-color: rgba(255, 255, 0, 0.8);
+    color: var(--light-text);
+}
+
+.hidden {
+    display: none;
+}
+
+body.light-theme .custom-swal-popup {
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+}
+
+body.dark-theme .custom-swal-popup {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.custom-swal-popup {
+    border-radius: 10%;
+}

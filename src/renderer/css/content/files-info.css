@@ -1,0 +1,15 @@
+#files-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#files-info label{
+    margin: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#sort-by-name {
+    background-image: url('../../images/sort-up-az.png');
+}

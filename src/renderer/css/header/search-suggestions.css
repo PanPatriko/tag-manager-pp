@@ -1,0 +1,97 @@
+.suggestions-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    z-index: 1000;
+    max-height: 600px; 
+    box-sizing: border-box;
+    list-style-type: none; 
+    padding: 0;
+    margin: 0;
+    border: var(--border);
+    border-top: none;
+}
+
+.suggestion-item {
+    padding: 0 5px 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-top: var(--border);
+}
+
+.suggestion-item div {
+    display: flex;
+    overflow-y: auto;
+    flex-wrap: wrap;
+}
+
+.suggestion-item div span {
+    border-radius: 10px;
+    padding: 0 5px 0 5px;
+    margin: 5px 0 5px 0;
+}
+
+.suggestion-item span.highlight {
+    border-radius: 0;
+    padding: 0;
+}
+
+body.light-theme .suggestion-item {
+    background-color: #f0f0f0;
+}
+
+body.dark-theme .suggestion-item {
+    background-color: #222;
+}
+
+body.light-theme .suggestion-item:hover {
+    background-color: #b4b3b3;
+}
+
+body.dark-theme .suggestion-item:hover {
+    background-color: #444444;
+}
+
+.suggestion-buttons {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.suggestion-button {
+    height: 2em !important;
+    width: 2em !important;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.suggestion-button.and {
+    background-color: green;
+    color: white;
+}
+
+.suggestion-button.or {
+    background-color: blue;
+    color: white;
+}
+
+.suggestion-button.not {
+    background-color: red;
+    color: white;
+}
+
+.suggestion-button.and:hover {
+    background-color: lightgreen;
+}
+
+.suggestion-button.or:hover {
+    background-color: lightskyblue;
+}
+
+.suggestion-button.not:hover {
+    background-color: darkred;
+}

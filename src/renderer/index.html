@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TagManagerPP</title>
+    <link rel="stylesheet" href="css/header/header.css">
+    <link rel="stylesheet" href="css/header/search-bar.css">
+    <link rel="stylesheet" href="css/header/search-suggestions.css">
+    <link rel="stylesheet" href="css/header/search-tags.css">
+    <link rel="stylesheet" href="css/left-sidebar/sidebar.css">
+    <link rel="stylesheet" href="css/left-sidebar/menu.css">
+    <link rel="stylesheet" href="css/left-sidebar/settings-panel.css">
+    <link rel="stylesheet" href="css/left-sidebar/tags-panel.css">
+    <link rel="stylesheet" href="css/left-sidebar/locations.css">
+    <link rel="stylesheet" href="css/right-sidebar/sidebar.css">
+    <link rel="stylesheet" href="css/right-sidebar/menu.css">
+    <link rel="stylesheet" href="css/right-sidebar/file-info.css">
+    <link rel="stylesheet" href="css/right-sidebar/file-preview.css">
+    <link rel="stylesheet" href="css/right-sidebar/file-tags.css">
+    <link rel="stylesheet" href="css/content/content.css">
+    <link rel="stylesheet" href="css/content/files-panel.css">
+    <link rel="stylesheet" href="css/content/files-info.css">
+    <link rel="stylesheet" href="css/content/pagination-controls.css">
+    <link rel="stylesheet" href="css/modals/modal.css">
+    <link rel="stylesheet" href="css/modals/location-modal.css">
+    <link rel="stylesheet" href="css/modals/tag-modal.css">
+    <link rel="stylesheet" href="css/modals/file-tag-modal.css">
+    <link rel="stylesheet" href="css/context-menu.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <aside id="left-sidebar">
+            <div id="left-resize-handle" class="left-sidebar-item"></div>
+            <div id="left-sidebar-menu" class="left-sidebar-item">
+                <button id="settings-button" class="menu-element" data-panel="settings-panel"
+                    data-i18n-title="title-settings"></button>
+                <button id="location-button" class="menu-element" data-panel="location-panel"
+                    data-i18n-title="title-locations"></button>
+                <button id="tags-button" class="menu-element" data-panel="tags-panel"
+                    data-i18n-title="title-tags"></button>
+                <button id="theme-toggle" data-i18n-title="title-theme"></button>
+            </div>
+            <div id="settings-panel" class="left-sidebar-item">
+                <ul id="settings-container">
+                    <li>
+                        <span data-i18n="settings-lang"></span>
+                        <select id="language-select">
+                            <option value="en" data-i18n="settings-lang-en"></option>
+                            <option value="pl" data-i18n="settings-lang-pl"></option>
+                        </select>
+                    </li>
+                    <li>
+                        <span data-i18n="settings-file-icon-size"></span>
+                        <select id="icon-size">
+                            <option value="50">50px</option>
+                            <option value="100">100px</option>
+                            <option value="125">125px</option>
+                            <option value="150">150px</option>
+                            <option value="200">200px</option>
+                        </select>
+                    </li>
+                    <li>
+                        <span data-i18n="settings-max-files-on-page"></span>
+                        <select id="max-files">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                        </select>
+                    </li>
+                    <li>
+                        <span data-i18n="settings-vid-auto-play"></span>
+                        <input type="checkbox" id="vid-autoplay">
+                    </li>
+                    <li>
+                        <span data-i18n="settings-vid-loop"></span>
+                        <input type="checkbox" id="vid-loop">
+                    </li>
+                    <li>
+                        <span data-i18n="settings-def-tag-bgcolor"></span>
+                        <input type="color" id="def-tag-bgcolor">
+                    </li>
+                    <li>
+                        <span data-i18n="settings-def-tag-textcolor"></span>
+                        <input type="color" id="def-tag-textcolor">
+                    </li>
+                </ul>
+            </div>
+            <div id="tags-panel" class="left-sidebar-item">
+                <section id="tags">
+                    <button id="add-tag" data-i18n="tag-add"></button>
+                    <div id="tags-container" class="tags-view"></div>
+                </section>
+            </div>
+            <div id="location-panel" class="left-sidebar-item">
+                <span for="directory-container" data-i18n="loc-directory-container"></span>
+                <ul id="directory-container"></ul>
+                <section id="locations">
+                    <button id="add-location" data-i18n="loc-add"></button>
+                    <div id="location-container" class="location-view"></div>
+                </section>
+            </div>
+        </aside>
+        <section id="content">
+            <header>
+                <button id="toggle-tag-sidebar" data-i18n-title="title-sidebar"></button>
+                <div id="search-container">
+                    <input type="text" id="search-input" data-i18n-placeholder="header-search-placeholder">
+                    <button id="search-button" data-i18n-title="title-search"></button>
+                    <ul id="search-suggestions" class="suggestions-container"></ul>
+                </div>
+                <div id="search-tags-container"></div>
+                <button id="toggle-file-sidebar" data-i18n-title="title-sidebar"></button>
+            </header>
+            <section id="files-info">
+                <button id="sort-by-name" data-i18n-title="title-sort-by-name"></button>
+                <label id="current-files"></label>
+                <label id="selected-file-count"></label>
+                <label id="total-file-count"></label>
+            </section>
+            <section id="pagination-controls">
+                <label id="dir-name"></label>
+                <button id="prev-directory" data-i18n-title="title-up-dir" disabled></button>
+                <label for="file-pages" data-i18n="content-page"></label>
+                <select id="file-pages"></select>
+                <button id="prev-page" data-i18n-title="title-prev-page"></button>
+                <button id="next-page" data-i18n-title="title-next-page"></button>
+            </section>
+            <div id="loading-bar-container" class="hidden">
+                <div id="loading-bar"></div>
+            </div>
+            <section id="files-panel">
+            </section>
+        </section>
+        <aside id="right-sidebar">
+            <div id="right-resize-handle" class="right-sidebar-item"></div>
+            <div id="right-sidebar-menu" class="right-sidebar-item">
+                <button id="show-file-info" class="right-sidebar-item active"
+                    data-i18n-title="title-file-info"></button>
+                <button id="show-file-tags" class="right-sidebar-item active"
+                    data-i18n-title="title-file-tags"></button>
+                <button id="show-file-desc" class="right-sidebar-item" data-i18n-title="title-file-desc"></button>
+            </div>
+            <section id="file-info" class="right-sidebar-item">
+                <ul id="fileinfo-container">
+                    <li>
+                        <span id="file-id">ID</span>
+                    </li>
+                    <li>
+                        <span data-i18n="file-prev-name"></span>
+                        <input id="file-name"></input>
+                        <button id="file-name-save" data-i18n="save" hidden></button>
+                    </li>
+                    <li>
+                        <span data-i18n="file-prev-path"></span>
+                        <input id="file-path" readonly></input>
+                    </li>
+                </ul>
+            </section>
+            <section id="file-tags" class="right-sidebar-item">
+                <div id="file-tags-container" class="tags-view"></div>
+            </section>
+            <div id="file-preview" class="right-sidebar-item"></div>
+        </aside>
+    </div>
+    <div id="tag-form-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="tag-modal-title"></h2>
+            <label for="tag-name" data-i18n="tag-name"></label>
+            <input type="text" id="tag-name" data-i18n-placeholder="tag-name-placeholder">
+            <label for="parent-name" data-i18n="tag-parent-name"></label>
+            <label id="parent-tag"></label>
+            <button id="clear-parent-tag" data-i18n="tag-clear-parent"></button>
+            <div id="parent-tag-search-container">
+                <input type="text" id="parent-name" data-i18n-placeholder="tag-parent-name-placeholder">
+                <ul id="parent-name-suggestions" class="suggestions-container hidden"></ul>
+            </div>
+            <label for="color" data-i18n="tag-color"></label>
+            <input type="color" id="color">
+            <label for="textcolor" data-i18n="tag-text-color"></label>
+            <input type="color" id="textcolor">
+            <div class="tag-modal-buttons">
+                <button id="tag-modal-ok" data-i18n="ok"></button>
+                <button id="tag-modal-cancel" data-i18n="cancel"></button>
+            </div>
+        </div>
+    </div>
+    <div id="location-form-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="loc-modal-title"></h2>
+            <label for="loc-name" data-i18n="loc-name"></label>
+            <input type="text" id="loc-name" data-i18n-placeholder="loc-name-placeholder">
+            <label for="loc-path" data-i18n="loc-path"></label>
+            <div class="loc-path-container">
+                <input type="text" id="loc-path" data-i18n-placeholder="loc-path-placeholder" readonly>
+                <button id="loc-path-btn" data-i18n="browse"></button>
+            </div>
+            <div class="tag-modal-buttons">
+                <button id="loc-modal-ok" data-i18n="ok"></button>
+                <button id="loc-modal-cancel" data-i18n="cancel"></button>
+            </div>
+        </div>
+    </div>
+    <div id="file-tag-form-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" id="close-file-tag-form-modal">&times;</span>
+            <h2 data-i18n="file-tag-title"></h2>
+            <form id="file-tag-form">
+                <div>
+                    <div id="modal-file-tags-container"></div>
+                </div>
+                <div>
+                    <label for="file-tag-search" data-i18n="file-tag-search"></label>
+                    <input type="text" id="file-tag-search" name="file-tag-search"
+                        data-i18n-placeholder="file-tag-search-placeholder">
+                </div>
+                <label for="modal-file-tags-tree" data-i18n="file-tag-select-list"></label>
+                <div id="modal-file-tags-tree"></div>
+                <div class="file-modal-buttons">
+                    <button type="button" id="add-tags-button" data-i18n="file-tag-add"></button>
+                    <button type="button" id="remove-tags-button" data-i18n="file-tag-remove"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

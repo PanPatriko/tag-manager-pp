@@ -1,0 +1,17 @@
+#tags-panel{
+    overflow-y: auto;
+}
+
+#tags {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-tag {
+    margin: 5px;
+    padding: 2px 0 2px 0;
+}
+
+#add-tag:hover {
+    transform: none;
+}

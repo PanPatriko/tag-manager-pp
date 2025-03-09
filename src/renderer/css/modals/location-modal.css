@@ -1,0 +1,9 @@
+.loc-path-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.loc-path-container input {
+    flex-grow: 1;
+}

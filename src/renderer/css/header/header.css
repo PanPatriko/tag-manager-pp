@@ -1,0 +1,23 @@
+header {
+    display: flex;   
+    box-sizing: border-box;
+    border-bottom: var(--border);
+    border-top: var(--border);
+}
+
+header button {
+    width: 3em;
+    height: 3em;
+    margin: 5px;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#toggle-tag-sidebar {
+    background-image: url('../../images/left-arrow.png');
+}
+
+#toggle-file-sidebar {
+    background-image: url('../../images/right-arrow.png');
+}

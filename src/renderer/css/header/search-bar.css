@@ -1,0 +1,17 @@
+#search-container {
+    position: relative;
+    display: flex;
+    width: 60%;
+}
+
+#search-input {
+    width: 100%;
+    border-radius: 15px;
+    padding-left: 10px;
+    margin: 5px;
+    font-size: medium;
+}
+
+#search-button {
+    background-image: url('../../images/search.png');
+}

@@ -15,6 +15,12 @@ function createWindow () {
   })
   win.maximize();
   win.loadFile('src/renderer/index.html')
+
+  win.webContents.on('before-input-event', (event, input) => {
+    if (!input.shift && input.control && input.key.toLowerCase() === 'r') {
+      event.preventDefault();
+    }
+  });
 }
 
 app.whenReady().then(() => {

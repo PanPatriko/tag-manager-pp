@@ -62,37 +62,24 @@ body.dark-theme .suggestion-item:hover {
 }
 
 .suggestion-button {
-    height: 2em !important;
-    width: 2em !important;
+    margin: 5px;
+    padding: 5px 10px 5px 10px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    padding: 0;
 }
 
 .suggestion-button.and {
-    background-color: green;
+    background-image: linear-gradient(rgb(0, 128, 0), rgb(0, 255, 0));
     color: white;
 }
 
 .suggestion-button.or {
-    background-color: blue;
+    background-image: linear-gradient(rgb(0, 0, 255), rgb(0, 128, 255));
     color: white;
 }
 
 .suggestion-button.not {
-    background-color: red;
+    background-image: linear-gradient(rgb(255, 0, 0), rgb(255, 128, 0));
     color: white;
-}
-
-.suggestion-button.and:hover {
-    background-color: lightgreen;
-}
-
-.suggestion-button.or:hover {
-    background-color: lightskyblue;
-}
-
-.suggestion-button.not:hover {
-    background-color: darkred;
 }

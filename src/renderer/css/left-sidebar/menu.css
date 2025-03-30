@@ -6,23 +6,12 @@
     min-height: min-content;
 }
 
-#left-sidebar-menu button {
-    width: 3em;
-    height: 3em;
-    margin: 5px; 
-    background-size: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 body.light-theme .menu-element.active {
-    border: 1px solid blue;
-    outline: 1px solid rgba(0, 0, 255, 0.5);
+    border: 2px solid rgb(0, 128, 255);
 }
 
 body.dark-theme .menu-element.active {
-    border: 1px solid red;
-    outline: 1px solid rgba(255, 0, 0, 0.5);
+    border: 2px solid rgb(255, 128, 0);
 }
 
 #theme-toggle {

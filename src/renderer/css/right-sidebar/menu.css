@@ -5,15 +5,6 @@
     border-top: var(--border);
 }
 
-#right-sidebar-menu button {
-    margin: 5px;
-    height: 3em;
-    width: 3em;
-    background-size: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 #show-file-tags {
     background-image: url('../../images/tag.png');
 }
@@ -23,11 +14,9 @@
 }
 
 body.light-theme #right-sidebar-menu button.active {
-    border: 1px solid blue;
-    outline: 1px solid rgba(0, 0, 255, 0.5);
+    border: 2px solid rgb(0, 128, 255);
 }
 
 body.dark-theme #right-sidebar-menu button.active {
-    border: 1px solid red;
-    outline: 1px solid rgba(255, 0, 0, 0.5);
+    border: 2px solid rgb(255, 128, 0);
 }

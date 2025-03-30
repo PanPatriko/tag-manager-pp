@@ -1,4 +1,14 @@
-#tags-panel{
+#tags{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: calc(100vh - 3em - 5px);
+}
+
+#tags-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-x: auto;
     overflow-y: auto;
 }
 

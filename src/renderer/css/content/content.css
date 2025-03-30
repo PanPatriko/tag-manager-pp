@@ -6,15 +6,6 @@
     border-bottom: var(--border);
 }
 
-#content button {
-    width: 3em;
-    height: 3em;
-    margin: 5px;
-    background-size: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 #loading-bar-container {
     position: relative;
     top: 0;

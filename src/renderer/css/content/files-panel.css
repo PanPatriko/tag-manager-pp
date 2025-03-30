@@ -78,9 +78,9 @@ body.dark-theme .file-container:hover, body.dark-theme .directory-container:hove
 }
 
 body.light-theme .file-container[data-checked="true"] {
-    border: 2px solid rgb(0, 0, 255);
+    border: 2px solid rgb(0, 128, 255);
 }
 
 body.dark-theme .file-container[data-checked="true"] {
-    border: 2px solid rgb(255, 0, 0);
+    border: 2px solid rgb(255, 128, 0);
 }

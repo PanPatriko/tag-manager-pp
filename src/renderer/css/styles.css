@@ -154,22 +154,22 @@ body.dark-theme .parent-li.expanded:hover {
 }
 
 .tag-label:hover {
-    animation: linearGradient 1.5s linear infinite; /* Dodanie animacji */
+    animation: linearGradient 2s linear infinite;
 }
 
 @keyframes linearGradient {
     0% {
-        background-image: linear-gradient(-45deg, transparent calc(100%/3), rgba(0, 0, 0, 0.3), transparent calc(200%/3));
+        background-image: linear-gradient(-45deg, transparent calc(100%/3), white, transparent calc(200%/3));
         background-size: 350% 100%;
         background-position: bottom left;
     }
     50% {
-        background-image: linear-gradient(-45deg, transparent calc(100%/3), rgba(0, 0, 0, 0.3), transparent calc(200%/3));
+        background-image: linear-gradient(-45deg, transparent calc(100%/3), white, transparent calc(200%/3));
         background-size: 350% 100%;
         background-position: center center;
     }
     100% {
-        background-image: linear-gradient(-45deg, transparent calc(100%/3), rgba(0, 0, 0, 0.3), transparent calc(200%/3));
+        background-image: linear-gradient(-45deg, transparent calc(100%/3), white, transparent calc(200%/3));
         background-size: 350% 100%;
         background-position: bottom right;
     }
@@ -205,4 +205,39 @@ body.dark-theme .custom-swal-popup {
 
 .custom-swal-popup {
     border-radius: 10%;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #2d3748;
+}
+
+body.light-theme ::-webkit-scrollbar-track {
+    background: #d4dadf;
+}
+  
+::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #4a5568;
+    border: 2px solid #2d3748;
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+    background: #8d8d8d;
+    border: 2px solid #b8b8b8;
+}
+  
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: rgb(255, 128, 0);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+    background: rgb(0, 128, 255);
 }

@@ -83,8 +83,12 @@ function renderHierarchy(hierarchy, parentElement) {
     ul.appendChild(li);
     parentElement.appendChild(ul);
 
-    if (hierarchy.children && hierarchy.children.length > 0) {
+    if (hierarchy.children && hierarchy.children.length > 0 ) {
 
+        if(hierarchy.children.length === 1 && hierarchy.children[0].name === thumbnailDir) {
+            return;
+        }
+        
         const button = document.createElement('button');
         button.textContent = '▼';
     

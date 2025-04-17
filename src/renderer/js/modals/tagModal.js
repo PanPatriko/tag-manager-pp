@@ -110,14 +110,16 @@ export async function openModalNewTag(tag = null) {
     parentTagLabel.textContent = !!tag ? `${getTagHierarchyString(tag)} ID: ${tag.id}` : '';
     parentNameInput.value = !!tag ? tag.name : '';
     selectedParentTag = !!tag ? tag : null;
-    if(tag != null) {
+    if(tag) {
         colorInput.value = tag.color;
         colorTextInput.value = tag.textcolor;
+
     } else {
         colorInput.value = defTagBgColor;
         colorTextInput.value = defTagTextColor;
     }
     tagModal.classList.remove('hidden');
+    tagNameInput.focus();
 }
 
 export async function openModalEditTag(tag) {
@@ -130,6 +132,7 @@ export async function openModalEditTag(tag) {
     colorInput.value = tag.color;
     colorTextInput.value = tag.textcolor;
     tagModal.classList.remove('hidden');
+    tagNameInput.focus();
 }
 
 function closeModal() {

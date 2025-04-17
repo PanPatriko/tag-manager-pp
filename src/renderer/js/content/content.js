@@ -82,6 +82,7 @@ sortByNameButton.addEventListener('click', function() {
 });
 
 export function sortFiles() {
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
     const sortedFiles = [...files].sort((a, b) => {
         if (a.isDirectory && !b.isDirectory) {
             return -1;
@@ -91,11 +92,7 @@ export function sortFiles() {
         }
         const nameA = a.name.toLowerCase();
         const nameB = b.name.toLowerCase();
-        if (sortOrder === 'asc') {
-            return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-        } else {
-            return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
-        }
+        return sortOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
     });
     setFiles(sortedFiles);
 }
@@ -111,11 +108,7 @@ function updateSortDirectionIndicator() {
 }
 
 export function getSelectedFiles() {
-    const selectedFiles = document.querySelectorAll('.file-container[data-checked="true"]');
-    return Array.from(selectedFiles).map(file => ({
-        id: parseInt(file.dataset.id, 10),
-        path: file.dataset.path
-    }));
+    return document.querySelectorAll('.file-container[data-checked="true"]');
 }
 
 function selectAllFiles() {
@@ -236,7 +229,8 @@ export async function displayDirectory(dirPath) {
 export async function displayFiles() {
     const panel = document.getElementById('files-panel');
     panel.innerHTML = '';
-
+    
+    updateFilePages();
     sortFiles();
 
     const start = (currentPage - 1) * maxFilesPerPage;
@@ -338,7 +332,6 @@ export async function displayFiles() {
     }
 
     updateSelectedFileCount();
-    updateFilePages();
 }
 
 async function getThumbnailPath(filePath) {

@@ -52,5 +52,9 @@ export function updateFilePages() {
         option.textContent = i;
         filePagesSelect.appendChild(option);
     }
+    if (currentPage > totalPages) {
+        //setCurrentPage(totalPages);
+        setCurrentPage(1);
+    }
     filePagesSelect.value = currentPage;
 }

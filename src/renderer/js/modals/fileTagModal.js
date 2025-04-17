@@ -1,7 +1,7 @@
-import { tags, currentLocation } from "../state.js";
+import { tags, files } from "../state.js";
 import { highlightText } from "../utils.js";
-import { buildTagHierarchy, renderModalFileTagsTree, addMissingParentTags, searchTagsInclude, getTagIdByName} from "../tags.js";
-import { getSelectedFiles, displayDirectory } from "../content/content.js";
+import { buildTagHierarchy, renderModalFileTagsTree, addMissingParentTags, addMissingChildTags, searchTagsInclude} from "../tags.js";
+import { getSelectedFiles } from "../content/content.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
 const fileTagFormModal = document.getElementById('file-tag-form-modal');
@@ -10,15 +10,17 @@ const removeTagsButton = document.getElementById('remove-tags-button');
 const searchInput = document.getElementById('file-tag-search');
 const tagsContainer = document.getElementById('modal-file-tags-container');
 const closeFileTagFormModal = document.getElementById('close-file-tag-form-modal');
+const showChildTags = document.getElementById('show-child-tags');
 
-searchInput.addEventListener('input', (e) =>  {
-    const query = e.target.value;
-    const foundTags = searchTagsInclude(query);
-    const completeTags = addMissingParentTags(foundTags);
-    const tagHierarchy = buildTagHierarchy(completeTags);
-    renderModalFileTagsTree(tagHierarchy);
-    highlightText(query, 'modal-file-tags-tree', 'li span');
+fileTagFormModal.addEventListener('click', (e) => {
+    if (e.target !== searchInput) {
+        searchInput.focus();
+    }
 });
+
+showChildTags.addEventListener('change', fileTagsModalSearch);
+
+searchInput.addEventListener('input', fileTagsModalSearch);
 
 addTagsButton.addEventListener('click', addTags);
 
@@ -47,17 +49,17 @@ async function addTags() {
         return;
     }
 
-    let refreshFilesPanelNeeded = false;
-
     for (const file of selectedFiles) {
-        let fileId = file.id;
+        let fileId = file.dataset.id;
+        let filePath = file.dataset.path;
 
-        if (!fileId) {
-            const fileName = file.path.split('\\').pop();
-            await window.api.createFile({ name: fileName, path: file.path });
-            const newFile = await window.api.getFileByPath(file.path);
+        if (fileId === 'null') {
+            const fileName = filePath.split('\\').pop();
+            await window.api.createFile({ name: fileName, path: filePath });
+            const newFile = await window.api.getFileByPath(filePath);
             fileId = newFile.id;
-            refreshFilesPanelNeeded = true;
+            file.dataset.id = fileId;
+            files.find(f => f.path === filePath).id = fileId;
         }
 
         for (const tagId of tagIds) {
@@ -70,9 +72,6 @@ async function addTags() {
     }
 
     await refreshFileInfo();
-    if(refreshFilesPanelNeeded) {
-        await displayDirectory(currentLocation);
-    }
     closeFileModal();
 }
 
@@ -84,28 +83,17 @@ async function removeTags() {
         return;
     }
 
-    let refreshFilesPanelNeeded = false;
-
     for (const file of selectedFiles) {
-        let fileId = file.id;
+        let fileId = file.dataset.id;
 
-        if (!fileId) {
-            const fileName = file.path.split('/').pop();
-            await window.api.createFile({ name: fileName, path: file.path });
-            const newFile = await window.api.getFileByPath(file.path);
-            fileId = newFile.id;
-            refreshFilesPanelNeeded = true;
-        }
-
-        for (const tagId of tagIds) {
-            await window.api.deleteFileTag(fileId, tagId);
+        if (fileId != 'null') {     
+            for (const tagId of tagIds) {
+                await window.api.deleteFileTag(fileId, tagId);
+            }
         }
     }
 
     await refreshFileInfo();
-    if(refreshFilesPanelNeeded) {
-        await displayDirectory(currentLocation);
-    }
     closeFileModal();
 }
 
@@ -121,4 +109,16 @@ export function addTag(tag) {
         tagsContainer.removeChild(tagDiv);
     });
     tagsContainer.appendChild(tagDiv);
+}
+
+function fileTagsModalSearch() {
+    const query = searchInput.value;
+    const foundTags = searchTagsInclude(query);
+    let completeTags = addMissingParentTags(foundTags);
+    if(showChildTags.checked) {
+        completeTags = addMissingChildTags(completeTags, query);
+    }
+    const tagHierarchy = buildTagHierarchy(completeTags);
+    renderModalFileTagsTree(tagHierarchy);
+    highlightText(query, 'modal-file-tags-tree', 'li span');
 }

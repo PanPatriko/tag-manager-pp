@@ -142,6 +142,30 @@ export function addMissingParentTags(fileTags) {
     return completeTags;
 }
 
+export function addMissingChildTags(fileTags, query) {
+    const completeTags = [...fileTags];
+    const tagIds = new Set(fileTags.map(tag => tag.id));
+
+    function addChildren(tag) {
+        const childTags = tags.filter(t => t.parent_id === tag.id);
+        for (const childTag of childTags) {
+            if (!tagIds.has(childTag.id)) {
+                completeTags.push(childTag);
+                tagIds.add(childTag.id);
+                addChildren(childTag);
+            }
+        }
+    }
+
+    for (const tag of fileTags) {
+        if (tag.name.toLowerCase().includes(query.toLowerCase())) {
+            addChildren(tag);
+        }
+    }
+
+    return completeTags;
+}
+
 export function addMissingParentTagsForSingleTag(tag) {
     const completeTags = [tag];
     const tagIds = new Set([tag.id]);
@@ -328,11 +352,12 @@ export function renderModalFileTagsTree(tagHierarchy) {
             li.appendChild(span);
 
             span.addEventListener("click", () => {
-                const tagsContainer = document.getElementById('file-tags-container');
+                const tagsContainer = document.getElementById('modal-file-tags-container');
                 const currentTags = Array.from(tagsContainer.querySelectorAll('.tag')).map(tagDiv => tagDiv.dataset.id);
                 if (!currentTags.includes(tag.id.toString())) {
                     addTag(tag);
                 }
+                document.getElementById('file-tag-search').focus();
             });
 
             if (tag.children.length > 0) {

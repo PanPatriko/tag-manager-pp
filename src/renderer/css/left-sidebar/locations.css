@@ -35,11 +35,11 @@ body.dark-theme .loc-item:hover {
 }
 
 body.light-theme .loc-active {
-    border: 1px solid blue
+    border: 1px solid rgb(0, 128, 255)
 }
 
 body.dark-theme .loc-active {
-    border: 1px solid red
+    border: 1px solid orange
 }
 
 #directory-container {

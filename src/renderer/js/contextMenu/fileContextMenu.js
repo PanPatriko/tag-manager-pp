@@ -146,24 +146,26 @@ export async function pasteTags() {
     }
 
     const conflicts = [];
-    let refreshFilesPanelNeeded = false;
 
     for (const file of selectedFiles) {
+        let fileId = file.dataset.id;
+        let filePath = file.dataset.path;
 
-        if (!file.id) {
-            const fileName = file.path.split('\\').pop();
-            await window.api.createFile({ name: fileName, path: file.path });
-            const newFile = await window.api.getFileByPath(file.path);
-            file.id = newFile.id;
-            refreshFilesPanelNeeded = true;
+        if (fileId === 'null') {
+            const fileName = filePath.split('\\').pop();
+            await window.api.createFile({ name: fileName, path: filePath});
+            const newFile = await window.api.getFileByPath(filePath);
+            fileId = newFile.id;
+            file.dataset.id = fileId;
+            files.find(f => f.path === filePath).id = fileId;
         }
 
         for (const tag of copiedTags) {
             try {
-                await window.api.addFileTag(file.id, tag.id);
+                await window.api.addFileTag(fileId, tag.id);
             } catch (error) {
-                console.warn(`Error adding tag ${tag.name} to file ${file.id}:`, error);
-                conflicts.push({ fileId: file.id, tagName: tag.name });
+                console.warn(`Error adding tag ${tag.name} to file ${fileId}:`, error);
+                conflicts.push({ fileId: fileId, tagName: tag.name });
             }
         }
     }
@@ -190,8 +192,5 @@ export async function pasteTags() {
     }
 
     await refreshFileInfo();
-    if(refreshFilesPanelNeeded) {
-        await displayDirectory(currentLocation);
-    }
     setCopiedTags(null);
 }

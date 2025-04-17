@@ -26,6 +26,7 @@
     "file-tag-select-list": "Wybierz tag z listy:",
     "file-tag-add": "Dodaj tagi",
     "file-tag-remove": "Usuń tagi",
+    "file-tag-show-child-tags": "Pokaż tagi podrzędne",
     "loc-add": "Dodaj nową lokalizację",
     "loc-edit": "Edytuj lokalizację",
     "loc-name": "Nazwa lokalizacji:",

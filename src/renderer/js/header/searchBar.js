@@ -62,17 +62,11 @@ searchInput.addEventListener('focusout', function() {
 
 searchButton.addEventListener('click', async function() {
     const newFiles = await window.api.searchFiles(andTags, orTags, notTags);
-    setRootLoc(null);
     setCurrentLoc(null);
     setFiles(newFiles);
     displayFiles();
     document.getElementById('prev-directory').disabled = true;
     document.getElementById('dir-name').textContent = "";
-    document.getElementById('directory-container').innerHTML = "";
-    let activeLoc = document.querySelector(".loc-active");
-    if(activeLoc) {
-        activeLoc.classList.remove("loc-active");
-    }
 });
 
 function createSuggestionButton(operationSign, operation, tag) {

@@ -37,8 +37,12 @@ showFileTagsButton.addEventListener('click', function() {
     showFileTagsButton.classList.toggle('active');
 });
 
-fileNameInput.addEventListener('focus', () => {
-    fileNameSaveButton.hidden = false;
+fileNameInput.addEventListener('focus', async () => {
+    if(await window.api.fileExists(currentFile.path)) {
+        fileNameSaveButton.hidden = false;
+    } else {
+        // TODO Set new path for file
+    }
 });
 
 fileNameInput.addEventListener('focusout', () => {
@@ -120,7 +124,12 @@ export async function createFileInfo(file) {
 export async function refreshFileInfo() {
     if(currentFile) {
         if(currentFile.id == null) {
-            currentFile = await window.api.getFileByPath(currentFile.path);
+            let tempFile = await window.api.getFileByPath(currentFile.path);
+            if(!tempFile) {
+                currentFile = files.find(file => file.path === currentFile.path);
+            } else {
+                currentFile = tempFile;
+            }
         } else {
             let tempFile = await window.api.getFileById(currentFile.id);
             if(!tempFile) {

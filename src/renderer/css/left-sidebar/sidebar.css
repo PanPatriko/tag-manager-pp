@@ -21,7 +21,7 @@
 
 #left-resize-handle {
     flex: auto;
-    width: 4px;
+    width: 2px;
     cursor: ew-resize;
     position: absolute;
     top: 0;
@@ -31,13 +31,11 @@
 }
 
 body.light-theme #left-resize-handle:hover {
-    right: -2px;
-    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.4);
-    background-color: var(--bg-bttn-hover);
+    right: -1px;
+    background-color: rgb(0, 128, 255, 0.8);
 }
 
 body.dark-theme #left-resize-handle:hover {
-    right: -2px;
-    box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 0.4);
-    background-color: var(--bg-bttn-hover);
+    right: -1px;
+    background-color: rgb(255, 128, 0, 0.8);
 }

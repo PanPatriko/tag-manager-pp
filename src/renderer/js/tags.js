@@ -1,6 +1,5 @@
 import { tags } from './state.js';
 import { addTag } from "./modals/fileTagModal.js";
-import { setInvertedColor } from './utils.js';
 
 document.addEventListener('click', (event) => {
     const tagElement = event.target.closest('.tag-item');
@@ -222,6 +221,7 @@ export function getTagHierarchySpan(tag) {
 
     return div;
 }
+
 export function getTagHierarchy(tag) {
     const completeTags = [tag];
     const tagIds = new Set([tag.id]);
@@ -240,8 +240,8 @@ export function getTagHierarchy(tag) {
     return completeTags;
 }
 
-export function renderTagsContainerTree(tagHierarchy) {
-    const container = document.getElementById('tags-container');
+function renderTagTree(containerId, tagHierarchy, tagClass, onClick) {
+    const container = document.getElementById(containerId);
 
     function createTagList(tags) {
         const ul = document.createElement("ul");
@@ -249,26 +249,16 @@ export function renderTagsContainerTree(tagHierarchy) {
             const li = document.createElement("li");
             const span = document.createElement("span");
             span.textContent = tag.name;
-            span.classList.add("tag-label", "tag-item");
+            tagClass.split(' ').forEach(cls => span.classList.add(cls));
             span.dataset.id = tag.id;
             span.style.color = tag.textcolor;
             span.style.backgroundColor = tag.color;
-            //setInvertedColor(span, tag.textcolor);
 
             li.appendChild(span);
 
-            span.addEventListener("click", () => {
-                const childUl = li.querySelector("ul");
-                if (childUl) {
-                    if (childUl.style.display === "none") {
-                        childUl.style.display = "block";
-                        li.classList.add("expanded");
-                    } else {
-                        childUl.style.display = "none";
-                        li.classList.remove("expanded");
-                    }   
-                }
-            });
+            if (onClick) {
+                span.addEventListener("click", () => onClick(tag, li));
+            }
 
             if (tag.children.length > 0) {
                 const childrenUl = createTagList(tag.children);
@@ -287,51 +277,44 @@ export function renderTagsContainerTree(tagHierarchy) {
     container.appendChild(tree);
 }
 
-export function renderFileTagsTree(tagHierarchy) {
-    const container = document.getElementById('file-tags-container');
-
-    function createTagList(tags) {
-        const ul = document.createElement("ul");
-        tags.forEach(tag => {
-            const li = document.createElement("li");
-            const span = document.createElement("span");
-            span.textContent = tag.name;
-            span.classList.add("tag-label", "file-tag-item");
-            span.dataset.id = tag.id;
-            span.style.color = tag.textcolor;
-            span.style.backgroundColor = tag.color;
-            //setInvertedColor(span, tag.textcolor);
-
-            li.appendChild(span);
-
-            span.addEventListener("click", () => {
-                const childUl = li.querySelector("ul");
-                if (childUl) {
-                    if (childUl.style.display === "none") {
-                        childUl.style.display = "block";
-                        li.classList.add("expanded");
-                    } else {
-                        childUl.style.display = "none";
-                        li.classList.remove("expanded");
-                    }   
+export function renderTagsContainerTree(tagHierarchy) {
+    renderTagTree(
+        'tags-container',
+        tagHierarchy,
+        'tag-label tag-item',
+        (tag, li) => {
+            const childUl = li.querySelector("ul");
+            if (childUl) {
+                if (childUl.style.display === "none") {
+                    childUl.style.display = "block";
+                    li.classList.add("expanded");
+                } else {
+                    childUl.style.display = "none";
+                    li.classList.remove("expanded");
                 }
-            });
-
-            if (tag.children.length > 0) {
-                const childrenUl = createTagList(tag.children);
-                childrenUl.style.display = "none";
-                li.classList.add("parent-li");
-                li.appendChild(childrenUl);
             }
+        }
+    );
+}
 
-            ul.appendChild(li);
-        });
-        return ul;
-    }
-
-    container.innerHTML = "";
-    const tree = createTagList(tagHierarchy);
-    container.appendChild(tree);
+export function renderFileTagsTree(tagHierarchy) {
+    renderTagTree(
+        'file-tags-container',
+        tagHierarchy,
+        'tag-label file-tag-item',
+        (tag, li) => {
+            const childUl = li.querySelector("ul");
+            if (childUl) {
+                if (childUl.style.display === "none") {
+                    childUl.style.display = "block";
+                    li.classList.add("expanded");
+                } else {
+                    childUl.style.display = "none";
+                    li.classList.remove("expanded");
+                }
+            }
+        }
+    );
 }
 
 export function renderModalFileTagsTree(tagHierarchy) {
@@ -347,7 +330,6 @@ export function renderModalFileTagsTree(tagHierarchy) {
             span.dataset.id = tag.id;
             span.style.color = tag.textcolor;
             span.style.backgroundColor = tag.color;
-            //setInvertedColor(span, tag.textcolor);
 
             li.appendChild(span);
 

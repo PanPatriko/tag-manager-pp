@@ -1,4 +1,4 @@
-import {tags, currentFile} from "../state.js"
+import { tags, currentFile} from "../state.js"
 import { openModalEditTag } from "../modals/tagModal.js"
 import { refreshTags } from "../leftSidebar/tagsPanel.js"
 import { adjustPosition } from "./contextMenu.js";
@@ -39,16 +39,8 @@ async function editTag(tagId) {
 }
 
 async function confirmDeleteFileTag(tagId) {
-    const result = await Swal.fire({
-        text: window.translations['confirm-del-tag'],
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: window.translations['ok'],
-        cancelButtonText: window.translations['cancel'],
-        customClass: {
-            popup: 'custom-swal-popup'
-        }
-    });
+    const result = await showPopup('', window.translations['confirm-del-tag'], 
+        'question', true);
 
     if (result.isConfirmed) {
         await window.api.deleteFileTag(currentFile.id, tagId);

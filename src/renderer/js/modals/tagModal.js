@@ -31,14 +31,7 @@ parentNameInput.addEventListener('input', () => {
             li.appendChild(div);
             li.addEventListener('click', () => {
                 if(isChildTag(currentTag, tag)) {
-                    Swal.fire({
-                        text: window.translations['tag-alert-not-allowed-parent-tag'],
-                        icon: 'warning',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            popup: 'custom-swal-popup'
-                        }
-                    });
+                    showPopup('', window.translations['tag-alert-not-allowed-parent-tag'], 'warning');
                     return;
                 }
                 parentNameInput.value = '';
@@ -74,15 +67,8 @@ modalOkButton.addEventListener('click', async () => {
     const textcolor = colorTextInput.value;
 
     if (tagNames.length === 0 || tagNames[0] === '') {
-        Swal.fire({
-            title: window.translations['tag-alert-empty-name-title'],
-            text: window.translations['tag-alert-empty-name'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup(window.translations['tag-alert-empty-name-title'], 
+            window.translations['tag-alert-empty-name'], 'warning');
         return;
     }
 

@@ -46,14 +46,7 @@ function renderLocationsAsDivs(locations) {
                 }
                 locDiv.classList.add("loc-active");
             } else {
-                Swal.fire({
-                    text: window.translations['dir-read-error'],
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        popup: 'custom-swal-popup'
-                    }
-                });
+                showPopup('', window.translations['dir-read-error'], 'error')
             }
         });
         return locDiv;

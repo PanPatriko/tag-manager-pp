@@ -71,7 +71,6 @@ ipcMain.handle('dbfiles:update-file-not-db', async (event, newFileName, oldFileP
   const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
   try {
     await fs.promises.rename(oldFilePath, newFilePath);
-
     return { success: true, newFilePath };
   } catch (error) {
     console.error('Error updating file name:', error);

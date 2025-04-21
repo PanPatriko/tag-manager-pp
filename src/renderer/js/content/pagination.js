@@ -31,14 +31,7 @@ prevDirButton.addEventListener('click', async () => {
             const parentLocation = await window.api.getDirectoryParent(currentLocation);
             displayDirectory(parentLocation);
         } catch(error) {
-            Swal.fire({
-                text: error,
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    popup: 'custom-swal-popup'
-                }
-            });
+            showPopup('', error, 'error');
         }
     }
 });

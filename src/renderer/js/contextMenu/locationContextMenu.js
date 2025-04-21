@@ -38,16 +38,8 @@ async function editLocation(locId) {
 }
 
 async function confirmDeleteLocation(locId) {
-    const result = await Swal.fire({
-        text: window.translations['confirm-del-loc'],
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: window.translations['ok'],
-        cancelButtonText: window.translations['cancel'],
-        customClass: {
-            popup: 'custom-swal-popup'
-        }
-    });
+    const result = await showPopup('', window.translations['confirm-del-loc'], 
+        'question', true);
 
     if (result.isConfirmed) {
         await window.api.deleteLocation(locId);

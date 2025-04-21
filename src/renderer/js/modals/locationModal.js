@@ -23,28 +23,14 @@ modalOkButton.addEventListener('click', async () => {
     const path = pathInput.value.trim();
 
     if (name == null || name === '') {
-        Swal.fire({
-            title: window.translations['loc-alert-empty-name-title'],
-            text: window.translations['loc-alert-empty-name'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup(window.translations['loc-alert-empty-name-title'], 
+            window.translations['loc-alert-empty-name'], 'warning')
         return;
     }
 
     if (path == null || path === '') {
-        Swal.fire({
-            title: window.translations['loc-alert-empty-path-title'],
-            text: window.translations['loc-alert-empty-path'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup(window.translations['loc-alert-empty-path-title'], 
+            window.translations['loc-alert-empty-path'], 'warning')
         return;
     }
     

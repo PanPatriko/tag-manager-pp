@@ -4,6 +4,7 @@ import { updateFilePages } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
+import { showPopup } from "../utils.js"
 
 const content = document.getElementById('content');
 const filesPanel = document.getElementById('files-panel');
@@ -192,14 +193,7 @@ export async function displayDirectory(dirPath) {
     const dirFiles = await window.api.getFilesInPath(dirPath);
     if (dirFiles.error) {
         console.error(dirFiles.error);
-        Swal.fire({
-            text: dirFiles.error,
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup("", dirFiles.error, 'error');
         return;
     }
 

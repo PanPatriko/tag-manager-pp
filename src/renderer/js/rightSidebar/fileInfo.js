@@ -71,14 +71,7 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                Swal.fire({
-                    text: window.translations['file-prev-name-save-error'] + result.error,
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        popup: 'custom-swal-popup'
-                    }
-                });
+                showPopup('', window.translations['file-prev-name-save-error'] + result.error, 'error');
             }
         } else {
             const result = await window.api.updateFileNotDB(newFileName, oldFilePath);
@@ -92,25 +85,11 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                Swal.fire({
-                    text: window.translations['file-prev-name-save-error'] + error,
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        popup: 'custom-swal-popup'
-                    }
-                });
+                showPopup('', window.translations['file-prev-name-save-error'] + error, 'error');
             }
         }      
     } catch (error) {
-        Swal.fire({
-            text: window.translations['file-prev-name-save-error'] + error,
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup('', window.translations['file-prev-name-save-error'] + error, 'error');
     }
 });
 

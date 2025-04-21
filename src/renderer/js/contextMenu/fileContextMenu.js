@@ -44,16 +44,8 @@ export function showFileContextMenu(x, y, fileId, filePath) {
 
 async function deleteFile(fileId) {
     if(fileId) {
-        const result = await Swal.fire({
-            text: window.translations['confirm-del-file'],
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: window.translations['ok'],
-            cancelButtonText: window.translations['cancel'],
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        const result = await showPopup('', window.translations['confirm-del-file'], 
+            'question', true);
     
         if (result.isConfirmed) {
             await window.api.deleteFileById(fileId);
@@ -69,15 +61,8 @@ async function deleteFile(fileId) {
             refreshFileInfo();
         }
     } else {
-        Swal.fire({
-            title: window.translations['cntx-menu-delete-file-no-id-title'],
-            text: window.translations['cntx-menu-delete-file-no-id'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup(window.translations['cntx-menu-delete-file-no-id-title'], 
+            window.translations['cntx-menu-delete-file-no-id'], 'warning');
     }    
 }
 
@@ -99,51 +84,22 @@ export async function copyTags(fileId) {
         if (tags.length > 0) {
             setCopiedTags(tags);
         } else {
-            Swal.fire({
-                text: window.translations['alert-file-no-tags'],
-                icon: 'warning',
-                confirmButtonText: 'OK',
-                customClass: {
-                    popup: 'custom-swal-popup'
-                }
-            });
-            
+            showPopup('', window.translations['alert-file-no-tags'], 'warning');       
         }
     } catch (error) {
         console.error('Error fetching tags:', error);
-        Swal.fire({
-            text: window.translations['alert-fetching-tags'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup('', window.translations['alert-fetching-tags'], 'warning');
     }
 }
 
 export async function pasteTags() {
     const selectedFiles = getSelectedFiles();
     if (selectedFiles.length === 0) {
-        Swal.fire({
-            text: window.translations['alert-no-files-selected'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup('', window.translations['alert-no-files-selected'], 'warning');
         return;
     }
     if (copiedTags === null) {
-        Swal.fire({
-            text: window.translations['alert-no-copied-tags'],
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup('', window.translations['alert-no-copied-tags'], 'warning');
         return;
     }
 
@@ -183,14 +139,7 @@ export async function pasteTags() {
             confirmButtonText: 'OK',
         });
     } else {
-        Swal.fire({
-            text: window.translations['alert-tags-paste-success'],
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'custom-swal-popup'
-            }
-        });
+        showPopup('', window.translations['alert-tags-paste-success'], 'success');
     }
 
     await refreshFileInfo();

@@ -1,5 +1,5 @@
-// Globalne zmienne
 export let files = [];
+export let currentFile = null;
 export let rootLocation = null;
 export let currentLocation = null;
 export let tags = [];
@@ -17,6 +17,14 @@ export let defTagTextColor = '#ffffff';
 // Settery
 export function setFiles(newFiles) {
     files = newFiles;
+}
+
+export function setCurrentFile(file) {
+    currentFile = file;
+}
+
+export function setCurrentFileId(id) {
+    currentFile.id = id;
 }
 
 export function setCurrentLoc(location) {

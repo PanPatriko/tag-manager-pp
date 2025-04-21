@@ -1,6 +1,6 @@
 import { addMissingParentTags, buildTagHierarchy, renderFileTagsTree, applyExpandedFileTags } from "../tags.js"
 import { displayFiles } from "../content/content.js"
-import { files } from "../state.js"
+import { files, currentFile, setCurrentFile } from "../state.js"
 
 const showFileInfoButton = document.getElementById('show-file-info');
 const fileInfoSection = document.getElementById('file-info');
@@ -14,8 +14,6 @@ const fileNameInput = document.getElementById('file-name');
 const fileNameSaveButton = document.getElementById('file-name-save');
 
 const fileTagsTree = document.getElementById('file-tags-container');
-
-export let currentFile = null;
 
 let isMouseOverSaveButton = false;
 
@@ -116,49 +114,25 @@ fileNameSaveButton.addEventListener('click', async () => {
     }
 });
 
-export async function createFileInfo(file) {
-    currentFile = file;
-    setFileInfo(file);
-}
-
 export async function refreshFileInfo() {
-    if(currentFile) {
-        if(currentFile.id == null) {
-            let tempFile = await window.api.getFileByPath(currentFile.path);
-            if(!tempFile) {
-                currentFile = files.find(file => file.path === currentFile.path);
-            } else {
-                currentFile = tempFile;
-            }
-        } else {
-            let tempFile = await window.api.getFileById(currentFile.id);
-            if(!tempFile) {
-                currentFile = files.find(file => file.path === currentFile.path);
-                if(currentFile) {
-                    currentFile.id = null;
-                }
-            } else {
-                currentFile = tempFile;
-            }
-        }
-        setFileInfo(currentFile);
+    if (currentFile) {
+        const updatedFile = await fetchFileInfo(currentFile);
+        setCurrentFile(updatedFile || currentFile);
+        await renderFileInfo(currentFile);
     }
 }
 
-async function setFileInfo(file) {
+export async function renderFileInfo(file) {
     fileTagsTree.innerHTML = "";
     fileTagsTree.dataset.i18n = "file-prev-no-tags";
     fileIdSpan.dataset.i18n = "file-prev-no-ID";
-    if(file) {  
-        if(file.id == null) {
-            fileIdSpan.textContent = window.translations['file-prev-no-ID'];
-        } else {
-            fileIdSpan.textContent = file.id;
-            fileIdSpan.dataset.i18n = null;
-        }
 
-        fileNameInput.value = `${file.name}`;
-        filePathInput.value = `${file.path}`;
+    if(file) {  
+        fileIdSpan.textContent = file.id ?? window.translations['file-prev-no-ID'];
+        fileIdSpan.dataset.i18n = file.id ? null : "file-prev-no-ID";
+
+        fileNameInput.value = file.name || "";
+        filePathInput.value = file.path || "";
 
         const tags = await window.api.getFileTags(file.id);
         if (!tags || tags.length === 0) {
@@ -175,5 +149,15 @@ async function setFileInfo(file) {
         filePathInput.value = "";
         const preview = document.getElementById('file-preview');
         preview.innerHTML = ''; 
+    }
+}
+
+async function fetchFileInfo(file) {
+    if (!file) return null;
+
+    if (file.id == null) {
+        return await window.api.getFileByPath(file.path);
+    } else {
+        return await window.api.getFileById(file.id);
     }
 }

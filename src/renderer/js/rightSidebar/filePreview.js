@@ -1,5 +1,5 @@
-import { createFileInfo } from "./fileInfo.js";
-import { vidLoop, vidAutoplay } from "../state.js";
+import { vidLoop, vidAutoplay, setCurrentFile } from "../state.js";
+import { renderFileInfo } from "./fileInfo.js";
 
 const preview = document.getElementById('file-preview');
 
@@ -35,7 +35,8 @@ export async function createFilePreview(file) {
         preview.dataset.i18n = "content-deleted-file";
         preview.textContent = window.translations['content-deleted-file'];
     }
-    createFileInfo(file);
+    setCurrentFile(file);
+    renderFileInfo(file);
 }
 
 function addListener(element) {   

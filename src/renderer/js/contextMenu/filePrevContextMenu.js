@@ -1,4 +1,4 @@
-import { currentFile } from "../rightSidebar/fileInfo.js";
+import { currentFile } from "../state.js";
 import { adjustPosition } from "./contextMenu.js";
 
 window.openFileExtPrev = openFileExtPrev

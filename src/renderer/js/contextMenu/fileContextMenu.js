@@ -1,7 +1,7 @@
-import { copiedTags, setCopiedTags, currentLocation, files, setFiles } from "../state.js"
+import { copiedTags, setCopiedTags, currentLocation, files, setFiles, currentFile, setCurrentFileId } from "../state.js"
 import { formatString } from "../i18n.js"
 import { openFileModal } from "../modals/fileTagModal.js"
-import { createFileInfo, refreshFileInfo } from "../rightSidebar/fileInfo.js"
+import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
 import { displayDirectory, displayFiles, getSelectedFiles } from "../content/content.js"
 import { adjustPosition } from "./contextMenu.js";
 
@@ -57,14 +57,16 @@ async function deleteFile(fileId) {
     
         if (result.isConfirmed) {
             await window.api.deleteFileById(fileId);
-            if(currentLocation) {
-                await displayDirectory(currentLocation);
-                refreshFileInfo();
-            } else {
-                setFiles(files.filter(f => f.id !== fileId));
-                displayFiles();
-                createFileInfo(null);
+            setFiles(files.filter(f => f.id !== fileId));
+            if (fileId === currentFile.id) {
+                setCurrentFileId(null);
             }
+            if(currentLocation) {
+                await displayDirectory(currentLocation);       
+            } else {              
+                displayFiles();
+            }
+            refreshFileInfo();
         }
     } else {
         Swal.fire({

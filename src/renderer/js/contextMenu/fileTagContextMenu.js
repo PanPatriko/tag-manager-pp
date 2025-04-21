@@ -1,8 +1,8 @@
-import {tags} from "../state.js"
+import {tags, currentFile} from "../state.js"
 import { openModalEditTag } from "../modals/tagModal.js"
 import { refreshTags } from "../leftSidebar/tagsPanel.js"
 import { adjustPosition } from "./contextMenu.js";
-import { currentFile, refreshFileInfo } from "../rightSidebar/fileInfo.js";
+import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
 window.editTag = editTag;
 window.confirmDeleteFileTag = confirmDeleteFileTag;

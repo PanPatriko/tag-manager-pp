@@ -1,8 +1,7 @@
 #content {
     display: grid;
     grid-template-rows: 0.05fr 0.05fr 0.05fr auto 1fr;
-    width: calc(100% - var(--left-sidebar-width, 15%) - var(--right-sidebar-width, 30%));
-    min-width: 20%;
+    width: 60%;
     border-bottom: var(--border);
 }
 

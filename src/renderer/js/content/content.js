@@ -4,12 +4,7 @@ import { updateFilePages } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
-import { showPopup } from "../utils.js"
-
-const content = document.getElementById('content');
-const filesPanel = document.getElementById('files-panel');
-const leftSidebar = document.getElementById('left-sidebar');
-const rightSidebar = document.getElementById('right-sidebar');
+//import { showPopup } from "../utils.js"
 
 const path = window.api.path;
 const sortByNameButton = document.getElementById('sort-by-name');
@@ -335,11 +330,4 @@ async function getThumbnailPath(filePath) {
     const thumbnailDirPath = await path.join(dir, thumbnailDir);
     const thumbnailPath = await path.join(thumbnailDirPath, `${base}${ext}.jpg`);
     return thumbnailPath;
-}
-
-export function updateContentWidth() {
-    const leftSidebarWidth = leftSidebar.classList.contains('hidden') ? 0 : Math.round(parseFloat(getComputedStyle(leftSidebar).width) / window.innerWidth * 100);
-    const rightSidebarWidth = rightSidebar.classList.contains('hidden') ? 0 : Math.round(parseFloat(getComputedStyle(rightSidebar).width) / window.innerWidth * 100);
-    const contentWidth = 100 - leftSidebarWidth - rightSidebarWidth;
-    content.style.width = `${contentWidth}%`;
 }

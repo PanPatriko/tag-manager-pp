@@ -7,7 +7,7 @@ import { setLanguage } from './i18n.js';
 
 import ('./header/searchBar.js');
 import ('./contextMenu/contextMenu.js')
-import ('./rightSidebar/rightSidebar.js')
+import ('./content/toggleSidebars.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
     const savedTheme = localStorage.getItem('theme') || 'light-theme';

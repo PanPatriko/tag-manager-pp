@@ -265,6 +265,8 @@ function renderTagTree(containerId, tagHierarchy, tagClass, onClick) {
                 childrenUl.style.display = "none";
                 li.classList.add("parent-li");
                 li.appendChild(childrenUl);
+            } else if (containerId === 'file-tags-container') {
+                li.classList.add("child-li");
             }
 
             ul.appendChild(li);
@@ -298,6 +300,7 @@ export function renderTagsContainerTree(tagHierarchy) {
 }
 
 export function renderFileTagsTree(tagHierarchy) {
+    //renderTagsAsDivs('file-tags-container', tagHierarchy);
     renderTagTree(
         'file-tags-container',
         tagHierarchy,
@@ -315,6 +318,27 @@ export function renderFileTagsTree(tagHierarchy) {
             }
         }
     );
+}
+
+function renderTagsAsDivs(containerId, tags) {
+    const tagsContainer = document.getElementById(containerId);
+
+    function createTagList(tags) {
+        tags.forEach((tag) => {
+            const tagDiv = document.createElement('div');
+            tagDiv.className = 'tag';
+            tagDiv.textContent = tag.name;
+            tagDiv.dataset.id = tag.id
+            tagDiv.style.color = tag.textcolor;
+            tagDiv.style.backgroundColor = tag.color;
+            tagsContainer.appendChild(tagDiv);
+            if (tag.children.length > 0) {
+                createTagList(tag.children);
+            }
+        });
+     }
+
+     createTagList(tags);
 }
 
 export function renderModalFileTagsTree(tagHierarchy) {

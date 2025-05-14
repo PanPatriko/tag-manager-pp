@@ -122,6 +122,11 @@ body input:disabled {
     border: 2px solid rgb(133, 133, 133);
 }
 
+.child-li {
+    display: flex !important;
+    flex-direction: column ;
+}
+
 body.light-theme .parent-li:hover {
     border: solid 2px rgba(0, 128, 255, 1);
 }

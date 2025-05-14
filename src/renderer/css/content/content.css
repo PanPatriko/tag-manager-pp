@@ -3,6 +3,7 @@
     grid-template-rows: 0.05fr 0.05fr 0.05fr auto 1fr;
     width: 60%;
     border-bottom: var(--border);
+    overflow-x: auto;
 }
 
 #loading-bar-container {

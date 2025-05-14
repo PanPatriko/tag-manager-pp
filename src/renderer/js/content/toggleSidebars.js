@@ -28,7 +28,7 @@ let startMiddleWidth = 0;
 let startRightWidth = 0;
 
 const MIN_SIDEBARS_WIDTH = 10;
-const MIN_CONTENT_WIDTH = 30;
+const MIN_CONTENT_WIDTH = 20;
 
 leftResizeHandle.addEventListener('mousedown', (e) => startResizing(e, 'left'));
 rightResizeHandle.addEventListener('mousedown', (e) => startResizing(e, 'right'));

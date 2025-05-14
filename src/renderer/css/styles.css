@@ -45,6 +45,7 @@ button {
     cursor: pointer;
     border: var(--border);
     transition: background-color 0.5s ease, transform 0.3s ease;
+    flex-shrink: 0;
 }
 
 button:hover {

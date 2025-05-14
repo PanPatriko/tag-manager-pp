@@ -4,6 +4,7 @@
     border-bottom: var(--border);
     border-top: var(--border);
     min-height: min-content;
+    overflow-x: auto;
 }
 
 body.light-theme .menu-element.active {

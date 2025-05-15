@@ -4,6 +4,7 @@
 
 #search-tags-container {
     width: 40%;
+    min-width: 100px;
     padding-left: 5px;
     max-height: var(--header-height);
     overflow-y: auto;
@@ -19,6 +20,7 @@
     cursor: pointer;
     font-size: smaller;
     transition: 0.5s;
+    white-space: nowrap;
 }
 
 body.light-theme .search-tag:hover {

@@ -115,17 +115,12 @@ body input:disabled {
     border-radius: 10px;
     cursor: pointer;
     word-wrap: break-word;
-    display: inline-table;
+    display: inline-grid;
 }
 
 .parent-li {
     padding: 2px;
     border: 2px solid rgb(133, 133, 133);
-}
-
-.child-li {
-    display: flex !important;
-    flex-direction: column ;
 }
 
 body.light-theme .parent-li:hover {

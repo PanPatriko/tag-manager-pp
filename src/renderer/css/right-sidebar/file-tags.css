@@ -5,3 +5,17 @@
     max-height: 250px;
     white-space: nowrap;
 } 
+
+#file-tags-container .root-li ul {
+    white-space: wrap;
+} 
+
+#file-tags-container .parent-li:not(.root-li) ul {
+    white-space: wrap;
+    max-width: 300px;
+}
+
+/* .child-li {
+    display: flex !important;
+    flex-direction: column ;
+} */

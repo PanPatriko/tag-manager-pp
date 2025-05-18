@@ -1,6 +1,6 @@
 {
   "name": "tag-manager-pp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "TagManagerPP - Tag Management for Files",
   "main": "src/main/main.js",
   "scripts": {

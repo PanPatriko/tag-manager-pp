@@ -1,9 +1,7 @@
 #file-tags-container {
-    display: flex;
-    flex-wrap: nowrap;
     gap: 10px; 
     margin: 5px;
     overflow-x: auto;
-    white-space: nowrap;
     max-height: 250px;
-}
+    white-space: nowrap;
+} 

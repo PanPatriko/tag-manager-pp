@@ -53,11 +53,6 @@ async function deleteFile(fileId) {
             if (fileId === currentFile.id) {
                 setCurrentFileId(null);
             }
-            if(currentLocation) {
-                await displayDirectory(currentLocation);       
-            } else {              
-                displayFiles();
-            }
             refreshFileInfo();
         }
     } else {

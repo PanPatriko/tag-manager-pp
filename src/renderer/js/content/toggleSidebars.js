@@ -8,7 +8,7 @@ const rightSidebarItems = document.querySelectorAll(".right-sidebar-item");
 const rightResizeHandle = document.getElementById('right-resize-handle');
 
 const fileInfoSection = document.getElementById('file-info');
-const fileTagsSection = document.getElementById('file-tags');
+const fileTagsSection = document.getElementById('file-container');
 
 const leftSidebar = document.getElementById("left-sidebar");
 const toggleLeftSidebar = document.getElementById("toggle-tag-sidebar");

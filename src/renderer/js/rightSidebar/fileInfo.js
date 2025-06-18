@@ -6,7 +6,6 @@ const showFileInfoButton = document.getElementById('show-file-info');
 const fileInfoSection = document.getElementById('file-info');
 
 const showFileTagsButton = document.getElementById('show-file-tags');
-const fileTagsSection = document.getElementById('file-tags');
 
 const fileIdSpan = document.getElementById('file-id');
 const filePathInput = document.getElementById('file-path');
@@ -14,8 +13,29 @@ const fileNameInput = document.getElementById('file-name');
 const fileNameSaveButton = document.getElementById('file-name-save');
 
 const fileTagsTree = document.getElementById('file-tags-container');
+const resizeHandle = document.getElementById('file-container-resize-handle');
 
+let isResizing = false;
 let isMouseOverSaveButton = false;
+
+document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+    const containerRect = fileTagsTree.parentElement.getBoundingClientRect();
+    let newWidth = e.clientX - containerRect.left;
+    fileTagsTree.style.width = newWidth + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+    if (isResizing) {
+        isResizing = false;
+        document.body.style.cursor = '';
+    }
+});
+
+resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    document.body.style.cursor = 'ew-resize';
+});
 
 fileNameSaveButton.addEventListener('mouseenter', () => {
     isMouseOverSaveButton = true;
@@ -31,7 +51,7 @@ showFileInfoButton.addEventListener('click', function() {
 });
 
 showFileTagsButton.addEventListener('click', function() {
-    fileTagsSection.classList.toggle('hidden');
+    fileTagsTree.classList.toggle('hidden');
     showFileTagsButton.classList.toggle('active');
 });
 

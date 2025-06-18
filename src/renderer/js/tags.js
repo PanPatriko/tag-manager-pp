@@ -260,17 +260,10 @@ function renderTagTree(containerId, tagHierarchy, tagClass, onClick) {
                 span.addEventListener("click", () => onClick(tag, li));
             }
 
-            if(tag.parent_id === null) {
-                    li.classList.add("root-li");
-            }
-
             if (tag.children.length > 0) {
                 const childrenUl = createTagList(tag.children);
                 childrenUl.style.display = "none";
-                li.classList.add("parent-li");
                 li.appendChild(childrenUl);
-            } else if (containerId === 'file-tags-container') {
-                li.classList.add("child-li");
             }
 
             ul.appendChild(li);

@@ -1,9 +1,10 @@
 #file-preview {
-    display: flex;
+    flex: 1 1 0%;
+    min-width: 0;
     overflow: hidden;
-    flex: 2;
+    display: flex;
     justify-content: center;
-    align-items: top;
+    align-items: flex-start;
     position: relative; 
 }
 

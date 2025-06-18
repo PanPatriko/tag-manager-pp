@@ -1,3 +1,7 @@
+#file-info {
+    flex: 0 0 auto;
+}
+
 #file-info.hidden {
     display: none;
 }

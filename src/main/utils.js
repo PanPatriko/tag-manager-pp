@@ -46,23 +46,59 @@ async function getDirectoryParent(directoryPath) {
     }
 }
 
+async function getVideoDimensions(filePath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(filePath, (err, metadata) => {
+            if (err) return reject(err);
+            const stream = metadata.streams.find(s => s.width && s.height);
+            if (stream) {
+                resolve({ width: stream.width, height: stream.height });
+            } else {
+                reject(new Error('No video stream found'));
+            }
+        });
+    });
+}
+
 async function generateThumbnail(filePath, thumbnailPath) {
     const extension = path.extname(filePath).slice(1);
-    if (['jpg', 'jpeg', 'png', 'gif'].includes(extension.toLowerCase())) {
+    const maxWidth = 400;
+    const maxHeight = 225;
+    if (["jpg", "jpeg", "png", "gif"].includes(extension.toLowerCase())) {
         await sharp(filePath)
-            .resize(400, 225, { fit: 'inside' })
+            .resize(maxWidth, maxHeight, { fit: "inside" })
             .toFile(thumbnailPath);
-    } else if (['mp4', 'webm'].includes(extension.toLowerCase())) {
+    } else if (["mp4", "webm"].includes(extension.toLowerCase())) {
+        // Get video dimensions
+        let size = `${maxWidth}x${maxHeight}`;
+        try {
+            const { width, height } = await getVideoDimensions(filePath);
+            let newWidth = width;
+            let newHeight = height;
+            const ratio = width / height;
+            if (width > maxWidth || height > maxHeight) {
+                if (width / maxWidth > height / maxHeight) {
+                    newWidth = maxWidth;
+                    newHeight = Math.round(maxWidth / ratio);
+                } else {
+                    newHeight = maxHeight;
+                    newWidth = Math.round(maxHeight * ratio);
+                }
+            }
+            size = `${newWidth}x${newHeight}`;
+        } catch (e) {
+            console.warn('Could not get video dimensions, using default size.', e);
+        }
         await new Promise((resolve, reject) => {
             ffmpeg(filePath)
                 .screenshots({
-                    timestamps: ['0'], // First frame
+                    timestamps: ["0"],
                     filename: path.basename(thumbnailPath),
                     folder: path.dirname(thumbnailPath),
-                    size: '400x225'
+                    size
                 })
-                .on('end', resolve)
-                .on('error', reject);
+                .on("end", resolve)
+                .on("error", reject);
         });
     } else {
         console.warn(`Cannot generate thumbnail for unsupported file type: ${extension}`);

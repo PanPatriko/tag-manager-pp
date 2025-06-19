@@ -263,6 +263,7 @@ function renderTagTree(containerId, tagHierarchy, tagClass, onClick) {
             if (tag.children.length > 0) {
                 const childrenUl = createTagList(tag.children);
                 childrenUl.style.display = "none";
+                li.classList.add("parent-li");
                 li.appendChild(childrenUl);
             }
 

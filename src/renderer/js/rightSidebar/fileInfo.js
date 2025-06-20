@@ -52,6 +52,7 @@ showFileInfoButton.addEventListener('click', function() {
 
 showFileTagsButton.addEventListener('click', function() {
     fileTagsTree.classList.toggle('hidden');
+    resizeHandle.classList.toggle('hidden');
     showFileTagsButton.classList.toggle('active');
 });
 

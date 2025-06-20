@@ -8,6 +8,7 @@ import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
 
 const path = window.api.path;
 const sortByNameButton = document.getElementById('sort-by-name');
+const dirNameSpan = document.getElementById('dir-name');
 
 const loadingBarContainer = document.getElementById('loading-bar-container');
 const loadingBar = document.getElementById('loading-bar');
@@ -209,7 +210,8 @@ export async function displayDirectory(dirPath) {
     } else {
         prevDirBttn.disabled = false;
     }
-    document.getElementById('dir-name').textContent = await path.basename(dirPath, "");
+    dirNameSpan.classList.remove('hidden');
+    dirNameSpan.textContent = await path.basename(dirPath, "");
     setCurrentLoc(dirPath);
     setFiles(dirFiles);
     displayFiles();

@@ -18,7 +18,10 @@
 }
 
 body, html {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
     overflow-x: hidden;
     overflow-y: auto;
     transition: 0.5s;
@@ -35,8 +38,9 @@ body.dark-theme {
 }
 
 #app {
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
-    height: 100vh;
 }
 
 button {
@@ -83,19 +87,45 @@ span, label {
     transition: 0.3s;
 }
 
+body.light-theme .color-span {
+    background: linear-gradient(135deg, #dadada, #b9cee2);
+    color: var(--light-text);
+}
+
+body.dark-theme .color-span {
+    background: linear-gradient(135deg, #0f0f0f, #4d3e32);
+    color: var(--dark-text);
+}
+
+body.light-theme .color-span:hover {
+    border: 1px solid rgb(0, 128, 255) !important;
+}
+
+body.dark-theme .color-span:hover {
+    border: 1px solid rgb(255, 128, 0) !important;
+}
+
 input {
     border: var(--border);
     transition:0.5s;
 }
 
 body.light-theme input {
-    background: linear-gradient(135deg, #dadada, #bac7d3);
+    background: linear-gradient(135deg, #dadada, #b9cee2);
     color: var(--light-text);
 }
 
 body.dark-theme input {
-    background: linear-gradient(135deg, #0f0f0f, #423838);
+    background: linear-gradient(135deg, #0f0f0f, #4d3e32);
     color: var(--dark-text);
+}
+
+body.light-theme input:hover {
+    border: 1px solid rgb(0, 128, 255);
+}
+
+body.dark-theme input:hover {
+    border: 1px solid rgb(255, 128, 0);
 }
 
 body input:disabled {
@@ -183,6 +213,28 @@ body.dark-theme .parent-li.expanded:hover {
     background-size: 75%;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+body.light-theme .ico-bttn.active {
+    border: 2px solid rgb(0, 128, 255);
+}
+
+body.dark-theme .ico-bttn.active {
+    border: 2px solid rgb(255, 128, 0);
+}
+
+.resize-handle {
+    width: 2px;
+    cursor: ew-resize;
+    z-index: 9;
+}
+
+body.light-theme .resize-handle:hover {
+    background-color: rgb(0, 128, 255) !important;
+}
+
+body.dark-theme .resize-handle:hover {
+    background-color: rgb(255, 128, 0) !important;
 }
 
 .highlight {

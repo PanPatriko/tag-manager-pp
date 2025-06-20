@@ -1,4 +1,5 @@
 header {
+    flex: 0 0 auto;
     display: flex;   
     box-sizing: border-box;
     border-bottom: var(--border);
@@ -11,4 +12,8 @@ header {
 
 #toggle-file-sidebar {
     background-image: url('../../images/right-arrow.png');
+}
+
+#theme-toggle {
+    background-image: url('../../images/theme.png');
 }

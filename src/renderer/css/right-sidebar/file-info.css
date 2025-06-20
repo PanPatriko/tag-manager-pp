@@ -2,10 +2,6 @@
     flex: 0 0 auto;
 }
 
-#file-info.hidden {
-    display: none;
-}
-
 #fileinfo-container {
     list-style-type: none;
     padding: 0;
@@ -27,38 +23,12 @@
     text-align: center;
 }
 
-body.light-theme #fileinfo-container span {
-    background: linear-gradient(135deg, #dadada, #bac7d3);
-    color: var(--light-text);
-}
-
-body.dark-theme #fileinfo-container span {
-    background: linear-gradient(135deg, #0f0f0f, #423838);
-    color: var(--dark-text);
-}
-
 #fileinfo-container input {
     margin: 0 5px 0 5px;
     width: 100%;
     border-radius: 15px;
     padding: 5px;
     font-size: medium;
-}
-
-body.light-theme #fileinfo-container span:hover {
-    border: 1px solid rgb(0, 128, 255);
-}
-
-body.dark-theme #fileinfo-container span:hover {
-    border: 1px solid rgb(255, 128, 0);
-}
-
-body.light-theme #fileinfo-container input:hover {
-    border: 1px solid rgb(0, 128, 255);
-}
-
-body.dark-theme #fileinfo-container input:hover {
-    border: 1px solid rgb(255, 128, 0);
 }
 
 #file-name-save {

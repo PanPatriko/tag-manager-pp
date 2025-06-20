@@ -66,7 +66,7 @@ searchButton.addEventListener('click', async function() {
     setFiles(newFiles);
     displayFiles();
     document.getElementById('prev-directory').disabled = true;
-    document.getElementById('dir-name').textContent = "";
+    document.getElementById('dir-name').classList.add('hidden');
 });
 
 function createSuggestionButton(operationSign, operation, tag) {

@@ -1,10 +1,7 @@
 #location-panel {
-    overflow-y: auto;
-}
-
-#locations {
     display: flex;
-    flex-direction: column;
+    flex-direction: column;   
+    overflow-y: auto;
 }
 
 #add-location {

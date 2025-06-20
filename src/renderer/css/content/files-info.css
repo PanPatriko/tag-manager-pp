@@ -1,15 +1,36 @@
 #files-info {
+    flex: 0 0 auto;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    border-bottom: var(--border);
+    overflow: auto;
 }
 
-#files-info label{
-    margin: 0;
-    padding-left: 15px;
-    padding-right: 15px;
+#files-info > * {
+    flex-shrink: 0;
+}
+
+#files-info span {
+    margin: 5px;
+    padding: 5px;
+    border: var(--border);
+    border-radius: 15px;
 }
 
 #sort-by-name {
     background-image: url('../../images/sort-up-az.png');
+}
+
+#prev-directory {
+    background-image: url('../../images/directory-up.png');
+}
+
+#prev-page {
+    background-image: url('../../images/left-arrow.png');
+}
+
+#next-page {
+    background-image: url('../../images/right-arrow.png');
 }

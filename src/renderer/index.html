@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TagManagerPP 1.1.1</title>
+    <title>TagManagerPP 1.2.0</title>
     <link rel="stylesheet" href="css/header/header.css">
     <link rel="stylesheet" href="css/header/search-bar.css">
     <link rel="stylesheet" href="css/header/search-suggestions.css">
@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="css/content/content.css">
     <link rel="stylesheet" href="css/content/files-panel.css">
     <link rel="stylesheet" href="css/content/files-info.css">
-    <link rel="stylesheet" href="css/content/pagination-controls.css">
     <link rel="stylesheet" href="css/modals/modal.css">
     <link rel="stylesheet" href="css/modals/location-modal.css">
     <link rel="stylesheet" href="css/modals/tag-modal.css">
@@ -32,17 +31,27 @@
 </head>
 
 <body>
+    <header>
+        <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
+        <button id="theme-toggle" class="ico-bttn" data-i18n-title="title-theme"></button>
+        <div id="search-container">
+            <input type="text" id="search-input" data-i18n-placeholder="header-search-placeholder">
+            <button id="search-button" class="ico-bttn" data-i18n-title="title-search"></button>
+            <ul id="search-suggestions" class="suggestions-container"></ul>
+        </div>
+        <div id="search-tags-container"></div>
+        <button id="toggle-file-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
+    </header>
     <div id="app">
         <aside id="left-sidebar">
-            <div id="left-resize-handle" class="left-sidebar-item"></div>
+            <div id="left-resize-handle" class="left-sidebar-item resize-handle"></div>
             <div id="left-sidebar-menu" class="left-sidebar-item">
                 <button id="settings-button" class="menu-element ico-bttn" data-panel="settings-panel"
                     data-i18n-title="title-settings"></button>
                 <button id="location-button" class="menu-element ico-bttn" data-panel="location-panel"
                     data-i18n-title="title-locations"></button>
                 <button id="tags-button" class="menu-element ico-bttn" data-panel="tags-panel"
-                    data-i18n-title="title-tags"></button>
-                <button id="theme-toggle" class="ico-bttn" data-i18n-title="title-theme"></button>
+                    data-i18n-title="title-tags"></button>                
             </div>
             <div id="settings-panel" class="left-sidebar-item">
                 <ul id="settings-container">
@@ -94,41 +103,23 @@
                 </ul>
             </div>
             <div id="tags-panel" class="left-sidebar-item">
-                <section id="tags">
-                    <button id="add-tag" data-i18n="tag-add"></button>
-                    <div id="tags-container" class="tags-view"></div>
-                </section>
+                <button id="add-tag" data-i18n="tag-add"></button>
+                <div id="tags-container" class="tags-view"></div>
             </div>
             <div id="location-panel" class="left-sidebar-item">
-                <span for="directory-container" data-i18n="loc-directory-container"></span>
                 <ul id="directory-container"></ul>
-                <section id="locations">
-                    <button id="add-location" data-i18n="loc-add"></button>
-                    <div id="location-container" class="location-view"></div>
-                </section>
+                <button id="add-location" data-i18n="loc-add"></button>
+                <div id="location-container" class="location-view"></div>
             </div>
         </aside>
         <section id="content">
-            <header>
-                <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
-                <div id="search-container">
-                    <input type="text" id="search-input" data-i18n-placeholder="header-search-placeholder">
-                    <button id="search-button" class="ico-bttn" data-i18n-title="title-search"></button>
-                    <ul id="search-suggestions" class="suggestions-container"></ul>
-                </div>
-                <div id="search-tags-container"></div>
-                <button id="toggle-file-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
-            </header>
             <section id="files-info">
                 <button id="sort-by-name" class="ico-bttn" data-i18n-title="title-sort-by-name"></button>
-                <label id="current-files"></label>
-                <label id="selected-file-count"></label>
-                <label id="total-file-count"></label>
-            </section>
-            <section id="pagination-controls">
-                <label id="dir-name"></label>
+                <span id="current-files" class="color-span"></span>
+                <span id="selected-file-count" class="color-span"></span>
+                <span id="total-file-count" class="color-span"></span>
                 <button id="prev-directory" class="ico-bttn" data-i18n-title="title-up-dir" disabled></button>
-                <label for="file-pages" data-i18n="content-page"></label>
+                <span id="dir-name" class="hidden color-span"></span>
                 <select id="file-pages"></select>
                 <button id="prev-page" class="ico-bttn" data-i18n-title="title-prev-page"></button>
                 <button id="next-page" class="ico-bttn" data-i18n-title="title-next-page"></button>
@@ -140,7 +131,7 @@
             </section>
         </section>
         <aside id="right-sidebar">
-            <div id="right-resize-handle" class="right-sidebar-item"></div>
+            <div id="right-resize-handle" class="right-sidebar-item resize-handle"></div>
             <div id="right-sidebar-menu" class="right-sidebar-item">
                 <button id="show-file-info" class="right-sidebar-item ico-bttn active"
                     data-i18n-title="title-file-info"></button>
@@ -151,7 +142,7 @@
             <section id="file-info" class="right-sidebar-item">
                 <ul id="fileinfo-container">
                     <li>
-                        <span id="file-id" data-i18n="file-prev-no-ID" data-i18n-title="title-file-id"></span>
+                        <span id="file-id" class="color-span" data-i18n="file-prev-no-ID" data-i18n-title="title-file-id"></span>
                         <input id="file-name" data-i18n-title="title-file-name"></input>
                         <button id="file-name-save" data-i18n="save" hidden></button>
                     </li>
@@ -162,7 +153,7 @@
             </section>
             <section id="file-container" class="right-sidebar-item">
                 <div id="file-tags-container" class="tags-view"></div>
-                <div id="file-container-resize-handle"></div>
+                <div id="file-container-resize-handle" class="resize-handle"></div>
                 <div id="file-preview"></div>
             </section>
         </aside>

@@ -1,22 +1,10 @@
 #left-sidebar-menu {
     display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
     justify-content: center;
     border-bottom: var(--border);
-    border-top: var(--border);
-    min-height: min-content;
-    overflow-x: auto;
-}
-
-body.light-theme .menu-element.active {
-    border: 2px solid rgb(0, 128, 255);
-}
-
-body.dark-theme .menu-element.active {
-    border: 2px solid rgb(255, 128, 0);
-}
-
-#theme-toggle {
-    background-image: url('../../images/theme.png');
+    overflow: auto;
 }
 
 #tags-button {

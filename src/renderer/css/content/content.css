@@ -1,9 +1,8 @@
 #content {
-    display: grid;
-    grid-template-rows: 0.05fr 0.05fr 0.05fr auto 1fr;
+    display: flex;
+    flex-direction: column;
     width: 60%;
     border-bottom: var(--border);
-    overflow-x: auto;
 }
 
 #loading-bar-container {

@@ -1,12 +1,8 @@
-:root {
-    --header-height: calc(100vh * 0.05);
-}
-
 #search-tags-container {
-    width: 40%;
+    width: 60%;
     min-width: 100px;
     padding-left: 5px;
-    max-height: var(--header-height);
+    max-height: 50px;
     overflow-y: auto;
     display: flex;
     flex-wrap: wrap;

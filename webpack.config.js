@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/main/index.js',
+    entry: './src/renderer/js/rendererEntry.js',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, './src/renderer/webpack'),
@@ -9,13 +9,16 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                 },
             }
         ],
+    },
+    resolve: {
+        extensions: ['.js', '.jsx'],
     },
     mode: 'development',
 };

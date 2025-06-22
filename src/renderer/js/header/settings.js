@@ -4,6 +4,9 @@ import { displayFiles } from "../content/content.js";
 import { setLanguage } from "../i18n.js";
 
 const themeToggleButton = document.getElementById('theme-toggle');
+const settingsButton = document.getElementById('settings-button');
+const closeSettingsModal = document.getElementById('close-settings-modal');
+const settingsModal = document.getElementById('settings-modal');
 
 const iconSizeSelect = document.getElementById('icon-size');
 const maxFilesSelect = document.getElementById('max-files');
@@ -49,6 +52,14 @@ themeToggleButton.addEventListener('click', () => {
     document.body.classList.add(newTheme);
 
     localStorage.setItem('theme', newTheme);
+});
+
+settingsButton.addEventListener('click', () => {
+    settingsModal.classList.remove('hidden');
+});
+
+closeSettingsModal.addEventListener('click', () => {
+    settingsModal.classList.add('hidden');
 });
 
 iconSizeSelect.addEventListener('change', (e) => {

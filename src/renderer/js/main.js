@@ -2,7 +2,7 @@ import { refreshTags } from './leftSidebar/tagsPanel.js'
 import { refreshLocations } from './leftSidebar/locations.js';
 import { showActivePanel } from './leftSidebar/leftSidebar.js';
 import { setIconSize, setMaxFilesPerPage, setVidAutoplay, setVidLoop, setDefTagBgColor, setDefTagTextColor } from './state.js';
-import { setFilesPanelGapAndPadding } from './leftSidebar/settings.js';
+import { setFilesPanelGapAndPadding } from './header/settings.js';
 import { setLanguage } from './i18n.js';
 
 import ('./header/searchBar.js');

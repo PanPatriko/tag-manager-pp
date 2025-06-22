@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="css/header/search-tags.css">
     <link rel="stylesheet" href="css/left-sidebar/sidebar.css">
     <link rel="stylesheet" href="css/left-sidebar/menu.css">
-    <link rel="stylesheet" href="css/left-sidebar/settings-panel.css">
     <link rel="stylesheet" href="css/left-sidebar/tags-panel.css">
     <link rel="stylesheet" href="css/left-sidebar/locations.css">
     <link rel="stylesheet" href="css/right-sidebar/sidebar.css">
@@ -26,6 +25,7 @@
     <link rel="stylesheet" href="css/modals/location-modal.css">
     <link rel="stylesheet" href="css/modals/tag-modal.css">
     <link rel="stylesheet" href="css/modals/file-tag-modal.css">
+    <link rel="stylesheet" href="css/modals/settings-modal.css">
     <link rel="stylesheet" href="css/context-menu.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -34,6 +34,7 @@
     <header>
         <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
         <button id="theme-toggle" class="ico-bttn" data-i18n-title="title-theme"></button>
+        <button id="settings-button" class="ico-bttn" data-i18n-title="title-settings"></button>
         <div id="search-container">
             <input type="text" id="search-input" data-i18n-placeholder="header-search-placeholder">
             <button id="search-button" class="ico-bttn" data-i18n-title="title-search"></button>
@@ -46,61 +47,10 @@
         <aside id="left-sidebar">
             <div id="left-resize-handle" class="left-sidebar-item resize-handle"></div>
             <div id="left-sidebar-menu" class="left-sidebar-item">
-                <button id="settings-button" class="menu-element ico-bttn" data-panel="settings-panel"
-                    data-i18n-title="title-settings"></button>
                 <button id="location-button" class="menu-element ico-bttn" data-panel="location-panel"
                     data-i18n-title="title-locations"></button>
                 <button id="tags-button" class="menu-element ico-bttn" data-panel="tags-panel"
                     data-i18n-title="title-tags"></button>                
-            </div>
-            <div id="settings-panel" class="left-sidebar-item">
-                <ul id="settings-container">
-                    <li>
-                        <span data-i18n="settings-lang"></span>
-                        <select id="language-select">
-                            <option value="en" data-i18n="settings-lang-en"></option>
-                            <option value="pl" data-i18n="settings-lang-pl"></option>
-                        </select>
-                    </li>
-                    <li>
-                        <span data-i18n="settings-file-icon-size"></span>
-                        <select id="icon-size">
-                            <option value="50">50px</option>
-                            <option value="100">100px</option>
-                            <option value="125">125px</option>
-                            <option value="150">150px</option>
-                            <option value="200">200px</option>
-                        </select>
-                    </li>
-                    <li>
-                        <span data-i18n="settings-max-files-on-page"></span>
-                        <select id="max-files">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="250">250</option>
-                            <option value="500">500</option>
-                        </select>
-                    </li>
-                    <li>
-                        <span data-i18n="settings-vid-auto-play"></span>
-                        <input type="checkbox" id="vid-autoplay">
-                    </li>
-                    <li>
-                        <span data-i18n="settings-vid-loop"></span>
-                        <input type="checkbox" id="vid-loop">
-                    </li>
-                    <li>
-                        <span data-i18n="settings-def-tag-bgcolor"></span>
-                        <input type="color" id="def-tag-bgcolor">
-                    </li>
-                    <li>
-                        <span data-i18n="settings-def-tag-textcolor"></span>
-                        <input type="color" id="def-tag-textcolor">
-                    </li>
-                </ul>
             </div>
             <div id="tags-panel" class="left-sidebar-item">
                 <button id="add-tag" data-i18n="tag-add"></button>
@@ -157,6 +107,59 @@
                 <div id="file-preview"></div>
             </section>
         </aside>
+    </div>
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" id="close-settings-modal">&times;</span>
+            <ul id="settings-container">
+                <li>
+                    <span data-i18n="settings-lang"></span>
+                    <select id="language-select">
+                        <option value="en" data-i18n="settings-lang-en"></option>
+                        <option value="pl" data-i18n="settings-lang-pl"></option>
+                    </select>
+                </li>
+                <li>
+                    <span data-i18n="settings-file-icon-size"></span>
+                    <select id="icon-size">
+                        <option value="50">50px</option>
+                        <option value="100">100px</option>
+                        <option value="125">125px</option>
+                        <option value="150">150px</option>
+                        <option value="200">200px</option>
+                    </select>
+                </li>
+                <li>
+                    <span data-i18n="settings-max-files-on-page"></span>
+                    <select id="max-files">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                    </select>
+                </li>
+                <li>
+                    <span data-i18n="settings-vid-auto-play"></span>
+                    <input type="checkbox" id="vid-autoplay">
+                </li>
+                <li>
+                    <span data-i18n="settings-vid-loop"></span>
+                    <input type="checkbox" id="vid-loop">
+                </li>
+                <li>
+                    <span data-i18n="settings-def-tag-bgcolor"></span>
+                    <input type="color" id="def-tag-bgcolor">
+                </li>
+                <li>
+                    <span data-i18n="settings-def-tag-textcolor"></span>
+                    <input type="color" id="def-tag-textcolor">
+                </li>
+            </ul>
+            </div>
+        </div>
     </div>
     <div id="tag-form-modal" class="modal hidden">
         <div class="modal-content">

@@ -17,3 +17,7 @@ header {
 #theme-toggle {
     background-image: url('../../images/theme.png');
 }
+
+#settings-button {
+    background-image: url('../../images/settings.png');
+}

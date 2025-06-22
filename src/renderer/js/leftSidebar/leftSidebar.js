@@ -23,7 +23,7 @@ export function showActivePanel() {
     if (activePanel) {
         showPanel(activePanel);
     } else {
-        showPanel('settings-panel');
+        showPanel('location-panel');
     }
 }
 

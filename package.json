@@ -12,7 +12,10 @@
   "author": "Patriko P",
   "license": "ISC",
   "babel": {
-    "presets": ["@babel/preset-env", "@babel/preset-react"]
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
@@ -27,8 +30,11 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "fluent-ffmpeg": "^2.1.3",
+    "i18next": "^25.2.1",
+    "i18next-http-backend": "^3.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-i18next": "^15.5.3",
     "sharp": "^0.33.5",
     "sqlite3": "^5.1.7",
     "sweetalert2": "^11.16.0"

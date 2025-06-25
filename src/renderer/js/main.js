@@ -10,8 +10,6 @@ import ('./contextMenu/contextMenu.js')
 import ('./content/toggleSidebars.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const savedTheme = localStorage.getItem('theme') || 'light-theme';
-    document.body.className = savedTheme;
 
     const savedLanguage = localStorage.getItem('language') || 'en';
     document.getElementById('language-select').value = savedLanguage;

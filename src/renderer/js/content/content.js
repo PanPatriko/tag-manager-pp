@@ -1,6 +1,6 @@
 import { currentPage, maxFilesPerPage, iconSize, files, setFiles, thumbnailDir, rootLocation, setCurrentLoc} from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
-import { updateFilePages } from "./pagination.js"
+import { updateFilePages, pushToHistory } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
@@ -204,7 +204,7 @@ export async function displayDirectory(dirPath) {
         }
     }
 
-    const prevDirBttn = document.getElementById('prev-directory');
+    const prevDirBttn = document.getElementById('parent-directory');
     if(rootLocation === dirPath) {     
         prevDirBttn.disabled = true;
     } else {
@@ -276,6 +276,7 @@ export async function displayFiles() {
             thumbnail.src = 'images/folder-256.png';      
             container.className = 'directory-container';
             container.addEventListener ('dblclick', async (e) => {
+                pushToHistory({ type: 'directory', path: file.path });
                 displayDirectory(file.path);
             });   
         } else {               

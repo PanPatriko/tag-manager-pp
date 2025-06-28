@@ -84,7 +84,7 @@
     "title-theme": "Toogle theme",
     "title-sidebar": "Show/Hide Sidebar",
     "title-search": "Search",
-    "title-up-dir": "Open parent directory",
+    "title-up-dir": "Up to parent directory",
     "title-sort-by-name": "Sort by name",
     "title-prev-page": "Previous page",
     "title-next-page": "Next page",
@@ -100,5 +100,7 @@
     "ok": "OK",
     "cancel": "Cancel",
     "browse": "Browse",
-    "save": "Save"
+    "save": "Save",
+    "next": "Next",
+    "back": "Back"
 }

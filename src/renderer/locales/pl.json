@@ -84,7 +84,7 @@
     "title-theme": "Zmień styl",
     "title-sidebar": "Pokaż/Schowaj panel boczny",
     "title-search": "Szukaj",
-    "title-up-dir": "Otwórz folder nadrzędny",
+    "title-up-dir": "W górę do folderu nadrzędny",
     "title-sort-by-name": "Sortuj po nazwie",
     "title-prev-page": "Poprzednia strona",
     "title-next-page": "Następna strona",
@@ -100,5 +100,7 @@
     "ok": "OK",
     "cancel": "Anuluj",
     "browse": "Przeglądaj",
-    "save": "Zapisz"
+    "save": "Zapisz",
+    "next": "Dalej",
+    "back": "Wstecz"
 }

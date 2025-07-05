@@ -4,6 +4,7 @@ import { showActivePanel } from './leftSidebar/leftSidebar.js';
 import { setIconSize, setMaxFilesPerPage, setVidAutoplay, setVidLoop, setDefTagBgColor, setDefTagTextColor } from './state.js';
 import { setFilesPanelGapAndPadding } from './header/settings.js';
 import { setLanguage } from './i18n.js';
+import { restoreSidebarState } from './content/toggleSidebars.js';
 
 import ('./header/searchBar.js');
 import ('./contextMenu/contextMenu.js')
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('def-tag-textcolor').value = defTagTextColor;
     setDefTagTextColor(defTagTextColor);
 
+    restoreSidebarState();
     showActivePanel();
     refreshTags();
     refreshLocations();

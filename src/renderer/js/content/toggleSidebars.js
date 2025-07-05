@@ -27,8 +27,8 @@ let startLeftWidth = 0;
 let startMiddleWidth = 0;
 let startRightWidth = 0;
 
-const MIN_SIDEBARS_WIDTH = 5;
-const MIN_CONTENT_WIDTH = 10;
+const MIN_SIDEBARS_WIDTH = 10;
+const MIN_CONTENT_WIDTH = 15;
 
 leftResizeHandle.addEventListener('mousedown', (e) => startResizing(e, 'left'));
 rightResizeHandle.addEventListener('mousedown', (e) => startResizing(e, 'right'));
@@ -62,6 +62,7 @@ toggleRightSidebarButton.addEventListener("click", () => {
     }
 
     updateContentWidth();
+    saveSidebarState();
 });
 
 toggleLeftSidebar.addEventListener("click", () => {
@@ -84,6 +85,7 @@ toggleLeftSidebar.addEventListener("click", () => {
     }
 
     updateContentWidth();
+    saveSidebarState();
 });
 
 function startResizing(e, direction) {
@@ -132,6 +134,9 @@ function resize(e) {
             //leftSidebar.style.width = `${Math.round(100 - newMiddleWidth - newRightWidth)}%`;
         } 
     }
+    
+    saveSidebarState();
+
 }
 
 function stopResizing() {
@@ -168,6 +173,34 @@ function updateContentWidth() {
     content.style.width = `${contentWidth}%`;
 }
 
-export function getComputedWidth(element) {
+function getComputedWidth(element) {
     return Math.round(parseFloat(getComputedStyle(element).width) / window.innerWidth * 100);
+}
+
+function saveSidebarState() {
+    localStorage.setItem('leftSidebarWidth', lastLeftSidebarWidth);
+    localStorage.setItem('rightSidebarWidth', lastRightSidebarWidth);
+    localStorage.setItem('leftSidebarHidden', leftSidebar.classList.contains('hidden'));
+    localStorage.setItem('rightSidebarHidden', rightSidebar.classList.contains('hidden'));
+}
+
+export function restoreSidebarState() {
+    const leftWidth = parseInt(localStorage.getItem('leftSidebarWidth'), 10);
+    const rightWidth = parseInt(localStorage.getItem('rightSidebarWidth'), 10);
+    const leftHidden = localStorage.getItem('leftSidebarHidden') === 'true';
+    const rightHidden = localStorage.getItem('rightSidebarHidden') === 'true';
+
+    if (!isNaN(leftWidth)) lastLeftSidebarWidth = leftWidth;
+    if (!isNaN(rightWidth)) lastRightSidebarWidth = rightWidth;
+
+    leftSidebar.style.width = leftHidden ? "0%" : `${lastLeftSidebarWidth}%`;
+    rightSidebar.style.width = rightHidden ? "0%" : `${lastRightSidebarWidth}%`;
+
+    if (leftHidden) leftSidebar.classList.add('hidden');
+    else leftSidebar.classList.remove('hidden');
+
+    if (rightHidden) rightSidebar.classList.add('hidden');
+    else rightSidebar.classList.remove('hidden');
+
+    updateContentWidth();
 }

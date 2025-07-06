@@ -19,18 +19,35 @@
     border-radius: 15px;
 }
 
+#file-pages {
+    border-radius: 15px;
+    width: auto;
+    height: 3em;
+    margin: 5px;
+}
+
 #sort-by-name {
     background-image: url('../../images/sort-up-az.png');
 }
 
-#prev-directory {
+#parent-directory {
     background-image: url('../../images/directory-up.png');
 }
 
+#prev-button {
+    background-image: url('../../images/back-arrow.png');
+}
+
+#next-button {
+    background-image: url('../../images/next-arrow.png');
+}
+
 #prev-page {
-    background-image: url('../../images/left-arrow.png');
+    background-image: url('../../images/left-arrow-1.png');
+    background-size: 50%;
 }
 
 #next-page {
-    background-image: url('../../images/right-arrow.png');
+    background-image: url('../../images/right-arrow-1.png');
+    background-size: 50%;
 }

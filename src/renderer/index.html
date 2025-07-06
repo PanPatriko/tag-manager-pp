@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TagManagerPP 1.2.0</title>
+    <title>TagManagerPP 1.3.0</title>
     <link rel="stylesheet" href="css/header/header.css">
     <link rel="stylesheet" href="css/header/search-bar.css">
     <link rel="stylesheet" href="css/header/search-suggestions.css">
@@ -68,10 +68,12 @@
                 <span id="current-files" class="color-span"></span>
                 <span id="selected-file-count" class="color-span"></span>
                 <span id="total-file-count" class="color-span"></span>
-                <button id="prev-directory" class="ico-bttn" data-i18n-title="title-up-dir" disabled></button>
-                <span id="dir-name" class="hidden color-span"></span>
-                <select id="file-pages"></select>
+                <button id="parent-directory" class="ico-bttn" data-i18n-title="title-up-dir" disabled></button>
+                <button id="prev-button" class="ico-bttn" data-i18n-title="back"  disabled></button>
+                <button id="next-button" class="ico-bttn" data-i18n-title="next"  disabled></button>
+                <span id="dir-name" class="hidden color-span"></span>             
                 <button id="prev-page" class="ico-bttn" data-i18n-title="title-prev-page"></button>
+                <select id="file-pages"></select>
                 <button id="next-page" class="ico-bttn" data-i18n-title="title-next-page"></button>
             </section>
             <div id="loading-bar-container" class="hidden">
@@ -87,7 +89,7 @@
                     data-i18n-title="title-file-info"></button>
                 <button id="show-file-tags" class="right-sidebar-item ico-bttn active"
                     data-i18n-title="title-file-tags"></button>
-                <button id="show-file-desc" class="right-sidebar-item ico-bttn" data-i18n-title="title-file-desc"></button>
+                <button id="show-file-prev" class="right-sidebar-item ico-bttn active" data-i18n-title="title-file-preview"></button>
             </div>
             <section id="file-info" class="right-sidebar-item">
                 <ul id="fileinfo-container">

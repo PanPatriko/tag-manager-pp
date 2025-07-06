@@ -136,6 +136,16 @@ body input:disabled {
     opacity: 0.6;
 }
 
+body.light-theme select {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.dark-theme select {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
 .tags-view ul {
     margin-left: 10px;
 }

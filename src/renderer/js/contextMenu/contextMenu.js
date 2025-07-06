@@ -4,6 +4,11 @@ import { showFileContextMenu } from "./fileContextMenu.js"
 import { showFileTagContextMenu } from "./fileTagContextMenu.js"
 import { showImgContextMenu, showVidContextMenu} from "./filePrevContextMenu.js"
 import { updateSelectedFileCount } from "../content/filesInfo.js";
+import { currentFile } from "../state.js";
+
+window.openFileNewTab = openFileNewTab
+
+export let previewWindow = null;
 
 document.addEventListener('contextmenu', (event) => {
     const clickedTag = event.target.closest('.tag-item');
@@ -62,5 +67,20 @@ export function adjustPosition(x, y, contextMenu) {
     }
     if (y + menuHeight > windowHeight) {
         contextMenu.style.top = `${windowHeight - menuHeight}px`;
+    }
+}
+
+export function openFileNewTab() {
+    if (!currentFile || !currentFile.path) return;
+
+    const fileUrl = `preview.html?file=${encodeURIComponent(currentFile.path)}`;
+
+    // Open or reuse the preview tab
+    if (previewWindow && !previewWindow.closed) {
+        previewWindow.focus();
+        // Send updated file info
+        previewWindow.postMessage({ type: 'update-preview', file: currentFile }, '*');
+    } else {
+        previewWindow = window.open(fileUrl, 'filePreviewTab');
     }
 }

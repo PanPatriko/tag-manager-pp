@@ -1,5 +1,5 @@
 import { currentFile } from "../state.js";
-import { adjustPosition } from "./contextMenu.js";
+import { adjustPosition, openFileNewTab } from "./contextMenu.js";
 
 window.openFileExtPrev = openFileExtPrev
 
@@ -13,6 +13,7 @@ export function showImgContextMenu(x, y) {
     contextMenu.style.left = `${x}px`;
 
     contextMenu.innerHTML = `
+        <button onclick="openFileNewTab()">${window.translations['cntx-menu-open-tab']}</button>
         <button onclick="openFileExtPrev()">${window.translations['cntx-menu-open-ext']}</button>
     `;
 
@@ -33,7 +34,11 @@ export function showVidContextMenu(x, y) {
     contextMenu.style.top = `${y}px`;
     contextMenu.style.left = `${x}px`;
 
-    let vid = document.querySelector('#file-preview > *'); 
+    let vid = document.querySelector('#file-preview > *');
+    
+    const openNewTabButton = document.createElement('button');
+    openNewTabButton.textContent = window.translations['cntx-menu-open-tab'];
+    openNewTabButton.onclick = openFileNewTab;
 
     const openFileButton = document.createElement('button');
     openFileButton.textContent = window.translations['cntx-menu-open-ext'];
@@ -78,7 +83,7 @@ export function showVidContextMenu(x, y) {
     controlsContainer.appendChild(controlsLabel);
     controlsContainer.appendChild(controlsCheckbox);
 
-
+    contextMenu.appendChild(openNewTabButton);
     contextMenu.appendChild(openFileButton);
     contextMenu.appendChild(repeatContainer);
     contextMenu.appendChild(controlsContainer);

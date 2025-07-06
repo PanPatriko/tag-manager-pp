@@ -2,7 +2,7 @@ import { copiedTags, setCopiedTags, currentLocation, files, setFiles, currentFil
 import { formatString } from "../i18n.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
-import { displayDirectory, displayFiles, getSelectedFiles } from "../content/content.js"
+import { getSelectedFiles } from "../content/content.js"
 import { adjustPosition } from "./contextMenu.js";
 
 window.pasteTags = pasteTags;
@@ -29,6 +29,7 @@ export function showFileContextMenu(x, y, fileId, filePath) {
         <button onclick="addTagForFile()">${window.translations['cntx-menu-edit-file-tags']}</button>
         <button onclick="copyTags(${fileId})">${window.translations['cntx-menu-copy-tags']}</button>
         <button onclick="pasteTags()">${window.translations['cntx-menu-paste-tags']}</button>
+        <button onclick="openFileNewTab()">${window.translations['cntx-menu-open-tab']}</button>
         <button onclick="openFileExt()">${window.translations['cntx-menu-open-ext']}</button>
         <button onclick="openFileLocation()">${window.translations['cntx-menu-open-file-explorer']}</button>
         <button onclick="deleteFile(${fileId})">${window.translations['cntx-menu-delete-file']}</button>

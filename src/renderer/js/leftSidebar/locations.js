@@ -2,6 +2,7 @@ import { setLocations, setRootLoc, thumbnailDir } from "../state.js"
 
 import { openLocationModal } from "../modals/locationModal.js";
 import { displayDirectory } from "../content/content.js"
+import { pushToHistory } from "../content/pagination.js"
 
 const addLocationButton = document.getElementById('add-location');
 const container = document.getElementById('location-container');
@@ -39,6 +40,7 @@ function renderLocationsAsDivs(locations) {
                     }
                 });
                 setRootLoc(location.path);
+                pushToHistory({ type: 'directory', path: location.path });
                 displayDirectory(location.path);
                 const activeLocation = document.querySelector(".loc-active");
                 if (activeLocation) {
@@ -69,6 +71,7 @@ function renderHierarchy(hierarchy, parentElement) {
     span.textContent = hierarchy.name
     span.addEventListener('click', (event) => {
         event.stopPropagation();
+        pushToHistory({ type: 'directory', path: hierarchy.fullPath });
         displayDirectory(hierarchy.fullPath);
     });
 

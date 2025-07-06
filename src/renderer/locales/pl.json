@@ -61,6 +61,7 @@
     "cntx-menu-edit-file-tags": "Edytuj tagi dla pliku",
     "cntx-menu-copy-tags": "Kopiuj tagi",
     "cntx-menu-paste-tags": "Wklej tagi",
+    "cntx-menu-open-tab": "Otwórz w nowej karcie",
     "cntx-menu-open-ext": "Otwórz w programie zewnętrznym",
     "cntx-menu-open-file-explorer": "Otwórz lokalizację pliku",
     "cntx-menu-vid-repeat": "Powtarzaj",
@@ -84,7 +85,7 @@
     "title-theme-toggle": "Przełącz motyw",
     "title-sidebar": "Pokaż/Schowaj panel boczny",
     "title-search": "Szukaj",
-    "title-up-dir": "Otwórz folder nadrzędny",
+    "title-up-dir": "W górę do folderu nadrzędny",
     "title-sort-by-name": "Sortuj po nazwie",
     "title-prev-page": "Poprzednia strona",
     "title-next-page": "Następna strona",
@@ -97,8 +98,11 @@
     "title-file-id": "ID pliku",
     "title-file-name": "Nazwa pliku",
     "title-file-path": "Ścieżka pliku",
+    "title-file-preview": "Podgląd pliku",
     "ok": "OK",
     "cancel": "Anuluj",
     "browse": "Przeglądaj",
-    "save": "Zapisz"
+    "save": "Zapisz",
+    "next": "Dalej",
+    "back": "Wstecz"
 }

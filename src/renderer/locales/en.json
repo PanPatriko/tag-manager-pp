@@ -61,6 +61,7 @@
     "cntx-menu-edit-file-tags": "Edit tags for file",
     "cntx-menu-copy-tags": "Copy tags",
     "cntx-menu-paste-tags": "Paste tags",
+    "cntx-menu-open-tab": "Open in new tab",
     "cntx-menu-open-ext": "Open in external program",
     "cntx-menu-open-file-explorer": "Open file location",
     "cntx-menu-vid-repeat": "Repeat",
@@ -84,7 +85,7 @@
     "title-theme-toggle": "Toogle theme",
     "title-sidebar": "Show/Hide Sidebar",
     "title-search": "Search",
-    "title-up-dir": "Open parent directory",
+    "title-up-dir": "Up to parent directory",
     "title-sort-by-name": "Sort by name",
     "title-prev-page": "Previous page",
     "title-next-page": "Next page",
@@ -97,8 +98,11 @@
     "title-file-id": "File ID",
     "title-file-name": "File name",
     "title-file-path": "File path",
+    "title-file-preview": "File preview",
     "ok": "OK",
     "cancel": "Cancel",
     "browse": "Browse",
-    "save": "Save"
+    "save": "Save",
+    "next": "Next",
+    "back": "Back"
 }

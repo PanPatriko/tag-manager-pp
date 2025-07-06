@@ -2,6 +2,7 @@ import { getTagHierarchyString, getTagHierarchySpan, searchTagsStartsWith } from
 import {tags, files, setFiles, setRootLoc, setCurrentLoc} from "../state.js"
 import { highlightText } from "../utils.js";
 import { displayFiles } from "../content/content.js"
+import { pushToHistory } from "../content/pagination.js"
 
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
@@ -9,6 +10,14 @@ const searchTagsContainer = document.getElementById('search-tags-container');
 const searchSuggestions = document.getElementById('search-suggestions');
 
 let isMouseOverSearchSuggestions = false;
+
+const andTagSign = '+';
+const orTagSign = '||';
+const notTagSign = '–';
+
+const andTagOperation = 'and';
+const orTagOperation = 'or';
+const notTagOperation = 'not';
 
 let andTags = [];
 let orTags = [];
@@ -27,9 +36,9 @@ searchInput.addEventListener('input', function() {
             const buttonsContainer = document.createElement('div');
             buttonsContainer.className = 'suggestion-buttons';
 
-            const andButton = createSuggestionButton('+', 'and', tag);
-            const orButton = createSuggestionButton('||', 'or', tag);
-            const notButton = createSuggestionButton('–', 'not', tag);
+            const andButton = createSuggestionButton(andTagSign, andTagOperation, tag);
+            const orButton = createSuggestionButton(orTagSign, orTagOperation, tag);
+            const notButton = createSuggestionButton(notTagSign, notTagOperation, tag);
 
             buttonsContainer.appendChild(andButton);
             buttonsContainer.appendChild(orButton);
@@ -61,29 +70,47 @@ searchInput.addEventListener('focusout', function() {
 });
 
 searchButton.addEventListener('click', async function() {
+    pushToHistory({
+        type: 'search',
+        andTags: [...andTags],
+        orTags: [...orTags],
+        notTags: [...notTags]
+    });
+    searchFiles(andTags, orTags, notTags);
+});
+
+export async function searchFiles(andTags, orTags, notTags) {
     const newFiles = await window.api.searchFiles(andTags, orTags, notTags);
     setCurrentLoc(null);
-    setFiles(newFiles);
+    setFiles(newFiles);  
     displayFiles();
-    document.getElementById('prev-directory').disabled = true;
+    document.getElementById('parent-directory').disabled = true;
     document.getElementById('dir-name').classList.add('hidden');
-});
+}
+
+export function displaySearchTags(newAndTags, newOrTags, newNotTags) {
+    searchTagsContainer.innerHTML = '';
+
+    andTags = [];
+    orTags = [];
+    notTags = [];
+
+    newAndTags.forEach(tagId => {
+        addSearchTag(tagId, andTagSign, andTagOperation);
+    });
+    newOrTags.forEach(tagId => {
+        addSearchTag(tagId, orTagSign, orTagOperation);
+    });
+    newNotTags.forEach(tagId => {
+        addSearchTag(tagId, notTagSign, notTagOperation);
+    });
+}
 
 function createSuggestionButton(operationSign, operation, tag) {
     const button = document.createElement('button');
     button.className = `suggestion-button ${operation}`;
     button.textContent = operationSign;
-    switch (operation) {
-        case 'and':
-            button.setAttribute('title',window.translations['title-and-button'])
-            break;
-        case 'or':
-            button.setAttribute('title',window.translations['title-or-button'])
-            break;
-        case 'not':
-            button.setAttribute('title',window.translations['title-not-button'])
-            break;
-    }
+    button.setAttribute('title', window.translations[`title-${operation}-button`]);
     button.addEventListener('click', function() {
         addSearchTag(tag.id, operationSign, operation);
         searchSuggestions.innerHTML = '';
@@ -125,13 +152,13 @@ function addSearchTag(tagID, operationSign, operation) {
 
 function addTag(tagId, operation) {
     switch (operation) {
-        case 'and':
+        case andTagOperation:
             andTags.push(tagId);
             break;
-        case 'or':
+        case orTagOperation:
             orTags.push(tagId);
             break;
-        case 'not':
+        case notTagOperation:
             notTags.push(tagId);
             break;
     }
@@ -139,13 +166,13 @@ function addTag(tagId, operation) {
 
 function removeTag(tagId, operation) {   
     switch (operation) {
-        case 'and':
+        case andTagOperation:
             andTags = andTags.filter(tag => tag !== tagId);
             break;
-        case 'or':
+        case orTagOperation:
             orTags = orTags.filter(tag => tag !== tagId);
             break;
-        case 'not':
+        case notTagOperation:
             notTags = notTags.filter(tag => tag !== tagId);
             break;
     }

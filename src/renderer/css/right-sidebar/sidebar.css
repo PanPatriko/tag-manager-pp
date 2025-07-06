@@ -22,3 +22,7 @@
     left: 0;
     bottom: 0;
 }
+
+#file-container-resize-handle {
+    border-right: var(--border);
+}

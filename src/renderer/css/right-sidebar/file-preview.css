@@ -1,11 +1,15 @@
 #file-preview {
-    flex: 1 1 0%;
+    flex: 1 1 0;
     min-width: 0;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     position: relative; 
+}
+
+#file-preview.hidden {
+    display: none;
 }
 
 #file-preview img, #file-preview video {

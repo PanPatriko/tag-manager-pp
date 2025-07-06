@@ -4,6 +4,9 @@ import { updateFilePages, pushToHistory } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
+import { setCurrentFile } from "../state.js"
+import { renderFileInfo } from "../rightSidebar/fileInfo.js";
+import { previewWindow } from "../contextMenu/contextMenu.js";
 //import { showPopup } from "../utils.js"
 
 const path = window.api.path;
@@ -39,6 +42,16 @@ document.addEventListener('keydown', function(e) {
         }
         if (e.ctrlKey && e.key === 'v') {
             pasteTags();
+        }
+    }
+});
+
+window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'preview-arrow') {
+        if (event.data.key === 'ArrowLeft') {
+            selectPreviousFile();
+        } else if (event.data.key === 'ArrowRight') {
+            selectNextFile();
         }
     }
 });
@@ -158,6 +171,11 @@ function selectFile(fileContainer) {
     }
     updateSelectedFileCount();
     createFilePreview(file);
+    setCurrentFile(file);
+    renderFileInfo(file);
+    if (previewWindow && !previewWindow.closed) {
+        previewWindow.postMessage({ type: 'update-preview', file: file }, '*');
+    }
 }
 
 function toggleSelection(container, isCtrlPressed, isShiftPressed) {
@@ -306,6 +324,11 @@ export async function displayFiles() {
                     return;
                 }    
                 createFilePreview(file);
+                setCurrentFile(file);
+                renderFileInfo(file);
+                if (previewWindow && !previewWindow.closed) {
+                    previewWindow.postMessage({ type: 'update-preview', file: file }, '*');
+                }
             });   
         }
         container.appendChild(thumbnail);

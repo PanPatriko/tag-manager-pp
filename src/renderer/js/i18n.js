@@ -40,3 +40,10 @@ export async function setLanguage(locale) {
     localStorage.setItem('language', locale);
     refreshLabels(); 
 }
+
+export async function setLanguageFilePrev(locale) {
+    const translations = await loadLocale(locale);
+    applyTranslations(translations);
+    window.translations = translations;
+    localStorage.setItem('language', locale);
+}

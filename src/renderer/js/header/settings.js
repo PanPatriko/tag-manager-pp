@@ -2,6 +2,7 @@ import { setIconSize, setMaxFilesPerPage, setCurrentPage, files, setVidAutoplay,
 import { updateFilePages } from "../content/pagination.js";
 import { displayFiles } from "../content/content.js";
 import { setLanguage } from "../i18n.js";
+import { previewWindow } from '../contextMenu/contextMenu.js';
 
 const themeToggleButton = document.getElementById('theme-toggle');
 const settingsButton = document.getElementById('settings-button');
@@ -19,6 +20,9 @@ const filesPanel = document.getElementById('files-panel');
 
 languageSelect.addEventListener('change', (e) => {
     setLanguage(e.target.value);
+    if (previewWindow && !previewWindow.closed) {
+        previewWindow.postMessage({ type: 'update-lang', language: e.target.value }, '*');
+    }
 });
 
 defColorInput.addEventListener('change', (e) => {
@@ -52,6 +56,10 @@ themeToggleButton.addEventListener('click', () => {
     document.body.classList.add(newTheme);
 
     localStorage.setItem('theme', newTheme);
+    
+    if (previewWindow && !previewWindow.closed) {
+        previewWindow.postMessage({ type: 'update-theme', theme: newTheme}, '*');
+    }
 });
 
 settingsButton.addEventListener('click', () => {

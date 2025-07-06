@@ -7,6 +7,9 @@ const fileInfoSection = document.getElementById('file-info');
 
 const showFileTagsButton = document.getElementById('show-file-tags');
 
+const showFilePrevButton = document.getElementById('show-file-prev');
+const preview = document.getElementById('file-preview');
+
 const fileIdSpan = document.getElementById('file-id');
 const filePathInput = document.getElementById('file-path');
 const fileNameInput = document.getElementById('file-name');
@@ -50,11 +53,34 @@ showFileInfoButton.addEventListener('click', function() {
     showFileInfoButton.classList.toggle('active');
 });
 
+showFilePrevButton.addEventListener('click', function() {
+    preview.classList.toggle('hidden');
+    showFilePrevButton.classList.toggle('active');
+    if (preview.classList.contains('hidden')) {
+        fileTagsTree.style.width = '100%';
+        const videos = document.querySelectorAll('.file-preview-video');
+        videos.forEach(video => {
+            video.pause();
+        });
+    } else {
+        fileTagsTree.style.width = '250px';
+    }
+    updateResizeHandleVisibility();
+});
+
 showFileTagsButton.addEventListener('click', function() {
     fileTagsTree.classList.toggle('hidden');
-    resizeHandle.classList.toggle('hidden');
     showFileTagsButton.classList.toggle('active');
+    updateResizeHandleVisibility();
 });
+
+function updateResizeHandleVisibility() {
+    if (!preview.classList.contains('hidden') && !fileTagsTree.classList.contains('hidden')) {
+        resizeHandle.classList.remove('hidden');
+    } else {
+        resizeHandle.classList.add('hidden');
+    }
+}
 
 fileNameInput.addEventListener('focus', async () => {
     if(await window.api.fileExists(currentFile.path)) {

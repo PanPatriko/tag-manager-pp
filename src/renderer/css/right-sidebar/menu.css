@@ -14,3 +14,7 @@
 #show-file-info {
     background-image: url('../../images/info.png');
 }
+
+#show-file-prev {
+    background-image: url('../../images/preview.png');
+}

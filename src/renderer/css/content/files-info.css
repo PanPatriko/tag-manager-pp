@@ -19,6 +19,13 @@
     border-radius: 15px;
 }
 
+#file-pages {
+    border-radius: 15px;
+    width: auto;
+    height: 3em;
+    margin: 5px;
+}
+
 #sort-by-name {
     background-image: url('../../images/sort-up-az.png');
 }
@@ -36,9 +43,11 @@
 }
 
 #prev-page {
-    background-image: url('../../images/left-arrow.png');
+    background-image: url('../../images/left-arrow-1.png');
+    background-size: 50%;
 }
 
 #next-page {
-    background-image: url('../../images/right-arrow.png');
+    background-image: url('../../images/right-arrow-1.png');
+    background-size: 50%;
 }

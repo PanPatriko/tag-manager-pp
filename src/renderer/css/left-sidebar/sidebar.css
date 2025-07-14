@@ -8,6 +8,26 @@
     border-bottom: var(--border);
 }
 
+#tags-button {
+    background-image: url('../../images/tag.png');
+}
+
+#location-button {
+    background-image: url('../../images/directory.png');
+}
+
+#add-tag {
+    margin: 10px;
+    align-self: center;
+    background-image: url('../../images/tag-add.png');
+}
+
+#add-location {
+    margin: 10px;
+    align-self: center;
+    background-image: url('../../images/directory-add.png');
+}
+
 .left-sidebar-item {
     overflow: hidden;
 }
@@ -21,4 +41,27 @@
     top: 0;
     right: 0;
     bottom: 0;
+}
+
+#left-sidebar-menu {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-bottom: var(--border);
+    overflow: auto;
+}
+
+#tags-panel,
+#location-panel {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+#tags-container {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    overflow-y: auto;
 }

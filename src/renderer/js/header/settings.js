@@ -1,10 +1,7 @@
 import { setIconSize, setMaxFilesPerPage, setCurrentPage, files, setVidAutoplay, setVidLoop, setDefTagBgColor, setDefTagTextColor} from '../state.js';
 import { updateFilePages } from "../content/pagination.js";
 import { displayFiles } from "../content/content.js";
-import { setLanguage } from "../i18n.js";
-import { previewWindow } from '../contextMenu/contextMenu.js';
 
-const themeToggleButton = document.getElementById('theme-toggle');
 const settingsButton = document.getElementById('settings-button');
 const closeSettingsModal = document.getElementById('close-settings-modal');
 const settingsModal = document.getElementById('settings-modal');
@@ -15,7 +12,6 @@ const vidAutoplayCheckbox = document.getElementById('vid-autoplay');
 const vidLoopCheckbox = document.getElementById('vid-loop');
 const defColorInput = document.getElementById('def-tag-bgcolor');
 const defColorTextInput = document.getElementById('def-tag-textcolor');
-const languageSelect = document.getElementById('language-select');
 const filesPanel = document.getElementById('files-panel');
 
 defColorInput.addEventListener('change', (e) => {
@@ -39,20 +35,6 @@ maxFilesSelect.addEventListener('change', (e) => {
     setCurrentPage(1);
     updateFilePages();
     displayFiles(files);
-});
-
-themeToggleButton.addEventListener('click', () => {
-    const currentTheme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
-    const newTheme = currentTheme === 'light' ? 'dark-theme' : 'light-theme';
-
-    document.body.classList.remove('light-theme', 'dark-theme');
-    document.body.classList.add(newTheme);
-
-    localStorage.setItem('theme', newTheme);
-    
-    if (previewWindow && !previewWindow.closed) {
-        previewWindow.postMessage({ type: 'update-theme', theme: newTheme}, '*');
-    }
 });
 
 settingsButton.addEventListener('click', () => {

@@ -3,7 +3,6 @@ import { refreshLocations } from './leftSidebar/locations.js';
 import { showActivePanel } from './leftSidebar/leftSidebar.js';
 import { setIconSize, setMaxFilesPerPage, setVidAutoplay, setVidLoop, setDefTagBgColor, setDefTagTextColor } from './state.js';
 import { setFilesPanelGapAndPadding } from './header/settings.js';
-import { setLanguage } from './i18n.js';
 import { restoreSidebarState } from './content/toggleSidebars.js';
 
 import { initSettingsController } from './controller/settingsController.js';
@@ -14,8 +13,6 @@ import ('./contextMenu/contextMenu.js')
 import ('./content/toggleSidebars.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const savedTheme = localStorage.getItem('theme') || 'light-theme';
-    document.body.className = savedTheme;
 
     initSettingsController();
 

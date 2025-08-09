@@ -6,6 +6,9 @@ import { setFilesPanelGapAndPadding } from './header/settings.js';
 import { setLanguage } from './i18n.js';
 import { restoreSidebarState } from './content/toggleSidebars.js';
 
+import { initSettingsController } from './controller/settingsController.js';
+
+
 import ('./header/searchBar.js');
 import ('./contextMenu/contextMenu.js')
 import ('./content/toggleSidebars.js');
@@ -14,9 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const savedTheme = localStorage.getItem('theme') || 'light-theme';
     document.body.className = savedTheme;
 
-    const savedLanguage = localStorage.getItem('language') || 'en';
-    document.getElementById('language-select').value = savedLanguage;
-    setLanguage(savedLanguage);
+    initSettingsController();
 
     const iconSize = localStorage.getItem('iconSize') || '125';
     document.getElementById('icon-size').value = iconSize;

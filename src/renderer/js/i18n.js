@@ -37,7 +37,6 @@ export async function setLanguage(locale) {
     const translations = await loadLocale(locale);
     applyTranslations(translations);
     window.translations = translations;
-    localStorage.setItem('language', locale);
     refreshLabels(); 
 }
 

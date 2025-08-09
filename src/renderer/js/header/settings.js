@@ -18,13 +18,6 @@ const defColorTextInput = document.getElementById('def-tag-textcolor');
 const languageSelect = document.getElementById('language-select');
 const filesPanel = document.getElementById('files-panel');
 
-languageSelect.addEventListener('change', (e) => {
-    setLanguage(e.target.value);
-    if (previewWindow && !previewWindow.closed) {
-        previewWindow.postMessage({ type: 'update-lang', language: e.target.value }, '*');
-    }
-});
-
 defColorInput.addEventListener('change', (e) => {
     setDefTagBgColor(e.target.value);
 });

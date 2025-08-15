@@ -4,6 +4,8 @@ import { openLocationModal } from "../modals/locationModal.js";
 import { displayDirectory } from "../content/content.js"
 import { pushToHistory } from "../content/pagination.js"
 
+import { i18nModel } from "../model/i18nModel.js";
+
 const addLocationButton = document.getElementById('add-location');
 const container = document.getElementById('location-container');
 const dirContainer = document.getElementById('directory-container');
@@ -36,7 +38,7 @@ function renderLocationsAsDivs(locations) {
                         renderHierarchy(hierarchy, dirContainer);
                     } else {
                         dirContainer.dataset.i18n = 'loc-directory-limit';
-                        dirContainer.textContent = window.translations['loc-directory-limit'];
+                        dirContainer.textContent = i18nModel.t('loc-directory-limit');
                     }
                 });
                 setRootLoc(location.path);
@@ -48,7 +50,7 @@ function renderLocationsAsDivs(locations) {
                 }
                 locDiv.classList.add("loc-active");
             } else {
-                showPopup('', window.translations['dir-read-error'], 'error')
+                showPopup('', i18nModel.t('dir-read-error'), 'error')
             }
         });
         return locDiv;

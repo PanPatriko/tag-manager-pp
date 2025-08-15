@@ -1,7 +1,10 @@
 import { refreshTags } from "../leftSidebar/tagsPanel.js";
 import { highlightText } from "../utils.js";
-import {tags, defTagBgColor, defTagTextColor} from "../state.js";
+import { tags } from "../state.js";
 import { getTagHierarchyString, getTagHierarchySpan, searchTagsStartsWith, isChildTag } from "../tags.js";
+
+import { settingsModel } from '../model/settingsModel.js';
+import { i18nModel } from "../model/i18nModel.js";
 
 const tagModal = document.getElementById('tag-form-modal');
 const modalTitle = document.getElementById('tag-modal-title');
@@ -31,7 +34,7 @@ parentNameInput.addEventListener('input', () => {
             li.appendChild(div);
             li.addEventListener('click', () => {
                 if(isChildTag(currentTag, tag)) {
-                    showPopup('', window.translations['tag-alert-not-allowed-parent-tag'], 'warning');
+                    showPopup('', i18nModel.t('tag-alert-not-allowed-parent-tag'), 'warning');
                     return;
                 }
                 parentNameInput.value = '';
@@ -67,8 +70,8 @@ modalOkButton.addEventListener('click', async () => {
     const textcolor = colorTextInput.value;
 
     if (tagNames.length === 0 || tagNames[0] === '') {
-        showPopup(window.translations['tag-alert-empty-name-title'], 
-            window.translations['tag-alert-empty-name'], 'warning');
+        showPopup(i18nModel.t('tag-alert-empty-name-title'), 
+            i18nModel.t('tag-alert-empty-name'), 'warning');
         return;
     }
 
@@ -91,7 +94,7 @@ modalOkButton.addEventListener('click', async () => {
 
 export async function openModalNewTag(tag = null) {
     isEditMode = false;
-    modalTitle.innerText = window.translations['tag-add'];
+    modalTitle.innerText = i18nModel.t('tag-add');
     tagNameInput.value = '';
     parentTagLabel.textContent = !!tag ? `${getTagHierarchyString(tag)} ID: ${tag.id}` : '';
     parentNameInput.value = !!tag ? tag.name : '';
@@ -101,8 +104,8 @@ export async function openModalNewTag(tag = null) {
         colorTextInput.value = tag.textcolor;
 
     } else {
-        colorInput.value = defTagBgColor;
-        colorTextInput.value = defTagTextColor;
+        colorInput.value = settingsModel.defTagBgColor;
+        colorTextInput.value = settingsModel.defTagTextColor;
     }
     tagModal.classList.remove('hidden');
     tagNameInput.focus();
@@ -111,7 +114,7 @@ export async function openModalNewTag(tag = null) {
 export async function openModalEditTag(tag) {
     isEditMode = true;
     currentTag = tag;
-    modalTitle.innerText = window.translations['tag-edit'];
+    modalTitle.innerText = i18nModel.t('tag-edit');
     tagNameInput.value = tag.name;
     selectedParentTag = tags.find(t => t.id === tag.parent_id);
     parentTagLabel.textContent = selectedParentTag ? `${getTagHierarchyString(selectedParentTag)} ID: ${selectedParentTag.id}` : '';
@@ -125,8 +128,8 @@ function closeModal() {
     tagModal.classList.add('hidden');
     tagNameInput.value = '';
     parentNameInput.value = '';
-    colorInput.value = defTagBgColor;
-    colorTextInput.value = defTagTextColor;
+    colorInput.value = settingsModel.defTagBgColor;
+    colorTextInput.value = settingsModel.defTagTextColor;
     currentTag = null;
     selectedParentTag = null;
 }

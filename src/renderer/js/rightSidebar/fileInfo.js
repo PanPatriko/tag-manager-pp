@@ -2,6 +2,8 @@ import { addMissingParentTags, buildTagHierarchy, renderFileTagsTree, applyExpan
 import { displayFiles } from "../content/content.js"
 import { files, currentFile, setCurrentFile } from "../state.js"
 
+import { i18nModel } from "../model/i18nModel.js";
+
 const showFileInfoButton = document.getElementById('show-file-info');
 const fileInfoSection = document.getElementById('file-info');
 
@@ -118,7 +120,7 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                showPopup('', window.translations['file-prev-name-save-error'] + result.error, 'error');
+                showPopup('', i18nModel.t('file-prev-name-save-error') + result.error, 'error');
             }
         } else {
             const result = await window.api.updateFileNotDB(newFileName, oldFilePath);
@@ -132,11 +134,11 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                showPopup('', window.translations['file-prev-name-save-error'] + error, 'error');
+                showPopup('', i18nModel.t('file-prev-name-save-error') + error, 'error');
             }
         }      
     } catch (error) {
-        showPopup('', window.translations['file-prev-name-save-error'] + error, 'error');
+        showPopup('', i18nModel.t('file-prev-name-save-error') + error, 'error');
     }
 });
 
@@ -154,7 +156,7 @@ export async function renderFileInfo(file) {
     fileIdSpan.dataset.i18n = "file-prev-no-ID";
 
     if(file) {  
-        fileIdSpan.textContent = file.id ?? window.translations['file-prev-no-ID'];
+        fileIdSpan.textContent = file.id ?? i18nModel.t('file-prev-no-ID');
         fileIdSpan.dataset.i18n = file.id ? null : "file-prev-no-ID";
 
         fileNameInput.value = file.name || "";
@@ -162,7 +164,7 @@ export async function renderFileInfo(file) {
 
         const tags = await window.api.getFileTags(file.id);
         if (!tags || tags.length === 0) {
-            fileTagsTree.textContent = window.translations['file-prev-no-tags'];
+            fileTagsTree.textContent = i18nModel.t('file-prev-no-tags');
         } else {
             const completeTags = addMissingParentTags(tags);
             const tagHierarchy = buildTagHierarchy(completeTags);
@@ -170,7 +172,7 @@ export async function renderFileInfo(file) {
             applyExpandedFileTags()
         }
     } else {
-        fileIdSpan.textContent = window.translations['file-prev-no-ID'];
+        fileIdSpan.textContent = i18nModel.t('file-prev-no-ID');
         fileNameInput.value = "";
         filePathInput.value = "";
         const preview = document.getElementById('file-preview');

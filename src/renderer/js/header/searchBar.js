@@ -4,6 +4,8 @@ import { highlightText } from "../utils.js";
 import { displayFiles } from "../content/content.js"
 import { pushToHistory } from "../content/pagination.js"
 
+import { i18nModel } from "../model/i18nModel.js";
+
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const searchTagsContainer = document.getElementById('search-tags-container');
@@ -110,7 +112,7 @@ function createSuggestionButton(operationSign, operation, tag) {
     const button = document.createElement('button');
     button.className = `suggestion-button ${operation}`;
     button.textContent = operationSign;
-    button.setAttribute('title', window.translations[`title-${operation}-button`]);
+    button.setAttribute('title', i18nModel.t(`title-${operation}-button`));
     button.addEventListener('click', function() {
         addSearchTag(tag.id, operationSign, operation);
         searchSuggestions.innerHTML = '';

@@ -1,14 +1,15 @@
 import { createFilePreview } from './rightSidebar/filePreview.js';
-import { setLanguageFilePrev } from './i18n.js';
+
+import { settingsModel } from './model/settingsModel.js';
+import { settingsView } from './view/settingsView.js';
+import { i18nModel } from './model/i18nModel.js';
+import { i18nView } from './view/i18nView.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const savedTheme = localStorage.getItem('theme') || 'light-theme';
-    document.body.className = savedTheme;
+    settingsView.documentTheme = settingsModel.theme;
     
-    const savedLanguage = localStorage.getItem('language') || 'en';
-    await setLanguageFilePrev(savedLanguage);
-
-    document.title = window.translations['title-file-preview'] || 'File Preview';
+    i18nView.applyTranslations(settingsModel.language);
+    document.title = i18nModel.t('title-file-preview') || 'File Preview';
 });
 
 document.addEventListener('contextmenu', (event) => {
@@ -55,7 +56,7 @@ function showVidContextMenu(x, y) {
     };
 
     const repeatLabel = document.createElement('label');
-    repeatLabel.textContent = window.translations['cntx-menu-vid-repeat']
+    repeatLabel.textContent = i18nModel.t('cntx-menu-vid-repeat')
     repeatLabel.htmlFor = 'repeatCheckbox';
 
     repeatContainer.appendChild(repeatLabel);
@@ -75,7 +76,7 @@ function showVidContextMenu(x, y) {
     };
 
     const controlsLabel = document.createElement('label');
-    controlsLabel.textContent = window.translations['cntx-menu-vid-show-controls']
+    controlsLabel.textContent = i18nModel.t('cntx-menu-vid-show-controls')
     controlsLabel.htmlFor = 'controlsCheckbox';
     
     controlsContainer.appendChild(controlsLabel);
@@ -116,13 +117,11 @@ window.addEventListener('message', async (event) => {
         createFilePreview(event.data.file);
     }
     if (event.data && event.data.type === 'update-lang' && event.data.language) {
-        await setLanguageFilePrev(event.data.language);
-        document.title = window.translations['title-file-preview'] || 'File Preview';
+        i18nView.applyTranslations(event.data.language);
+        document.title = i18nModel.t('title-file-preview') || 'File Preview';
     }
     if (event.data && event.data.type === 'update-theme' && event.data.theme) {
-        document.body.classList.remove('light-theme', 'dark-theme');
-        document.body.classList.add(event.data.theme);
-        localStorage.setItem('theme', event.data.theme);
+        settingsView.documentTheme = event.data.theme;
     }
 
 });

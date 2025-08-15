@@ -1,9 +1,11 @@
-import { copiedTags, setCopiedTags, currentLocation, files, setFiles, currentFile, setCurrentFileId } from "../state.js"
+import { copiedTags, setCopiedTags, files, setFiles, currentFile, setCurrentFileId } from "../state.js"
 import { formatString } from "../i18n.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
 import { getSelectedFiles } from "../content/content.js"
 import { adjustPosition } from "./contextMenu.js";
+
+import { i18nModel } from "../model/i18nModel.js"
 
 window.pasteTags = pasteTags;
 window.addTagForFile = addTagForFile;
@@ -26,13 +28,13 @@ export function showFileContextMenu(x, y, fileId, filePath) {
     contextMenu.style.left = `${x}px`;
 
     contextMenu.innerHTML = `
-        <button onclick="addTagForFile()">${window.translations['cntx-menu-edit-file-tags']}</button>
-        <button onclick="copyTags(${fileId})">${window.translations['cntx-menu-copy-tags']}</button>
-        <button onclick="pasteTags()">${window.translations['cntx-menu-paste-tags']}</button>
-        <button onclick="openFileNewTab()">${window.translations['cntx-menu-open-tab']}</button>
-        <button onclick="openFileExt()">${window.translations['cntx-menu-open-ext']}</button>
-        <button onclick="openFileLocation()">${window.translations['cntx-menu-open-file-explorer']}</button>
-        <button onclick="deleteFile(${fileId})">${window.translations['cntx-menu-delete-file']}</button>
+        <button onclick="addTagForFile()">${i18nModel.t('cntx-menu-edit-file-tags')}</button>
+        <button onclick="copyTags(${fileId})">${i18nModel.t('cntx-menu-copy-tags')}</button>
+        <button onclick="pasteTags()">${i18nModel.t('cntx-menu-paste-tags')}</button>
+        <button onclick="openFileNewTab()">${i18nModel.t('cntx-menu-open-tab')}</button>
+        <button onclick="openFileExt()">${i18nModel.t('cntx-menu-open-ext')}</button>
+        <button onclick="openFileLocation()">${i18nModel.t('cntx-menu-open-file-explorer')}</button>
+        <button onclick="deleteFile(${fileId})">${i18nModel.t('cntx-menu-delete-file')}</button>
     `;
 
     document.body.appendChild(contextMenu);
@@ -45,7 +47,7 @@ export function showFileContextMenu(x, y, fileId, filePath) {
 
 async function deleteFile(fileId) {
     if(fileId) {
-        const result = await showPopup('', window.translations['confirm-del-file'], 
+        const result = await showPopup('', i18nModel.t('confirm-del-file'), 
             'question', true);
     
         if (result.isConfirmed) {
@@ -57,8 +59,8 @@ async function deleteFile(fileId) {
             refreshFileInfo();
         }
     } else {
-        showPopup(window.translations['cntx-menu-delete-file-no-id-title'], 
-            window.translations['cntx-menu-delete-file-no-id'], 'warning');
+        showPopup(i18nModel.t('cntx-menu-delete-file-no-id-title'), 
+            i18nModel.t('cntx-menu-delete-file-no-id'), 'warning');
     }    
 }
 
@@ -80,22 +82,22 @@ export async function copyTags(fileId) {
         if (tags.length > 0) {
             setCopiedTags(tags);
         } else {
-            showPopup('', window.translations['alert-file-no-tags'], 'warning');       
+            showPopup('', i18nModel.t('alert-file-no-tags'), 'warning');       
         }
     } catch (error) {
         console.error('Error fetching tags:', error);
-        showPopup('', window.translations['alert-fetching-tags'], 'warning');
+        showPopup('', i18nModel.t('alert-fetching-tags'), 'warning');
     }
 }
 
 export async function pasteTags() {
     const selectedFiles = getSelectedFiles();
     if (selectedFiles.length === 0) {
-        showPopup('', window.translations['alert-no-files-selected'], 'warning');
+        showPopup('', i18nModel.t('alert-no-files-selected'), 'warning');
         return;
     }
     if (copiedTags === null) {
-        showPopup('', window.translations['alert-no-copied-tags'], 'warning');
+        showPopup('', i18nModel.t('alert-no-copied-tags'), 'warning');
         return;
     }
 
@@ -126,7 +128,7 @@ export async function pasteTags() {
 
     if (conflicts.length > 0) {
         const conflictMessages = conflicts.map(conflict => `File ID: ${conflict.fileId}, Tag: ${conflict.tagName}`).join('\n');
-        const text = formatString(window.translations['alert-tags-paste-problems'], {
+        const text = formatString(i18nModel.t('alert-tags-paste-problems'), {
                 conflictMessages: conflictMessages
         })
         Swal.fire({
@@ -135,7 +137,7 @@ export async function pasteTags() {
             confirmButtonText: 'OK',
         });
     } else {
-        showPopup('', window.translations['alert-tags-paste-success'], 'success');
+        showPopup('', i18nModel.t('alert-tags-paste-success'), 'success');
     }
 
     await refreshFileInfo();

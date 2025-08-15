@@ -1,4 +1,5 @@
-import { vidLoop, vidAutoplay } from "../state.js";
+import { settingsModel } from '../model/settingsModel.js';
+import { i18nModel } from "../model/i18nModel.js";
 
 const preview = document.getElementById('file-preview');
 
@@ -21,18 +22,18 @@ export async function createFilePreview(file) {
             const video = document.createElement('video');
             video.src = file.path;
             video.controls = true;
-            video.autoplay = vidAutoplay;
-            video.loop = vidLoop;
+            video.autoplay = settingsModel.vidAutoplay;
+            video.loop = settingsModel.vidLoop;
             video.className = 'file-preview-video';
             addListener(video); 
             preview.appendChild(video);
         } else {
             preview.dataset.i18n = "file-prev-format-error";
-            preview.textContent = window.translations['file-prev-format-error'];
+            preview.textContent = i18nModel.t('file-prev-format-error');
         }
     } else {
         preview.dataset.i18n = "content-deleted-file";
-        preview.textContent = window.translations['content-deleted-file'];
+        preview.textContent = i18nModel.t('content-deleted-file');
     }
 }
 

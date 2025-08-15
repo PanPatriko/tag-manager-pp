@@ -1,4 +1,5 @@
 import { refreshLocations } from "../leftSidebar/locations.js";
+import { i18nModel } from "../model/i18nModel.js";
 
 const locModal = document.getElementById('location-form-modal');
 const modalTitle = document.getElementById('loc-modal-title');
@@ -23,14 +24,14 @@ modalOkButton.addEventListener('click', async () => {
     const path = pathInput.value.trim();
 
     if (name == null || name === '') {
-        showPopup(window.translations['loc-alert-empty-name-title'], 
-            window.translations['loc-alert-empty-name'], 'warning')
+        showPopup(i18nModel.t('loc-alert-empty-name-title'), 
+            i18nModel.t('loc-alert-empty-name'), 'warning')
         return;
     }
 
     if (path == null || path === '') {
-        showPopup(window.translations['loc-alert-empty-path-title'], 
-            window.translations['loc-alert-empty-path'], 'warning')
+        showPopup(i18nModel.t('loc-alert-empty-path-title'), 
+            i18nModel.t('loc-alert-empty-path'), 'warning')
         return;
     }
     
@@ -50,12 +51,12 @@ export async function openLocationModal(location = null) {
     modalLocation = location;
     if(location == null) {
         isEditMode = false;
-        modalTitle.innerText = window.translations['loc-add'];
+        modalTitle.innerText = i18nModel.t('loc-add');
         nameInput.value = '';
         pathInput.value = '';
     } else {
         isEditMode = true;
-        modalTitle.innerText = window.translations['loc-edit'];
+        modalTitle.innerText = i18nModel.t('loc-edit');
         nameInput.value = location.name;
         pathInput.value = location.path;
     }

@@ -4,6 +4,8 @@ import { refreshTags } from "../leftSidebar/tagsPanel.js"
 import { adjustPosition } from "./contextMenu.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
+import { i18nModel } from "../model/i18nModel.js";
+
 window.editTag = editTag;
 window.confirmDeleteFileTag = confirmDeleteFileTag;
 
@@ -17,8 +19,8 @@ export function showFileTagContextMenu(x, y, tagId) {
     contextMenu.style.left = `${x}px`;
 
     contextMenu.innerHTML = `
-        <button onclick="editTag(${tagId})">${window.translations['cntx-menu-edit-tag']}</button>
-        <button onclick="confirmDeleteFileTag(${tagId})">${window.translations['cntx-menu-del-file-tag']}</button>
+        <button onclick="editTag(${tagId})">${i18nModel.t('cntx-menu-edit-tag')}</button>
+        <button onclick="confirmDeleteFileTag(${tagId})">${i18nModel.t('cntx-menu-del-file-tag')}</button>
     `;
 
     document.body.appendChild(contextMenu);
@@ -39,7 +41,7 @@ async function editTag(tagId) {
 }
 
 async function confirmDeleteFileTag(tagId) {
-    const result = await showPopup('', window.translations['confirm-del-tag'], 
+    const result = await showPopup('', i18nModel.t('confirm-del-tag'), 
         'question', true);
 
     if (result.isConfirmed) {

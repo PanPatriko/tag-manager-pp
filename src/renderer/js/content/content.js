@@ -1,4 +1,4 @@
-import { currentPage, maxFilesPerPage, iconSize, files, setFiles, thumbnailDir, rootLocation, setCurrentLoc} from "../state.js"
+import { currentPage, files, setFiles, thumbnailDir, rootLocation, setCurrentLoc} from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
 import { updateFilePages, pushToHistory } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
@@ -7,6 +7,7 @@ import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
 import { setCurrentFile } from "../state.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 import { previewWindow } from "../contextMenu/contextMenu.js";
+import { settingsModel } from '../model/settingsModel.js';
 //import { showPopup } from "../utils.js"
 
 const path = window.api.path;
@@ -242,8 +243,8 @@ export async function displayFiles() {
     updateFilePages();
     sortFiles();
 
-    const start = (currentPage - 1) * maxFilesPerPage;
-    const end = Math.min(start + maxFilesPerPage, files.length);
+    const start = (currentPage - 1) * settingsModel.maxFilesPerPage;
+    const end = Math.min(start + settingsModel.maxFilesPerPage, files.length);
     const currentFiles = files.slice(start, end);
 
     loadingBarContainer.classList.remove('hidden');
@@ -280,8 +281,8 @@ export async function displayFiles() {
         span.textContent = file.name;
 
         const container = document.createElement('div');
-        container.style.width = iconSize + 'px';
-        container.style.height = iconSize + 'px';
+        container.style.width = settingsModel.iconSize + 'px';
+        container.style.height = settingsModel.iconSize + 'px';
         container.setAttribute('title', file.name);
 
         const thumbnail = document.createElement('img');

@@ -3,6 +3,8 @@ import { openLocationModal } from "../modals/locationModal.js"
 import { refreshLocations } from "../leftSidebar/locations.js"
 import { adjustPosition } from "./contextMenu.js";
 
+import { i18nModel } from "../model/i18nModel.js";
+
 window.editLocation = editLocation;
 window.confirmDeleteLocation = confirmDeleteLocation;
 
@@ -16,8 +18,8 @@ export function showLocContextMenu(x, y, locId) {
     contextMenu.style.left = `${x}px`;
 
     contextMenu.innerHTML = `
-        <button onclick="editLocation(${locId})">${window.translations['cntx-menu-edit-loc']}</button>
-        <button onclick="confirmDeleteLocation(${locId})">${window.translations['cntx-menu-del-loc']}</button>
+        <button onclick="editLocation(${locId})">${i18nModel.t('cntx-menu-edit-loc')}</button>
+        <button onclick="confirmDeleteLocation(${locId})">${i18nModel.t('cntx-menu-del-loc')}</button>
     `;
 
     document.body.appendChild(contextMenu);
@@ -38,7 +40,7 @@ async function editLocation(locId) {
 }
 
 async function confirmDeleteLocation(locId) {
-    const result = await showPopup('', window.translations['confirm-del-loc'], 
+    const result = await showPopup('', i18nModel.t('confirm-del-loc'), 
         'question', true);
 
     if (result.isConfirmed) {

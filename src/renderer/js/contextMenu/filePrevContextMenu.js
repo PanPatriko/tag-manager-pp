@@ -1,6 +1,8 @@
 import { currentFile } from "../state.js";
 import { adjustPosition, openFileNewTab } from "./contextMenu.js";
 
+import { i18nModel } from "../model/i18nModel.js";
+
 window.openFileExtPrev = openFileExtPrev
 
 export function showImgContextMenu(x, y) {
@@ -13,8 +15,8 @@ export function showImgContextMenu(x, y) {
     contextMenu.style.left = `${x}px`;
 
     contextMenu.innerHTML = `
-        <button onclick="openFileNewTab()">${window.translations['cntx-menu-open-tab']}</button>
-        <button onclick="openFileExtPrev()">${window.translations['cntx-menu-open-ext']}</button>
+        <button onclick="openFileNewTab()">${i18nModel.t('cntx-menu-open-tab')}</button>
+        <button onclick="openFileExtPrev()">${i18nModel.t('cntx-menu-open-ext')}</button>
     `;
 
     document.body.appendChild(contextMenu);
@@ -37,11 +39,11 @@ export function showVidContextMenu(x, y) {
     let vid = document.querySelector('#file-preview > *');
     
     const openNewTabButton = document.createElement('button');
-    openNewTabButton.textContent = window.translations['cntx-menu-open-tab'];
+    openNewTabButton.textContent = i18nModel.t('cntx-menu-open-tab');
     openNewTabButton.onclick = openFileNewTab;
 
     const openFileButton = document.createElement('button');
-    openFileButton.textContent = window.translations['cntx-menu-open-ext'];
+    openFileButton.textContent = i18nModel.t('cntx-menu-open-ext');
     openFileButton.onclick = openFileExt;
 
     const repeatContainer = document.createElement('div');
@@ -57,7 +59,7 @@ export function showVidContextMenu(x, y) {
     };
 
     const repeatLabel = document.createElement('label');
-    repeatLabel.textContent = window.translations['cntx-menu-vid-repeat']
+    repeatLabel.textContent = i18nModel.t('cntx-menu-vid-repeat')
     repeatLabel.htmlFor = 'repeatCheckbox';
 
     repeatContainer.appendChild(repeatLabel);
@@ -77,7 +79,7 @@ export function showVidContextMenu(x, y) {
     };
 
     const controlsLabel = document.createElement('label');
-    controlsLabel.textContent = window.translations['cntx-menu-vid-show-controls']
+    controlsLabel.textContent = i18nModel.t('cntx-menu-vid-show-controls')
     controlsLabel.htmlFor = 'controlsCheckbox';
     
     controlsContainer.appendChild(controlsLabel);

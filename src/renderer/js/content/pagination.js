@@ -1,4 +1,5 @@
-import {files, currentLocation, rootLocation, currentPage, setCurrentPage, maxFilesPerPage} from '../state.js';
+import {files, currentLocation, rootLocation, currentPage, setCurrentPage} from '../state.js';
+import { settingsModel } from '../model/settingsModel.js';
 import { displayDirectory, displayFiles } from "./content.js";
 import { searchFiles, displaySearchTags } from '../header/searchBar.js';
 
@@ -18,7 +19,7 @@ filePagesSelect.addEventListener('change', (e) => {
 });
 
 nextPageButton.addEventListener('click', () => {
-    if (currentPage * maxFilesPerPage < files.length) {
+    if (currentPage * settingsModel.maxFilesPerPage < files.length) {
         setCurrentPage(currentPage + 1);
         displayFiles(files);
     }
@@ -56,7 +57,7 @@ nextButton.addEventListener('click', () => {
 });
 
 export function updateFilePages() {
-    const totalPages = Math.ceil(files.length / maxFilesPerPage);
+    const totalPages = Math.ceil(files.length / settingsModel.maxFilesPerPage);
     filePagesSelect.innerHTML = '';
     for (let i = 1; i <= totalPages; i++) {
         const option = document.createElement('option');

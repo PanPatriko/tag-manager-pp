@@ -1,8 +1,10 @@
-import { tags, files } from "../state.js";
+import { files } from "../state.js";
 import { highlightText } from "../utils.js";
-import { buildTagHierarchy, renderModalFileTagsTree, addMissingParentTags, addMissingChildTags, searchTagsInclude} from "../tags.js";
 import { getSelectedFiles } from "../content/content.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
+
+import { tagsView } from '../view/tagsView.js';
+import { tagsModel } from '../model/tagsModel.js';
 
 const fileTagFormModal = document.getElementById('file-tag-form-modal');
 const addTagsButton = document.getElementById('add-tags-button');
@@ -12,7 +14,7 @@ const tagsContainer = document.getElementById('modal-file-tags-container');
 const closeFileTagFormModal = document.getElementById('close-file-tag-form-modal');
 const showChildTags = document.getElementById('show-child-tags');
 
-fileTagFormModal.addEventListener('click', (e) => {
+fileTagFormModal.addEventListener('click', (e) => { // controller
     if (e.target !== searchInput) {
         searchInput.focus();
     }
@@ -28,20 +30,47 @@ removeTagsButton.addEventListener('click', removeTags);
 
 closeFileTagFormModal.addEventListener('click', closeFileModal);
 
-export async function openFileModal() {
-    const tagHierarchy = buildTagHierarchy(tags);
-    renderModalFileTagsTree(tagHierarchy);
+export async function openFileModal() { // controller or view
+    const tagHierarchy = tagsModel.buildTagHierarchy(tagsModel.tags);
+    tagsView.renderTagTree({
+        container: 'modal-file-tags-tree',
+        tagHierarchy,
+        tagClass: 'modal-tag-label',
+        childrenInitiallyVisible: true,
+        onTagClick: (tag, span, li) => {
+            const container = document.getElementById('modal-file-tags-container');
+            const currentTags = Array.from(container.querySelectorAll('.tag')).map(tagDiv => tagDiv.dataset.id);
+            if (!currentTags.includes(tag.id.toString())) {
+                _addTagDivToContainer(tag, container);
+            }
+            document.getElementById('file-tag-search').focus();
+        }
+    });    
     fileTagFormModal.classList.remove('hidden');
     searchInput.focus();
 }
 
-function closeFileModal() {
+function _addTagDivToContainer(tag, container) { 
+    const tagDiv = document.createElement('div');
+
+    tagDiv.dataset.id = tag.id
+    tagDiv.className = 'tag';
+    tagDiv.textContent = tag.name;            
+    tagDiv.style.color = tag.textcolor;
+    tagDiv.style.backgroundColor = tag.color;
+    tagDiv.addEventListener('click', function() {
+        container.removeChild(tagDiv);
+    });
+    container.appendChild(tagDiv);
+}
+
+function closeFileModal() { // view
     searchInput.value = '';
     tagsContainer.innerHTML = "";
     fileTagFormModal.classList.add('hidden');
 }
 
-async function addTags() {
+async function addTags() { // model
     const selectedFiles = getSelectedFiles();
     const tagIds = Array.from(tagsContainer.querySelectorAll('.tag')).map(tagDiv => tagDiv.dataset.id);
 
@@ -75,7 +104,7 @@ async function addTags() {
     closeFileModal();
 }
 
-async function removeTags() {
+async function removeTags() { // model
     const selectedFiles = getSelectedFiles(); 
     const tagIds = Array.from(tagsContainer.querySelectorAll('.tag')).map(tagDiv => tagDiv.dataset.id);
 
@@ -97,28 +126,14 @@ async function removeTags() {
     closeFileModal();
 }
 
-export function addTag(tag) {
-    const tagsContainer = document.getElementById('modal-file-tags-container');
-    const tagDiv = document.createElement('div');
-    tagDiv.className = 'tag';
-    tagDiv.textContent = tag.name;
-    tagDiv.dataset.id = tag.id
-    tagDiv.style.color = tag.textcolor;
-    tagDiv.style.backgroundColor = tag.color;
-    tagDiv.addEventListener('click', function() {
-        tagsContainer.removeChild(tagDiv);
-    });
-    tagsContainer.appendChild(tagDiv);
-}
-
-function fileTagsModalSearch() {
+function fileTagsModalSearch() { // controller
     const query = searchInput.value;
-    const foundTags = searchTagsInclude(query);
-    let completeTags = addMissingParentTags(foundTags);
+    const foundTags = tagsModel.searchTags(query, 'include');
+    let completeTags = tagsModel.addMissingParentTags(foundTags);
     if(showChildTags.checked) {
-        completeTags = addMissingChildTags(completeTags, query);
+        completeTags = tagsModel.addMissingChildTags(completeTags, query);
     }
-    const tagHierarchy = buildTagHierarchy(completeTags);
-    renderModalFileTagsTree(tagHierarchy);
+    const tagHierarchy = tagsModel.buildTagHierarchy(completeTags);
+    tagsView.renderTagsFileTagsModal(tagHierarchy);
     highlightText(query, 'modal-file-tags-tree', 'li span');
 }

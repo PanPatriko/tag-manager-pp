@@ -34,7 +34,7 @@ async function createTag(tagData) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    getTagById(this.lastID).then(resolve).catch(reject);
                 }
             }
         );

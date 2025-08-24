@@ -2,7 +2,6 @@ export let files = [];
 export let currentFile = null;
 export let rootLocation = null;
 export let currentLocation = null;
-export let tags = [];
 export let locations = [];
 export let currentPage = 1;
 export let copiedTags = null;
@@ -27,10 +26,6 @@ export function setCurrentLoc(location) {
 
 export function setRootLoc(location) {
     rootLocation = location;
-}
-
-export function setTags(newTags) {
-    tags = newTags;
 }
 
 export function setLocations(newLocations) {

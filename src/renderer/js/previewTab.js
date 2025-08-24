@@ -6,7 +6,7 @@ import { i18nModel } from './model/i18nModel.js';
 import { i18nView } from './view/i18nView.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    settingsView.documentTheme = settingsModel.theme;
+    document.body.className = settingsModel.theme;
     
     i18nView.applyTranslations(settingsModel.language);
     document.title = i18nModel.t('title-file-preview') || 'File Preview';
@@ -121,7 +121,7 @@ window.addEventListener('message', async (event) => {
         document.title = i18nModel.t('title-file-preview') || 'File Preview';
     }
     if (event.data && event.data.type === 'update-theme' && event.data.theme) {
-        settingsView.documentTheme = event.data.theme;
+        document.body.className = event.data.theme;
     }
 
 });

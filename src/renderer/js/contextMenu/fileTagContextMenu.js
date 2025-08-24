@@ -1,9 +1,9 @@
-import { tags, currentFile} from "../state.js"
-import { openModalEditTag } from "../modals/tagModal.js"
-import { refreshTags } from "../leftSidebar/tagsPanel.js"
+import { currentFile} from "../state.js"
 import { adjustPosition } from "./contextMenu.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
+import { openEditTagModal } from "../controller/tagsModalController.js";
+import { tagsModel } from "../model/tagsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
 
 window.editTag = editTag;
@@ -32,9 +32,9 @@ export function showFileTagContextMenu(x, y, tagId) {
 }
 
 async function editTag(tagId) {
-    const tag = tags.find(t => t.id === tagId);
+    const tag = tagsModel.tags.find(t => t.id === tagId);
     if (tag) {
-        openModalEditTag(tag);
+        openEditTagModal(tag);
     } else {
         console.warn('Tag not found:', tagId);
     }
@@ -46,7 +46,6 @@ async function confirmDeleteFileTag(tagId) {
 
     if (result.isConfirmed) {
         await window.api.deleteFileTag(currentFile.id, tagId);
-        refreshTags();
         refreshFileInfo();
     }
 }

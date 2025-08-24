@@ -1,8 +1,9 @@
-import { tags } from "../state.js"
-import { openModalNewTag, openModalEditTag } from "../modals/tagModal.js"
-import { refreshTags } from "../leftSidebar/tagsPanel.js"
 import { adjustPosition } from "./contextMenu.js";
 
+import { refreshTagsContainer } from "../controller/tagsController.js";
+import { openNewTagModal, openEditTagModal } from "../controller/tagsModalController.js";
+import { tagsView } from "../view/tagsView.js";
+import { tagsModel, TagType, TagClass } from "../model/tagsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
 
 window.editTag = editTag;
@@ -33,18 +34,19 @@ export function showTagContextMenu(x, y, tagId) {
 }
 
 async function editTag(tagId) {
-    const tag = tags.find(t => t.id === tagId);
+    const tag = tagsModel.tags.find(t => t.id === tagId);
     if (tag) {
-        openModalEditTag(tag);
+        openEditTagModal(tag);
     } else {
         console.warn('Tag not found:', tagId);
     }
 }
 
 async function addChildTag(tagId) {
-    const tag = tags.find(t => t.id === tagId);
+    const tag = tagsModel.tags.find(t => t.id === tagId);
+    console.log(tag);
     if (tag) {
-        openModalNewTag(tag);
+        openNewTagModal(tag);
     } else {
         console.warn('Tag not found:', tagId);
     }
@@ -55,7 +57,7 @@ async function confirmDeleteTag(tagId) {
         'question', true);
 
     if (result.isConfirmed) {
-        await window.api.deleteTag(tagId);
-        refreshTags();
+        await tagsModel.deleteTag(tagId);
+        refreshTagsContainer();
     }
 }

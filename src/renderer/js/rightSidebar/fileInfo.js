@@ -1,7 +1,8 @@
-import { addMissingParentTags, buildTagHierarchy, renderFileTagsTree, applyExpandedFileTags } from "../tags.js"
 import { displayFiles } from "../content/content.js"
 import { files, currentFile, setCurrentFile } from "../state.js"
 
+import { tagsView } from "../view/tagsView.js";
+import { tagsModel, TagClass, TagType } from '../model/tagsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
 
 const showFileInfoButton = document.getElementById('show-file-info');
@@ -166,10 +167,15 @@ export async function renderFileInfo(file) {
         if (!tags || tags.length === 0) {
             fileTagsTree.textContent = i18nModel.t('file-prev-no-tags');
         } else {
-            const completeTags = addMissingParentTags(tags);
-            const tagHierarchy = buildTagHierarchy(completeTags);
-            renderFileTagsTree(tagHierarchy);
-            applyExpandedFileTags()
+            const completeTags = tagsModel.addMissingParentTags(tags);
+            const tagHierarchy = tagsModel.buildTagHierarchy(completeTags);
+            tagsView.renderTagTree({
+                container: tagsView.fileTagsContainer,
+                tagHierarchy,
+                tagClass: 'tag-label file-tag-item',
+                childrenInitiallyVisible: false
+            });            
+            tagsView.applyExpandedTags(tagsModel.getExpandedTags(TagType.EXPANDED_FILE_TAGS), TagClass.FILE_TAG_ITEM);
         }
     } else {
         fileIdSpan.textContent = i18nModel.t('file-prev-no-ID');

@@ -4,81 +4,29 @@ import { displayFiles } from "../content/content.js";
 
 export const settingsView = {
 
-    get settingsModal() {
-        return document.getElementById('settings-modal');
-    },
+    get settingsModal() { return document.getElementById('settings-modal'); },
 
-    get openModalButton() {
-        return document.getElementById('open-settings-modal');
-    },
+    get openModalButton() { return document.getElementById('open-settings-modal'); },
 
-    get closeModalButton() {
-        return document.getElementById('close-settings-modal');
-    },
+    get closeModalButton() { return document.getElementById('close-settings-modal'); },
     
-    get languageSelect() {
-        return document.getElementById('language-select');
-    },
+    get languageSelect() { return document.getElementById('language-select'); },
 
-    set languageSelect(value) {
-        this.languageSelect.value = value;
-    },
+    get toggleThemeButton() { return document.getElementById('theme-toggle'); },
 
-    set documentTheme(value) {
-        document.body.className = value;
-    },
+    get iconSizeSelect() { return document.getElementById('icon-size'); },
 
-    get toggleThemeButton() {
-        return document.getElementById('theme-toggle');
-    },
+    set iconSizeSelect(value) { this.iconSizeSelect.value = value; },
 
-    get iconSizeSelect() {
-        return document.getElementById('icon-size');
-    },
+    get maxFilesSelect() { return document.getElementById('max-files'); },
 
-    set iconSizeSelect(value) {
-        this.iconSizeSelect.value = value;
-    },
+    get vidAutoplay() { return document.getElementById('vid-autoplay'); },
 
-    get maxFilesSelect() {
-        return document.getElementById('max-files');
-    },
+    get vidLoop() { return document.getElementById('vid-loop'); },
 
-    set maxFilesSelect(value) {
-        this.maxFilesSelect.value = value;
-    },
+    get defTagBgColor() { return document.getElementById('def-tag-bgcolor'); },
 
-    get vidAutoplay() {
-        return document.getElementById('vid-autoplay');
-    },
-
-    set vidAutoplay(value) {
-        this.vidAutoplay.checked = value;
-    },
-
-    get vidLoop() {
-        return document.getElementById('vid-loop');
-    },
-
-    set vidLoop(value) {
-        this.vidLoop.checked = value;
-    },
-
-    get defTagBgColor() {
-        return document.getElementById('def-tag-bgcolor');
-    },
-
-    set defTagBgColor(value) {
-        this.defTagBgColor.value = value;
-    },
-
-    get defTagTextColor() {
-        return document.getElementById('def-tag-textcolor');
-    },
-
-    set defTagTextColor(value) {
-        this.defTagTextColor.value = value;
-    },
+    get defTagTextColor() { return document.getElementById('def-tag-textcolor'); },
 
     applyIconSize(value) {
         document.querySelectorAll('.file-container').forEach(el => {

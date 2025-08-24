@@ -1,9 +1,10 @@
-import { getTagHierarchyString, getTagHierarchySpan, searchTagsStartsWith } from "../tags.js";
-import {tags, files, setFiles, setRootLoc, setCurrentLoc} from "../state.js"
+import { setFiles, setCurrentLoc} from "../state.js"
 import { highlightText } from "../utils.js";
 import { displayFiles } from "../content/content.js"
 import { pushToHistory } from "../content/pagination.js"
 
+import { tagsView } from '../view/tagsView.js';
+import { tagsModel } from '../model/tagsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
 
 const searchInput = document.getElementById('search-input');
@@ -25,14 +26,14 @@ let andTags = [];
 let orTags = [];
 let notTags = [];
 
-searchInput.addEventListener('input', function() {
+searchInput.addEventListener('input', function() { // controller todo
     const query = searchInput.value.trim().toLowerCase();
     searchSuggestions.innerHTML = '';
     if (query.length > 0) {
-        const filteredTags = searchTagsStartsWith(query);
+        const filteredTags = tagsModel.searchTags(query, 'startsWith');
         filteredTags.forEach(tag => {
             const suggestionItem = document.createElement('li');
-            const div = getTagHierarchySpan(tag);
+            const div = tagsView.buildTagHierarchyDiv(tagsModel.buildSingleTagHierarchy(tag));
             suggestionItem.className = 'suggestion-item';
 
             const buttonsContainer = document.createElement('div');
@@ -54,15 +55,15 @@ searchInput.addEventListener('input', function() {
     }
 });
 
-searchSuggestions.addEventListener('mouseenter', () => {
+searchSuggestions.addEventListener('mouseenter', () => { // ctrl 
     isMouseOverSearchSuggestions = true;
 });
 
-searchSuggestions.addEventListener('mouseleave', () => {
+searchSuggestions.addEventListener('mouseleave', () => { // ctrl
     isMouseOverSearchSuggestions = false;
 });
 
-searchInput.addEventListener('focusout', function() {
+searchInput.addEventListener('focusout', function() { // ctrl todo
     if (!isMouseOverSearchSuggestions) {
         searchSuggestions.innerHTML = '';
         searchInput.value = '';
@@ -71,7 +72,7 @@ searchInput.addEventListener('focusout', function() {
     }
 });
 
-searchButton.addEventListener('click', async function() {
+searchButton.addEventListener('click', async function() { // controller
     pushToHistory({
         type: 'search',
         andTags: [...andTags],
@@ -81,7 +82,7 @@ searchButton.addEventListener('click', async function() {
     searchFiles(andTags, orTags, notTags);
 });
 
-export async function searchFiles(andTags, orTags, notTags) {
+export async function searchFiles(andTags, orTags, notTags) { // model, ctrl todo, view todo
     const newFiles = await window.api.searchFiles(andTags, orTags, notTags);
     setCurrentLoc(null);
     setFiles(newFiles);  
@@ -90,7 +91,7 @@ export async function searchFiles(andTags, orTags, notTags) {
     document.getElementById('dir-name').classList.add('hidden');
 }
 
-export function displaySearchTags(newAndTags, newOrTags, newNotTags) {
+export function displaySearchTags(newAndTags, newOrTags, newNotTags) { // view todo
     searchTagsContainer.innerHTML = '';
 
     andTags = [];
@@ -108,7 +109,7 @@ export function displaySearchTags(newAndTags, newOrTags, newNotTags) {
     });
 }
 
-function createSuggestionButton(operationSign, operation, tag) {
+function createSuggestionButton(operationSign, operation, tag) { // view todo
     const button = document.createElement('button');
     button.className = `suggestion-button ${operation}`;
     button.textContent = operationSign;
@@ -122,8 +123,8 @@ function createSuggestionButton(operationSign, operation, tag) {
     return button;
 }
 
-function addSearchTag(tagID, operationSign, operation) {
-    const tag = tags.find(t => t.id === tagID);
+function addSearchTag(tagID, operationSign, operation) { //view todo
+    const tag = tagsModel.tags.find(t => t.id === tagID);
     if (!tag) {
         console.warn(`Tag with ID "${tagID}" not found.`);
         return;
@@ -138,7 +139,7 @@ function addSearchTag(tagID, operationSign, operation) {
     const tagDiv = document.createElement('div');
     tagDiv.className = `search-tag ${operation}`;
     tagDiv.textContent = `${operationSign.toUpperCase()} ${tag.name}`;
-    tagDiv.setAttribute('title', getTagHierarchyString(tag));
+    tagDiv.setAttribute('title', tagsView.buildTagHierarchyString(tagsModel.buildSingleTagHierarchy(tag)));
     tagDiv.style.color =  tag.textcolor;
     tagDiv.style.backgroundColor = tag.color;
     tagDiv.dataset.tagName = tag.name;
@@ -152,7 +153,7 @@ function addSearchTag(tagID, operationSign, operation) {
     addTag(tag.id, operation);
 }
 
-function addTag(tagId, operation) {
+function addTag(tagId, operation) { // model
     switch (operation) {
         case andTagOperation:
             andTags.push(tagId);
@@ -166,7 +167,7 @@ function addTag(tagId, operation) {
     }
 }
 
-function removeTag(tagId, operation) {   
+function removeTag(tagId, operation) {   // model
     switch (operation) {
         case andTagOperation:
             andTags = andTags.filter(tag => tag !== tagId);

@@ -6,6 +6,7 @@
     justify-content:left;
     align-content: start;
     overflow-y: auto;
+    flex: 1 1 auto;
 }
 
 .file-container-wrapper {

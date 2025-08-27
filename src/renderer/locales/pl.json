@@ -33,7 +33,6 @@
     "loc-name-placeholder": "Podaj nazwę",
     "loc-path": "Scieżka do lokalizacji:",
     "loc-path-placeholder": "Podaj ścieżkę",
-    "loc-directory-container": "Drzewko katalogów",
     "loc-alert-empty-name": "Nazwa lokalizacji nie może być pusta", 
     "loc-alert-empty-path": "Ścieżka lokalizacji nie może być pusta",
     "loc-alert-duplicate-path": "Lokalizacja o podanej ścieżce już istnieje",

@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 900;
     max-height: 600px; 
     box-sizing: border-box;
     list-style-type: none; 

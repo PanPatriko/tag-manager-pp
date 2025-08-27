@@ -33,7 +33,6 @@
     "loc-name-placeholder": "Enter location name",
     "loc-path": "Location path:",
     "loc-path-placeholder": "Enter location path",
-    "loc-directory-container": "Directory tree view",
     "loc-alert-empty-name": "Location name cannot be empty",
     "loc-alert-empty-path": "Location path cannot be empty", 
     "loc-alert-duplicate-path": "Location with this path already exists",

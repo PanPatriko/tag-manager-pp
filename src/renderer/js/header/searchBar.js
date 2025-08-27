@@ -1,8 +1,9 @@
-import { setFiles, setCurrentLoc} from "../state.js"
+import { setFiles } from "../state.js"
 import { highlightText } from "../utils.js";
 import { displayFiles } from "../content/content.js"
 import { pushToHistory } from "../content/pagination.js"
 
+import { locationsModel } from "../model/locationsModel.js"
 import { tagsView } from '../view/tagsView.js';
 import { tagsModel } from '../model/tagsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
@@ -84,7 +85,7 @@ searchButton.addEventListener('click', async function() { // controller
 
 export async function searchFiles(andTags, orTags, notTags) { // model, ctrl todo, view todo
     const newFiles = await window.api.searchFiles(andTags, orTags, notTags);
-    setCurrentLoc(null);
+    locationsModel.currentDirectory = null;
     setFiles(newFiles);  
     displayFiles();
     document.getElementById('parent-directory').disabled = true;

@@ -1,7 +1,9 @@
-import {files, currentLocation, rootLocation, currentPage, setCurrentPage} from '../state.js';
-import { settingsModel } from '../model/settingsModel.js';
+import {files, currentPage, setCurrentPage} from '../state.js';
 import { displayDirectory, displayFiles } from "./content.js";
 import { searchFiles, displaySearchTags } from '../header/searchBar.js';
+
+import { settingsModel } from '../model/settingsModel.js';
+import { locationsModel } from '../model/locationsModel.js';
 
 const filePagesSelect = document.getElementById('file-pages');
 const parentDirButton = document.getElementById('parent-directory');
@@ -33,9 +35,9 @@ prevPageButton.addEventListener('click', () => {
 });
 
 parentDirButton.addEventListener('click', async () => {
-    if(currentLocation != rootLocation) {
+    if(locationsModel.currentDirectory != locationsModel.root) {
         try {
-            const parentLocation = await window.api.getDirectoryParent(currentLocation);
+            const parentLocation = await window.api.getDirectoryParent(locationsModel.currentDirectory);
             pushToHistory({ type: 'directory', path: parentLocation });
             displayDirectory(parentLocation);
         } catch(error) {

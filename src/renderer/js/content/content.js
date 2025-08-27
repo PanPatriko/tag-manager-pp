@@ -1,4 +1,4 @@
-import { currentPage, files, setFiles, thumbnailDir, rootLocation, setCurrentLoc} from "../state.js"
+import { currentPage, files, setFiles, thumbnailDir } from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
 import { updateFilePages, pushToHistory } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
@@ -7,8 +7,9 @@ import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
 import { setCurrentFile } from "../state.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 import { previewWindow } from "../contextMenu/contextMenu.js";
+
+import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';
-//import { showPopup } from "../utils.js"
 
 const path = window.api.path;
 const sortByNameButton = document.getElementById('sort-by-name');
@@ -224,14 +225,14 @@ export async function displayDirectory(dirPath) {
     }
 
     const prevDirBttn = document.getElementById('parent-directory');
-    if(rootLocation === dirPath) {     
+    if(locationsModel.root === dirPath) {     
         prevDirBttn.disabled = true;
     } else {
         prevDirBttn.disabled = false;
     }
     dirNameSpan.classList.remove('hidden');
     dirNameSpan.textContent = await path.basename(dirPath, "");
-    setCurrentLoc(dirPath);
+    locationsModel.currentDirectory = dirPath;
     setFiles(dirFiles);
     displayFiles();
 }

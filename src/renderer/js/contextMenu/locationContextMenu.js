@@ -1,8 +1,8 @@
-import {locations} from "../state.js"
-import { openLocationModal } from "../modals/locationModal.js"
-import { refreshLocations } from "../leftSidebar/locations.js"
 import { adjustPosition } from "./contextMenu.js";
 
+import { openLocationModal } from "../controller/locationModalController.js"
+import { refreshLocations } from "../controller/locationsController.js";
+import { locationsModel } from '../model/locationsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
 
 window.editLocation = editLocation;
@@ -31,7 +31,7 @@ export function showLocContextMenu(x, y, locId) {
 }
 
 async function editLocation(locId) {
-    const location = locations.find(l => l.id === locId);
+    const location = locationsModel.locations.find(l => l.id === locId);
     if (location) {
         openLocationModal(location);
     } else {
@@ -44,7 +44,7 @@ async function confirmDeleteLocation(locId) {
         'question', true);
 
     if (result.isConfirmed) {
-        await window.api.deleteLocation(locId);
+        await locationsModel.deleteLocation(locId);
         refreshLocations()
     }
 }

@@ -1,11 +1,12 @@
 const sharp = require('sharp');
 const ffmpeg = require('fluent-ffmpeg');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const MAX_FOLDERS = 1000;
 
-async function getDirectoryHierarchy(directoryPath) {
+// Recursive with limit: returns full hierarchy but stops if too large
+async function getDirectoryHierarchyRecursive(directoryPath) {
     let folderCount = 0;
 
     const buildHierarchy = async (dirPath) => {
@@ -13,7 +14,7 @@ async function getDirectoryHierarchy(directoryPath) {
             throw new Error(`Directory hierarchy is too large. Limit is ${MAX_FOLDERS} folders.`);
         }
         folderCount++;
-        const items = fs.readdirSync(dirPath, { withFileTypes: true });
+        const items = await fs.readdir(dirPath, { withFileTypes: true });
         const children = await Promise.all(
             items
                 .filter(item => item.isDirectory())
@@ -29,6 +30,23 @@ async function getDirectoryHierarchy(directoryPath) {
         };
     };
     return await buildHierarchy(directoryPath);
+}
+
+//Non-recursive: returns root and only first-level children
+async function getDirectoryHierarchy(directoryPath) {
+    const items = await fs.readdir(directoryPath, { withFileTypes: true });
+    const children = items
+        .filter(item => item.isDirectory())
+        .map(item => ({
+            name: item.name,
+            fullPath: path.join(directoryPath, item.name),
+            children: []
+        }));
+    return {
+        name: path.basename(directoryPath),
+        fullPath: directoryPath,
+        children
+    };
 }
 
 async function getDirectoryParent(directoryPath) {
@@ -61,6 +79,10 @@ async function getVideoDimensions(filePath) {
 }
 
 async function generateThumbnail(filePath, thumbnailPath) {
+    if(await fs.access(filePath) === false) {
+        console.warn(`generateThumbnail: File does not exist: ${filePath}`);
+        return;
+    }
     const extension = path.extname(filePath).slice(1);
     const maxWidth = 400;
     const maxHeight = 225;
@@ -87,7 +109,7 @@ async function generateThumbnail(filePath, thumbnailPath) {
             }
             size = `${newWidth}x${newHeight}`;
         } catch (e) {
-            console.warn('Could not get video dimensions, using default size.', e);
+            console.warn('generateThumbnail: Could not get video dimensions, using default size.', e);
         }
         await new Promise((resolve, reject) => {
             ffmpeg(filePath)
@@ -101,7 +123,7 @@ async function generateThumbnail(filePath, thumbnailPath) {
                 .on("error", reject);
         });
     } else {
-        console.warn(`Cannot generate thumbnail for unsupported file type: ${extension}`);
+        console.warn(`generateThumbnail: Cannot generate thumbnail for unsupported file type: ${extension}`);
         //throw new Error(`Unsupported file type: ${extension}`);
     }
 }

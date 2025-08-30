@@ -1,6 +1,6 @@
 import { currentPage, files, setFiles, thumbnailDir } from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
-import { updateFilePages, pushToHistory } from "./pagination.js"
+import { updateFilePages } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
@@ -8,6 +8,7 @@ import { setCurrentFile } from "../state.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 import { previewWindow } from "../contextMenu/contextMenu.js";
 
+import { pushToHistory } from "../controller/historyController.js"
 import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';
 

@@ -1,8 +1,8 @@
 import { setFiles } from "../state.js"
 import { highlightText } from "../utils.js";
 import { displayFiles } from "../content/content.js"
-import { pushToHistory } from "../content/pagination.js"
 
+import { pushToHistory } from "../controller/historyController.js"
 import { locationsModel } from "../model/locationsModel.js"
 import { tagsView } from '../view/tagsView.js';
 import { tagsModel } from '../model/tagsModel.js';

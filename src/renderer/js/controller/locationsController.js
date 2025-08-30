@@ -1,6 +1,6 @@
 import { displayDirectory } from "../content/content.js"
-import { pushToHistory } from "../content/pagination.js"
 
+import { pushToHistory } from "./historyController.js"
 import { openLocationModal } from "./locationModalController.js";
 import { locationsModel } from "../model/locationsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
@@ -34,6 +34,17 @@ export async function refreshLocations() {
     if (locationsModel.activeLocation) {
         locationsView.setActiveLocation(locationsModel.activeLocation.id);
     }
+}
+
+export async function restoreLocation(historyRecord) {
+    locationsModel.root = historyRecord.root;
+    locationsModel.activeLocation = historyRecord.activeLocation;
+    
+    refreshLocations();
+    locationsView.directoryContainer.innerHTML = '';
+    await locationsView.renderHierarchy(historyRecord.path, locationsView.directoryContainer, _onDirectoryClick, async (path) => {
+        return await window.api.getDirectoryHierarchy(path);
+    });
 }
 
 export async function initLocationsController() {

@@ -1,7 +1,7 @@
 import {files, currentPage, setCurrentPage} from '../state.js';
 import { displayDirectory, displayFiles } from "./content.js";
-import { searchFiles, displaySearchTags } from '../header/searchBar.js';
 
+import { pushToHistory } from "../controller/historyController.js"
 import { settingsModel } from '../model/settingsModel.js';
 import { locationsModel } from '../model/locationsModel.js';
 
@@ -9,11 +9,6 @@ const filePagesSelect = document.getElementById('file-pages');
 const parentDirButton = document.getElementById('parent-directory');
 const prevPageButton = document.getElementById('prev-page');
 const nextPageButton = document.getElementById('next-page');
-const prevButton = document.getElementById('prev-button');
-const nextButton = document.getElementById('next-button');
-
-let history = [];
-let historyIndex = -1;
 
 filePagesSelect.addEventListener('change', (e) => {
     setCurrentPage(parseInt(e.target.value, 10));
@@ -46,18 +41,6 @@ parentDirButton.addEventListener('click', async () => {
     }
 });
 
-prevButton.addEventListener('click', () => {
-    if (historyIndex > 0) {
-        goToHistory(historyIndex - 1);
-    }
-});
-
-nextButton.addEventListener('click', () => {
-    if (historyIndex < history.length - 1) {
-        goToHistory(historyIndex + 1);
-    }
-});
-
 export function updateFilePages() {
     const totalPages = Math.ceil(files.length / settingsModel.maxFilesPerPage);
     filePagesSelect.innerHTML = '';
@@ -72,35 +55,4 @@ export function updateFilePages() {
         setCurrentPage(1);
     }
     filePagesSelect.value = currentPage;
-}
-
-export function pushToHistory(location) {
-    if (historyIndex < history.length - 1) {
-        history = history.slice(0, historyIndex + 1);
-    }
-    history.push(location);
-    historyIndex = history.length - 1;
-    updateHistoryButtons();
-}
-
-function goToHistory(index) {
-    if (index >= 0 && index < history.length) {
-        historyIndex = index;
-        const entry = history[historyIndex];
-        if (entry.type === 'directory') {
-            displayDirectory(entry.path);
-        } else if (entry.type === 'search') {
-            const andTags = [...entry.andTags];
-            const orTags = [...entry.orTags];
-            const notTags = [...entry.notTags];
-            displaySearchTags(andTags, orTags, notTags);
-            searchFiles(andTags, orTags, notTags);
-        }
-        updateHistoryButtons();
-    }
-}
-
-function updateHistoryButtons() {
-    prevButton.disabled = historyIndex <= 0;
-    nextButton.disabled = historyIndex >= history.length - 1;
 }

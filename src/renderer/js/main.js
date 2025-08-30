@@ -6,6 +6,7 @@ import { initTagsController } from './controller/tagsController.js';
 import { initTagsModalController } from './controller/tagsModalController.js';
 import { initLocationsController } from './controller/locationsController.js';
 import { initLocationModalController } from './controller/locationModalController.js';
+import { initHistoryController } from './controller/historyController.js';
 
 import ('./header/searchBar.js');
 import ('./contextMenu/contextMenu.js')
@@ -20,6 +21,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     initLocationsController();
     initLocationModalController();
+
+    initHistoryController();
     
     restoreSidebarState();
     showActivePanel();

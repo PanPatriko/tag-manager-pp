@@ -4,8 +4,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    border-right: var(--border);
-    border-bottom: var(--border);
 }
 
 #tags-button {

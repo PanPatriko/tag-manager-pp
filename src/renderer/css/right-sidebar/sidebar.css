@@ -4,8 +4,6 @@
     display: flex;
     flex-direction: column;
     position: relative; 
-    border-left: var(--border);
-    border-bottom: var(--border);
 }
 
 .right-sidebar-item {
@@ -21,8 +19,4 @@
     top: 0;
     left: 0;
     bottom: 0;
-}
-
-#file-container-resize-handle {
-    border-right: var(--border);
 }

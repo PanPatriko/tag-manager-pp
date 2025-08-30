@@ -2,12 +2,16 @@ import { thumbnailDir } from "../state.js"
 
 const path = window.api.path;
 
-export const locationsView = {    
+export const locationsView = {
+    get locationPanel() {return document.getElementById('location-panel'); },
+    
     get addLocationButton() { return document.getElementById('add-location'); },
 
     get locationContainer() { return document.getElementById('location-container'); },
 
     get directoryContainer() { return document.getElementById('directory-container'); },
+
+    get resizeHandle() { return document.getElementById('location-resize-handle'); },
 
     renderLocations(locations, onLocationClick) {
         const container = this.locationContainer;

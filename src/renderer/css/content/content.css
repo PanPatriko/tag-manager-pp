@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     width: 60%;
-    border-bottom: var(--border);
 }
 
 #loading-bar-container {

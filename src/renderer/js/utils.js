@@ -46,3 +46,7 @@ export function highlightText(query, containerId, spanSelector) {
         }
     });
 }
+
+export function formatString(template, values) {
+    return template.replace(/{(\w+)}/g, (match, key) => values[key] || match);
+}

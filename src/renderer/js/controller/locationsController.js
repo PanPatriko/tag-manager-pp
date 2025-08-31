@@ -51,7 +51,7 @@ export async function restoreLocation(historyRecord) {
     });
 }
 
-export async function initLocationsController() {
+export async function initLocations() {
     await locationsModel.getLocationsFromDB();
     refreshLocations();
 

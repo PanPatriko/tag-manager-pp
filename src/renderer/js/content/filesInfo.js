@@ -1,4 +1,4 @@
-import { formatString } from '../i18n.js';
+import { formatString } from '../utils.js';
 import { i18nModel } from '../model/i18nModel.js';
 
 const fileCountLabel = document.getElementById('total-file-count');

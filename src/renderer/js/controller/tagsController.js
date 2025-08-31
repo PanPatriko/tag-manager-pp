@@ -33,7 +33,7 @@ export function refreshTagsContainer() {
     );
 }
 
-export async function initTagsController() {
+export async function initTags() {
     await tagsModel.getTagsFromDB();
 
     refreshTagsContainer();

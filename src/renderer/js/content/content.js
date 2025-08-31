@@ -3,11 +3,10 @@ import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from
 import { updateFilePages } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { openFileModal } from "../modals/fileTagModal.js"
-import { copyTags, pasteTags } from "../contextMenu/fileContextMenu.js"
 import { setCurrentFile } from "../state.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
-import { previewWindow } from "../contextMenu/contextMenu.js";
 
+import { previewWindow, copyTags, pasteTags } from "../controller/contextMenuController.js";
 import { pushToHistory } from "../controller/historyController.js"
 import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';

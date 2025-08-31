@@ -1,12 +1,13 @@
 import { showActivePanel } from './leftSidebar/leftSidebar.js';
 import { restoreSidebarState } from './content/toggleSidebars.js';
 
-import { initSettingsController } from './controller/settingsController.js';
-import { initTagsController } from './controller/tagsController.js';
-import { initTagsModalController } from './controller/tagsModalController.js';
-import { initLocationsController } from './controller/locationsController.js';
-import { initLocationModalController } from './controller/locationModalController.js';
-import { initHistoryController } from './controller/historyController.js';
+import { initSettings } from './controller/settingsController.js';
+import { initTags } from './controller/tagsController.js';
+import { initTagsModal } from './controller/tagsModalController.js';
+import { initLocations } from './controller/locationsController.js';
+import { initLocationsModal } from './controller/locationModalController.js';
+import { initHistory } from './controller/historyController.js';
+import { initContextMenu } from './controller/contextMenuController.js';
 
 import ('./header/searchBar.js');
 import ('./contextMenu/contextMenu.js')
@@ -14,15 +15,16 @@ import ('./content/toggleSidebars.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    await initSettingsController();
+    await initSettings();
 
-    await initTagsController();
-    initTagsModalController();
+    await initTags();
+    initTagsModal();
 
-    initLocationsController();
-    initLocationModalController();
+    initLocations();
+    initLocationsModal();
 
-    initHistoryController();
+    initHistory();
+    initContextMenu();
     
     restoreSidebarState();
     showActivePanel();

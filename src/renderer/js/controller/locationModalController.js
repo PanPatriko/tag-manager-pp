@@ -48,7 +48,7 @@ async function _openFolderDialog() {
     }
 }
 
-export function initLocationModalController() {
+export function initLocationsModal() {
     locationModalView.pathBrowseButton.addEventListener('click', _openFolderDialog);
     locationModalView.cancelButton.addEventListener('click', _closeModal);
     locationModalView.okButton.addEventListener('click', _saveLocation);

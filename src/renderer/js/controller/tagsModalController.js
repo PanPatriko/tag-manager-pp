@@ -72,7 +72,7 @@ function _searchParentTag(query) {
     }
 }
 
-export function initTagsModalController() {
+export function initTagsModal() {
 
     tagsView.addTagButton.addEventListener('click', () => { openNewTagModal(); });
 

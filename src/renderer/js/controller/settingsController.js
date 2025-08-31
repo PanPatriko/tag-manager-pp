@@ -4,7 +4,7 @@ import { settingsModel } from '../model/settingsModel.js';
 import { i18nView } from '../view/i18nView.js';
 import { settingsView } from '../view/settingsView.js';
 
-import { previewWindow } from '../contextMenu/contextMenu.js';
+import { previewWindow } from './contextMenuController.js';
 import { refreshLabels } from '../content/filesInfo.js';
 
 async function _setLanguage(locale) {
@@ -95,7 +95,7 @@ function initVidSettings() {
     });
 }
 
-export async function initSettingsController() {
+export async function initSettings() {
     initBodyTheme();
     await initLanguageSelect();
     initIconSizeSelect();

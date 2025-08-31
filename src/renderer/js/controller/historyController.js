@@ -37,7 +37,7 @@ export function pushToHistory(record) {
     _updateHistoryButtons();
 }
 
-export async function initHistoryController() {
+export async function initHistory() {
     _updateHistoryButtons();
 
     historyView.prevHistoryBtn.addEventListener('click', () => {

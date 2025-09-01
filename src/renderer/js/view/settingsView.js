@@ -1,4 +1,4 @@
-import { setCurrentPage, files } from '../state.js';
+import { setCurrentPage } from '../state.js';
 import { updateFilePages } from "../content/pagination.js";
 import { displayFiles } from "../content/content.js";
 
@@ -53,6 +53,6 @@ export const settingsView = {
     applyMaxFiles(value) {
         setCurrentPage(1);
         updateFilePages();
-        displayFiles(files);
+        displayFiles();
     },
 };

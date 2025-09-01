@@ -1,4 +1,4 @@
-import { currentPage, files, setFiles, thumbnailDir } from "../state.js"
+import { currentPage, thumbnailDir } from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
 import { updateFilePages } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
@@ -8,6 +8,8 @@ import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 
 import { previewWindow, copyTags, pasteTags } from "../controller/contextMenuController.js";
 import { pushToHistory } from "../controller/historyController.js"
+
+import { filesModel } from "../model/filesModel.js"
 import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';
 
@@ -87,15 +89,15 @@ function isModalOpen() {
 }
 
 sortByNameButton.addEventListener('click', function() {
-    if (files.length === 0) return;
+    if (filesModel.files.length === 0) return;
     sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
     displayFiles();
     updateSortDirectionIndicator();
 });
 
-export function sortFiles() {
+export function sortFiles() { // model
     const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-    const sortedFiles = [...files].sort((a, b) => {
+    const sortedFiles = [...filesModel.files].sort((a, b) => {
         if (a.isDirectory && !b.isDirectory) {
             return -1;
         }
@@ -106,7 +108,7 @@ export function sortFiles() {
         const nameB = b.name.toLowerCase();
         return sortOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
     });
-    setFiles(sortedFiles);
+    filesModel.files = sortedFiles;
 }
 
 function updateSortDirectionIndicator() {
@@ -166,10 +168,10 @@ function selectFile(fileContainer) {
     const fileId = fileContainer.dataset.id;
 
     if(!fileId) {
-        file = files.find(f => f.id == fileId);
+        file = filesModel.files.find(f => f.id == fileId);
     } else {
         const filePath = fileContainer.dataset.path;
-        file = files.find(f => f.path === filePath);
+        file = filesModel.files.find(f => f.path === filePath);
     }
     updateSelectedFileCount();
     createFilePreview(file);
@@ -233,7 +235,7 @@ export async function displayDirectory(dirPath) {
     dirNameSpan.classList.remove('hidden');
     dirNameSpan.textContent = await path.basename(dirPath, "");
     locationsModel.currentDirectory = dirPath;
-    setFiles(dirFiles);
+    filesModel.files = dirFiles;
     displayFiles();
 }
 
@@ -245,8 +247,8 @@ export async function displayFiles() {
     sortFiles();
 
     const start = (currentPage - 1) * settingsModel.maxFilesPerPage;
-    const end = Math.min(start + settingsModel.maxFilesPerPage, files.length);
-    const currentFiles = files.slice(start, end);
+    const end = Math.min(start + settingsModel.maxFilesPerPage, filesModel.files.length);
+    const currentFiles = filesModel.files.slice(start, end);
 
     loadingBarContainer.classList.remove('hidden');
     loadingBar.style.width = '0%';
@@ -340,9 +342,9 @@ export async function displayFiles() {
         //await new Promise(r => setTimeout(r, 100));
     };
                
-    const folderFilesCount = files.filter(file => file.isDirectory).length;
-    updateFileCount(files.length - folderFilesCount, folderFilesCount);
-    if(files.length > 0) {
+    const folderFilesCount = filesModel.files.filter(file => file.isDirectory).length;
+    updateFileCount(filesModel.files.length - folderFilesCount, folderFilesCount);
+    if(filesModel.files.length > 0) {
         updateCurrentFilesLabel(start + 1, end);
     } else {
         updateCurrentFilesLabel(0, 0);

@@ -1,10 +1,11 @@
-import { files } from "../state.js";
 import { highlightText } from "../utils.js";
 import { getSelectedFiles } from "../content/content.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
-import { tagsView } from '../view/tagsView.js';
+import { filesModel } from "../model/filesModel.js";
 import { tagsModel } from '../model/tagsModel.js';
+
+import { tagsView } from '../view/tagsView.js';
 
 const fileTagFormModal = document.getElementById('file-tag-form-modal');
 const addTagsButton = document.getElementById('add-tags-button');
@@ -88,7 +89,7 @@ async function addTags() { // model
             const newFile = await window.api.getFileByPath(filePath);
             fileId = newFile.id;
             file.dataset.id = fileId;
-            files.find(f => f.path === filePath).id = fileId;
+            filesModel.files.find(f => f.path === filePath).id = fileId;
         }
 
         for (const tagId of tagIds) {

@@ -1,9 +1,11 @@
-import {files, currentPage, setCurrentPage} from '../state.js';
+import { currentPage, setCurrentPage} from '../state.js';
 import { displayDirectory, displayFiles } from "./content.js";
 
-import { pushToHistory } from "../controller/historyController.js"
+import { filesModel } from '../model/filesModel.js';
 import { settingsModel } from '../model/settingsModel.js';
 import { locationsModel } from '../model/locationsModel.js';
+
+import { pushToHistory } from "../controller/historyController.js"
 
 const filePagesSelect = document.getElementById('file-pages');
 const parentDirButton = document.getElementById('parent-directory');
@@ -12,20 +14,20 @@ const nextPageButton = document.getElementById('next-page');
 
 filePagesSelect.addEventListener('change', (e) => {
     setCurrentPage(parseInt(e.target.value, 10));
-    displayFiles(files);
+    displayFiles();
 });
 
 nextPageButton.addEventListener('click', () => {
-    if (currentPage * settingsModel.maxFilesPerPage < files.length) {
+    if (currentPage * settingsModel.maxFilesPerPage < filesModel.files.length) {
         setCurrentPage(currentPage + 1);
-        displayFiles(files);
+        displayFiles();
     }
 });
 
 prevPageButton.addEventListener('click', () => {
     if (currentPage > 1) {
         setCurrentPage(currentPage - 1);
-        displayFiles(files);
+        displayFiles();
     }
 });
 
@@ -42,7 +44,7 @@ parentDirButton.addEventListener('click', async () => {
 });
 
 export function updateFilePages() {
-    const totalPages = Math.ceil(files.length / settingsModel.maxFilesPerPage);
+    const totalPages = Math.ceil(filesModel.files.length / settingsModel.maxFilesPerPage);
     filePagesSelect.innerHTML = '';
     for (let i = 1; i <= totalPages; i++) {
         const option = document.createElement('option');

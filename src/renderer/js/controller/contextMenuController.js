@@ -1,6 +1,7 @@
 import { tagsModel } from "../model/tagsModel.js";
 import { locationsModel } from '../model/locationsModel.js';
 import { i18nModel } from '../model/i18nModel.js';
+import { filesModel } from "../model/filesModel.js";
 
 import { contextMenuView } from '../view/contextMenuView.js';
 
@@ -9,7 +10,7 @@ import { openNewTagModal, openEditTagModal } from "./tagsModalController.js";
 import { refreshLocations } from "./locationsController.js";
 import { openLocationModal } from "./locationModalController.js"
 
-import { copiedTags, setCopiedTags, files, setFiles, currentFile, setCurrentFileId } from "../state.js"
+import { copiedTags, setCopiedTags, currentFile, setCurrentFileId } from "../state.js"
 import { formatString } from "../utils.js"
 import { openFileModal } from "../modals/fileTagModal.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
@@ -104,7 +105,7 @@ export async function pasteTags() {
             const newFile = await window.api.getFileByPath(filePath);
             fileId = newFile.id;
             file.dataset.id = fileId;
-            files.find(f => f.path === filePath).id = fileId;
+            filesModel.files.find(f => f.path === filePath).id = fileId;
         }
 
         for (const tag of copiedTags) {
@@ -142,7 +143,7 @@ async function _confirmDeleteFile(fileId) {
     
         if (result.isConfirmed) {
             await window.api.deleteFileById(fileId);
-            setFiles(files.filter(f => f.id !== fileId));
+            filesModel.files.filter(f => f.id !== fileId);
             if (fileId === currentFile.id) {
                 setCurrentFileId(null);
             }

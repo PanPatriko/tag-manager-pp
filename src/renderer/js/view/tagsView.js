@@ -23,12 +23,12 @@ export const tagsView = {
         });
     },
 
-    buildTagHierarchyString(hierarchy) { 
+    renderTagHierarchyString(hierarchy) { 
         const hierarchyTagNames = hierarchy.map(t => t.name);
         return hierarchyTagNames.join(' > ');
     },
 
-    buildTagHierarchyDiv(hierarchy) { 
+    renderTagHierarchyDiv(hierarchy) { 
         const div = document.createElement('div');
         hierarchy.forEach((tag, index) => {
             const tagSpan = document.createElement('span');

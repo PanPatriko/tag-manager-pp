@@ -8,9 +8,8 @@ import { initLocations } from './controller/locationsController.js';
 import { initLocationsModal } from './controller/locationModalController.js';
 import { initHistory } from './controller/historyController.js';
 import { initContextMenu } from './controller/contextMenuController.js';
+import { initSearch } from './controller/searchController.js';
 
-import ('./header/searchBar.js');
-import ('./contextMenu/contextMenu.js')
 import ('./content/toggleSidebars.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -28,4 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     restoreSidebarState();
     showActivePanel();
+
+    initSearch();
 });

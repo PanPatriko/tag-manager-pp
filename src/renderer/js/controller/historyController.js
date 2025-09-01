@@ -1,12 +1,14 @@
 import { displayDirectory } from "../content/content.js";
-import { searchFiles, displaySearchTags } from '../header/searchBar.js';
 
-import { restoreLocation } from "./locationsController.js";
+import { searchModel } from "../model/searchModel.js";
 import { locationsModel } from "../model/locationsModel.js";
 import { historyModel } from "../model/historyModel.js";
 
 import { locationsView } from "../view/locationsView.js";
 import { historyView } from "../view/historyView.js";
+
+import { searchFiles, restoreSearchTags } from "./searchController.js";
+import { restoreLocation } from "./locationsController.js";
 
 function _updateHistoryButtons() {
     historyView.prevHistoryBtn.disabled = !historyModel.canGoBack();
@@ -16,14 +18,14 @@ function _updateHistoryButtons() {
 function _updateFiles(record) {
     if (record.type === 'directory') {
         displayDirectory(record.path);
-        displaySearchTags([], [], []);
+        restoreSearchTags([], [], []);
         restoreLocation(record)
     } else if (record.type === 'search') {
         const andTags = [...record.andTags];
         const orTags = [...record.orTags];
         const notTags = [...record.notTags];
-        displaySearchTags(andTags, orTags, notTags);
-        searchFiles(andTags, orTags, notTags);
+        restoreSearchTags(andTags, orTags, notTags);
+        searchFiles();
     }
     _updateHistoryButtons();  
 }

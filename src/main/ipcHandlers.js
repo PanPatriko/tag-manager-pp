@@ -132,11 +132,7 @@ ipcMain.handle('ext:open-ext', (event, path) => {
 ipcMain.handle('ext:open-file-explorer', async (event, filePath) => {
   const resolvedPath = path.resolve(filePath);
   try {
-    const result = await shell.openPath(path.dirname(resolvedPath));
-    if (result) {
-      console.error(`Error opening file explorer: ${result}`);
-      return { success: false, error: result };
-    }
+    shell.showItemInFolder(resolvedPath);
     return { success: true };
   } catch (error) {
     console.error(`Error opening file explorer: ${error.message}`);

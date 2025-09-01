@@ -17,6 +17,7 @@ async function _onLocationClick(location, locDiv, e) {
         await locationsView.renderHierarchy(location.path, dirContainer, _onDirectoryClick, async (path) => {
             return await window.api.getDirectoryHierarchy(path);
         });
+        dirContainer.querySelector('button').click(); // expand root directory
         locationsModel.root = location.path;
         locationsModel.currentDirectory = location.path;
         locationsModel.activeLocation = location;

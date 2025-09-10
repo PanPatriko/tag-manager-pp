@@ -7,107 +7,83 @@ import { settingsView } from '../view/settingsView.js';
 import { previewWindow } from './contextMenuController.js';
 import { refreshLabels } from '../content/filesInfo.js';
 
-async function _setLanguage(locale) {
+async function setLanguage(locale) {
     await i18nModel.load(locale);
     i18nView.applyTranslations(i18nModel.translations);
     refreshLabels(); // TODO - tymczasowo do refaktoru reszty kodu
 }
 
-function _previewWindowPostMessage(type, data) {
+function previewWindowPostMessage(type, data) {
     if (previewWindow && !previewWindow.closed) {
         previewWindow.postMessage({ type, ...data }, '*');
     }
 }
 
-function initBodyTheme() {
+export async function initSettings() {
+
     document.body.className = settingsModel.theme;
 
-    settingsView.toggleThemeButton.addEventListener('click', () => {
-        const newTheme = settingsModel.theme === 'light-theme' ? 'dark-theme' : 'light-theme';
+    settingsView.setLanguage(settingsModel.language);
+    await setLanguage(settingsModel.language);
 
-        settingsModel.theme = newTheme;
-        document.body.className = newTheme;
-        
-        _previewWindowPostMessage('update-theme', { theme: newTheme });
-    });
-}
-
-async function initLanguageSelect() { 
-    settingsView.languageSelect.value = settingsModel.language;
-    await _setLanguage(settingsModel.language);
-
-    settingsView.languageSelect.addEventListener('change', async (e) => {
-        const lang = e.target.value;
-        settingsModel.language = lang;
-        await _setLanguage(lang);
-
-        _previewWindowPostMessage('update-lang', { language: lang });
-    });
-}
-
-function initIconSizeSelect() {
     const iconSize = settingsModel.iconSize;
-    settingsView.iconSizeSelect = iconSize;
+    settingsView.setIconSize(iconSize);
     settingsView.applyIconSize(iconSize);
 
-    settingsView.iconSizeSelect.addEventListener('change', (e) => {
-        const newSize = e.target.value;
-        settingsModel.iconSize = newSize;
-        settingsView.applyIconSize(newSize);
-    });
-}
-
-function initMaxFilesSelect() {
     const maxFiles = settingsModel.maxFilesPerPage;
-    settingsView.maxFilesSelect.value = maxFiles;
+    settingsView.setMaxFiles(maxFiles);
     settingsView.applyMaxFiles(maxFiles);
 
-    settingsView.maxFilesSelect.addEventListener('change', (e) => {
-        const newMax = parseInt(e.target.value, 10);
-        settingsModel.maxFilesPerPage = newMax;
-        settingsView.applyMaxFiles(newMax);
-    });
-}
+    settingsView.setVidAutoplay(settingsModel.vidAutoplay);
+    settingsView.setVidLoop(settingsModel.vidLoop);
 
-function initDefTagColors() {
-    settingsView.defTagBgColor.value = settingsModel.defTagBgColor;
-    settingsView.defTagTextColor.value = settingsModel.defTagTextColor;
+    settingsView.setDefaultTagColor(settingsModel.defTagBgColor);
+    settingsView.setDefaultTagTextColor(settingsModel.defTagTextColor);
 
-    settingsView.defTagBgColor.addEventListener('change', (e) => {
-        settingsModel.defTagBgColor = e.target.value;
+    settingsView.onOpenModalClick(() => {
+        settingsView.openModal();
     });
 
-    settingsView.defTagTextColor.addEventListener('change', (e) => {
-        settingsModel.defTagTextColor = e.target.value;
-    });
-}
-
-function initVidSettings() {
-    settingsView.vidAutoplay.checked = settingsModel.vidAutoplay;
-    settingsView.vidLoop.checked = settingsModel.vidLoop;
-
-     settingsView.vidAutoplay.addEventListener('change', (e) => {
-        settingsModel.vidAutoplay.checked = e.target.checked;
+    settingsView.onCloseModalClick(() => {
+        settingsView.closeModal();
     });
 
-    settingsView.vidLoop.addEventListener('change', (e) => {
-        settingsModel.vidLoop.checked = e.target.checked;
-    });
-}
-
-export async function initSettings() {
-    initBodyTheme();
-    await initLanguageSelect();
-    initIconSizeSelect();
-    initMaxFilesSelect();
-    initDefTagColors();
-    initVidSettings();
-
-    settingsView.openModalButton.addEventListener('click', () => {
-        settingsView.settingsModal.classList.remove('hidden');
+    settingsView.onToggleThemeClick(() => {
+        const newTheme = settingsModel.theme === 'light-theme' ? 'dark-theme' : 'light-theme';
+        settingsModel.theme = newTheme;
+        document.body.className = newTheme;     
+        previewWindowPostMessage('update-theme', { theme: newTheme });
     });
 
-    settingsView.closeModalButton.addEventListener('click', () => {
-        settingsView.settingsModal.classList.add('hidden');
+    settingsView.onLanguageChange(async (lang) => {
+        settingsModel.language = lang;
+        await setLanguage(lang);
+        previewWindowPostMessage('update-lang', { language: lang });
     });
+
+    settingsView.onIconSizeChange((size) => {
+        settingsModel.iconSize = size;
+        settingsView.applyIconSize(size);
+    });
+    
+    settingsView.onMaxFilesChange((value) => {
+        settingsModel.maxFilesPerPage = value;
+        settingsView.applyMaxFiles(value);
+    });
+
+    settingsView.onVidAutoplayChange((checked) => {
+        settingsModel.vidAutoplay = checked;
+    });
+
+    settingsView.onVidLoopChange((checked) => {
+        settingsModel.vidLoop = checked;
+    });
+
+    settingsView.onDefaultTagColorChange((value) => {
+        settingsModel.defTagBgColor = value;
+    });
+
+    settingsView.onDefaultTagTextColorChange((value) => {
+        settingsModel.defTagTextColor = value;
+    });    
 }

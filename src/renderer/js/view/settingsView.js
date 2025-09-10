@@ -2,31 +2,98 @@ import { setCurrentPage } from '../state.js';
 import { updateFilePages } from "../content/pagination.js";
 import { displayFiles } from "../content/content.js";
 
+const settingsModal = document.getElementById('settings-modal');
+
+const languageSelect = document.getElementById('language-select');
+const iconSize = document.getElementById('icon-size');
+const maxFiles = document.getElementById('max-files');
+
+const videoAutoplayCheckbox = document.getElementById('vid-autoplay'); 
+const videoLoopCheckbox = document.getElementById('vid-loop');
+
+const defaultTagColor = document.getElementById('def-tag-bgcolor');
+const defaultTagTextColor = document.getElementById('def-tag-textcolor');
+
 export const settingsView = {
 
-    get settingsModal() { return document.getElementById('settings-modal'); },
+    setLanguage(value) {
+        languageSelect.value = value;
+    },
 
-    get openModalButton() { return document.getElementById('open-settings-modal'); },
+    setIconSize(value) {
+        iconSize.value = value;
+    },
 
-    get closeModalButton() { return document.getElementById('close-settings-modal'); },
+    setMaxFiles(value) {
+        maxFiles.value = value;
+    },    
+
+    setVidAutoplay(value) { 
+       videoAutoplayCheckbox.checked = value;
+    },
+
+    setVidLoop(value) { 
+        videoLoopCheckbox.checked = value;
+    },
     
-    get languageSelect() { return document.getElementById('language-select'); },
+    setDefaultTagColor(value) { 
+       defaultTagColor.value = value;
+    },
 
-    get toggleThemeButton() { return document.getElementById('theme-toggle'); },
+    setDefaultTagTextColor(value) { 
+        defaultTagTextColor.value = value;
+    },  
+    
+    closeModal() { 
+        settingsModal.classList.add('hidden');
+    },
 
-    get iconSizeSelect() { return document.getElementById('icon-size'); },
+    openModal() { 
+        settingsModal.classList.remove('hidden');
+    },
 
-    set iconSizeSelect(value) { this.iconSizeSelect.value = value; },
+    onOpenModalClick(handler) {
+        const el = document.getElementById('open-settings-modal');
+        el.addEventListener('click', (e) => handler(e.target.value));
+    },
 
-    get maxFilesSelect() { return document.getElementById('max-files'); },
+    onCloseModalClick(handler) {
+        const el = document.getElementById('close-settings-modal');
+        el.addEventListener('click', (e) => handler(e.target.value));
+    },
 
-    get vidAutoplay() { return document.getElementById('vid-autoplay'); },
+    onToggleThemeClick(handler) {
+        const el = document.getElementById('theme-toggle');
+        el.addEventListener('click', () => handler());
+    },
 
-    get vidLoop() { return document.getElementById('vid-loop'); },
+    onLanguageChange(handler) {
+        languageSelect.addEventListener('change', (e) => handler(e.target.value));
+    },
 
-    get defTagBgColor() { return document.getElementById('def-tag-bgcolor'); },
+    onIconSizeChange(handler) {
+        iconSize.addEventListener('change', (e) => handler(e.target.value));
+    },
 
-    get defTagTextColor() { return document.getElementById('def-tag-textcolor'); },
+    onMaxFilesChange(handler) {
+        maxFiles.addEventListener('change', (e) => handler(e.target.value));
+    },
+
+    onVidAutoplayChange(handler) {
+        videoAutoplayCheckbox.addEventListener('change', (e) => handler(e.target.checked));
+    },
+
+    onVidLoopChange(handler) {
+        videoLoopCheckbox.addEventListener('change', (e) => handler(e.target.checked));
+    },
+
+    onDefaultTagColorChange(handler) {
+        defaultTagColor.addEventListener('change', (e) => handler(e.target.value));
+    },
+
+    onDefaultTagTextColorChange(handler) {
+        defaultTagTextColor.addEventListener('change', (e) => handler(e.target.value));
+    },
 
     applyIconSize(value) {
         document.querySelectorAll('.file-container').forEach(el => {
@@ -41,7 +108,7 @@ export const settingsView = {
             el.style.fontSize = `${value / 10}px`;
         });
 
-        const gap = Math.max(10, value / 10);
+        const gap = Math.max(10, value / 10); // jako funkcja w files View ??
         const padding = Math.max(10, value / 12.5);
         const filesPanel = document.getElementById('files-panel');
 

@@ -2,11 +2,11 @@ import { tagsModel, TagType, TagClass } from '../model/tagsModel.js';
 
 import { tagsView } from '../view/tagsView.js';
 
-function _handleExpandTags(tag, tagType, tagItem) {
-    const tagId = tag.dataset.id;
+function onTagItemClick(tag, tagType, tagItem) {
+    const tagId = tagsView.getTagItemId(tag);
     const expandedTags = tagsModel.getExpandedTags(tagType);
 
-    if (tag.classList.toggle('expanded')) {
+    if (tagsView.expandTagItem(tag)) {
         expandedTags.push(tagId);
     } else {
         const index = expandedTags.indexOf(tagId);
@@ -18,10 +18,10 @@ function _handleExpandTags(tag, tagType, tagItem) {
 }
 
 export function refreshTagsContainer() {
-    const tagHierarchy = tagsModel.buildTagHierarchy(tagsModel.tags);
+    const tagHierarchy = tagsModel.buildTagHierarchy();
 
     tagsView.renderTagTree({
-        container: tagsView.tagsContainer,
+        container: tagsView.getTagsContainer(),
         tagHierarchy,
         tagClass: 'tag-label tag-item',
         childrenInitiallyVisible: false
@@ -38,17 +38,17 @@ export async function initTags() {
 
     refreshTagsContainer();
 
-    tagsView.tagsContainer.addEventListener('click', (event) => { 
+    tagsView.onTagsContainerClick((event) => { 
         const tag = event.target.closest(`.${TagClass.TAG_ITEM}`);
         if (tag) {
-            _handleExpandTags(tag, TagType.EXPANDED_TAGS, TagClass.TAG_ITEM);
+            onTagItemClick(tag, TagType.EXPANDED_TAGS, TagClass.TAG_ITEM);
         }
     });
 
-    tagsView.fileTagsContainer.addEventListener('click', (event) => { 
+    tagsView.onFileTagsContainerClick((event) => { 
         const fileTag = event.target.closest(`.${TagClass.FILE_TAG_ITEM}`);
         if (fileTag) {
-            _handleExpandTags(fileTag, TagType.EXPANDED_FILE_TAGS, TagClass.FILE_TAG_ITEM);
+            onTagItemClick(fileTag, TagType.EXPANDED_FILE_TAGS, TagClass.FILE_TAG_ITEM);
         }
     });
 }

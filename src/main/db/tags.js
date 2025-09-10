@@ -25,11 +25,11 @@ async function getTagById(id) {
 }
 
 async function createTag(tagData) {
-    const { name, parentId, color, textcolor } = tagData;
+    const { name, parent_id, color, textcolor } = tagData;
     return new Promise((resolve, reject) => {
         db.run(
             'INSERT INTO tags (name, parent_id, color, textcolor) VALUES (?, ?, ?, ?)',
-            [name, parentId, color, textcolor],
+            [name, parent_id, color, textcolor],
             function (err) {
                 if (err) {
                     reject(err);
@@ -42,11 +42,11 @@ async function createTag(tagData) {
 }
 
 async function updateTag(id, tagData) {
-    const { name, parentId, color, textcolor } = tagData;
+    const { name, parent_id, color, textcolor } = tagData;
     return new Promise((resolve, reject) => {
         db.run(
             'UPDATE tags SET name = ?, parent_id = ?, color = ?, textcolor = ? WHERE id = ?',
-            [name, parentId, color, textcolor, id],
+            [name, parent_id, color, textcolor, id],
             function (err) {
                 if (err) {
                     reject(err);

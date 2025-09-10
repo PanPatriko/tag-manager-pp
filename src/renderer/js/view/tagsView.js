@@ -1,10 +1,19 @@
+const tagsContainer = document.getElementById('tags-container');
+const fileTagsContainer = document.getElementById('file-tags-container');
+
 export const tagsView = {
 
-    get addTagButton() { return document.getElementById('add-tag'); },
+    getTagsContainer() { return tagsContainer; },
 
-    get tagsContainer() { return document.getElementById('tags-container'); },
+    getFileTagsContainer() { return fileTagsContainer; },
 
-    get fileTagsContainer() { return document.getElementById('file-tags-container'); },
+    getTagItemId(tag) {
+        return tag.dataset.id;
+    },
+
+    expandTagItem(tag) {
+        return tag.classList.toggle('expanded');
+    },
 
     applyExpandedTags(expandedTags, selectorClass) {     
         expandedTags.forEach(tagId => {
@@ -33,7 +42,7 @@ export const tagsView = {
         hierarchy.forEach((tag, index) => {
             const tagSpan = document.createElement('span');
             tagSpan.style.backgroundColor = tag.color;
-            tagSpan.style.color = tag.textcolor;
+            tagSpan.style.color = tag.textColor;
             tagSpan.textContent = tag.name;
             div.appendChild(tagSpan);
 
@@ -70,7 +79,7 @@ export const tagsView = {
                 span.dataset.id = tag.id;
                 span.textContent = tag.name;
                 if (tagClass) tagClass.split(' ').forEach(cls => span.classList.add(cls));           
-                span.style.color = tag.textcolor;
+                span.style.color = tag.textColor;
                 span.style.backgroundColor = tag.color;
 
                 li.appendChild(span);
@@ -106,4 +115,16 @@ export const tagsView = {
         container.appendChild(tree);
     },
 
+    onAddTagClick(handler) {
+        const el = document.getElementById('add-tag');
+        el.addEventListener('click', () => handler());
+    },
+
+    onTagsContainerClick(handler) {
+        tagsContainer.addEventListener('click', (e) => handler(e));
+    },
+
+    onFileTagsContainerClick(handler) {
+        fileTagsContainer.addEventListener('click', (e) => handler(e));
+    }
 }

@@ -6,7 +6,8 @@ export const tagsModel = {
     set tags(newTags) { tags = newTags; },
 
     async getTagsFromDB() { 
-        tags = await window.api.getTags();
+        const rawTags = await window.api.getTags();
+        tags = rawTags.map(record => new Tag(record));
         if (!Array.isArray(tags)) {
             console.error('getTagsFromDB: window.api.getTags() did not return an array', tags);
             tags = [];
@@ -14,16 +15,18 @@ export const tagsModel = {
         return tags;
     },
 
-    async createTag(tagData) {
+    async createTag(name, parent_id, color, textcolor) {
+        const tagData = { name, parent_id, color, textcolor };
         const newTag = await window.api.createTag(tagData);
-        tags.push(newTag);
+        tags.push(new Tag(newTag));
     },
 
-    async updateTag(id, tagData) {
+    async updateTag(id, name, parent_id, color, textcolor) {
+        const tagData = { id, name, parent_id, color, textcolor };
         await window.api.updateTag(id, tagData);
         const index = tags.findIndex(tag => tag.id === id);
         if (index !== -1) {
-            tags[index] = { ...tags[index], ...tagData };
+            tags[index] = new Tag(tagData);
         }
     },     
 
@@ -41,11 +44,11 @@ export const tagsModel = {
         localStorage.setItem(tagType, JSON.stringify(tagIds));
     },
 
-    isChildTag(parentTag, childTag) {
-        if (!parentTag || !childTag) return false;
-        if (parentTag.id === childTag.id) return true;
-        if (!parentTag.children) return false;
-        return parentTag.children.some(tag => this.isChildTag(tag, childTag));
+    isDescendantTag(tag, tagToCompare) {
+        if (!tag || !tagToCompare) return false;
+        if (!tag.children) return false;
+        if (tagToCompare.isChildOf(tag.id)) return true;      
+        return tag.children.some(tag => this.isDescendantTag(tag, tagToCompare));
     },
 
     searchTags(query, mode) {
@@ -59,7 +62,11 @@ export const tagsModel = {
         }
     },
     
-    buildTagHierarchy(tags) {
+    buildTagHierarchy(tags = null) {
+        if(!tags) {
+            tags = this.tags;
+        }
+
         const tagMap = new Map();
         tags.forEach(tag => {
             tag.children = [];
@@ -68,8 +75,8 @@ export const tagsModel = {
 
         const hierarchy = [];
         tags.forEach(tag => {
-            if (tag.parent_id) {
-                const parent = tagMap.get(tag.parent_id);
+            if (tag.parentId) {
+                const parent = tagMap.get(tag.parentId);
                 if (parent) {
                     parent.children.push(tag);
                 }
@@ -78,8 +85,13 @@ export const tagsModel = {
             }
         });
 
-        function sortTagsByName(tags) {
-            tags.sort((a, b) => a.name.localeCompare(b.name));
+        const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+        function sortTagsByName(tags) {         
+            tags.sort((a, b) => {
+                const nameA = a.name.toLowerCase();
+                const nameB = b.name.toLowerCase();
+                return collator.compare(nameA, nameB);
+            });
             tags.forEach(tag => {
                 if (tag.children.length > 0) {
                     sortTagsByName(tag.children);
@@ -98,7 +110,7 @@ export const tagsModel = {
     
         while (currentTag) {
             hierarchy.unshift(currentTag);
-            currentTag = tags.find(t => t.id === currentTag.parent_id);
+            currentTag = tags.find(t => t.id === currentTag.parentId);
         }
     
         return hierarchy;
@@ -109,13 +121,13 @@ export const tagsModel = {
         const tagIds = new Set(fileTags.map(tag => tag.id));
 
         for (const tag of fileTags) {
-            let parentId = tag.parent_id;
+            let parentId = tag.parentId;
             while (parentId && !tagIds.has(parentId)) {
                 const parentTag = tags.find(t => t.id === parentId);
                 if (parentTag) {
                     completeTags.push(parentTag);
                     tagIds.add(parentTag.id);
-                    parentId = parentTag.parent_id;
+                    parentId = parentTag.parentId;
                 } else {
                     break;
                 }
@@ -129,7 +141,7 @@ export const tagsModel = {
         const tagIds = new Set(fileTags.map(tag => tag.id));
 
         function addChildren(tag) {
-            const childTags = tags.filter(t => t.parent_id === tag.id);
+            const childTags = tags.filter(t => t.parentId === tag.id);
             for (const childTag of childTags) {
                 if (!tagIds.has(childTag.id)) {
                     completeTags.push(childTag);
@@ -158,3 +170,22 @@ export const TagClass = Object.freeze({
     FILE_TAG_ITEM: 'file-tag-item',
     TAG_ITEM: 'tag-item'
 });
+
+class Tag {
+  constructor({ id, name, parent_id = null, color, textcolor }) {
+    this.id = id;
+    this.parentId = parent_id;
+    this.name = name;
+    this.color = color;
+    this.textColor = textcolor;
+  }
+
+  get cssStyle() {
+    return `color: ${this.textColor}; background: ${this.color}`;
+  }
+
+  isChildOf(parentId) {
+    return this.parentId === parentId;
+  }
+
+}

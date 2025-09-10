@@ -20,6 +20,16 @@ export const modalModel = {
     set locationToEdit(location) { locationToEdit = location; }
 }
 
+export class TagModalState {
+  constructor({ title, tagColor, tagTextColor, tagHierarchy = null, tagName = null }) {
+    this.title = title;
+    this.tagColor = tagColor;
+    this.tagTextColor = tagTextColor;
+    this.tagHierarchy = tagHierarchy;
+    this.tagName = tagName;
+  }
+}
+
 export const ModalMode = Object.freeze({
     NEW: 'new',
     EDIT: 'edit'

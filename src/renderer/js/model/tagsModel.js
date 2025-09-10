@@ -51,6 +51,10 @@ export const tagsModel = {
         return tag.children.some(tag => this.isDescendantTag(tag, tagToCompare));
     },
 
+    findTagById(id) {
+        return tags.find(tag => tag.id === id);
+    },
+
     searchTags(query, mode) {
         const lowerCaseQuery = query.toLowerCase();
         if (mode === 'inlude') {
@@ -110,7 +114,7 @@ export const tagsModel = {
     
         while (currentTag) {
             hierarchy.unshift(currentTag);
-            currentTag = tags.find(t => t.id === currentTag.parentId);
+            currentTag = this.findTagById(currentTag.parentId);
         }
     
         return hierarchy;
@@ -123,7 +127,7 @@ export const tagsModel = {
         for (const tag of fileTags) {
             let parentId = tag.parentId;
             while (parentId && !tagIds.has(parentId)) {
-                const parentTag = tags.find(t => t.id === parentId);
+                const parentTag = this.findTagById(parentId);
                 if (parentTag) {
                     completeTags.push(parentTag);
                     tagIds.add(parentTag.id);

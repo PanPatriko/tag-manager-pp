@@ -1,23 +1,103 @@
+import { tagsView } from "./tagsView.js";
+
+const modal = document.getElementById('tag-form-modal');
+const title = document.getElementById('tag-modal-title');
+
+const tagName = document.getElementById('tag-name');
+const tagColor = document.getElementById('color');
+const tagTextColor = document.getElementById('textcolor');
+
+const parentTag = document.getElementById('parent-tag');
+const parentTagName = document.getElementById('parent-name');
+const parentTagSuggestions = document.getElementById('parent-name-suggestions');
+
 export const tagsModalView = {
-    get tagModal() { return document.getElementById('tag-form-modal'); },
 
-    get modalTitle() { return document.getElementById('tag-modal-title');},
+    getTagNameValue() { return tagName.value; },
 
-    get tagName() { return document.getElementById('tag-name'); },
+    getTagColorValue() { return tagColor.value; },
 
-    get parentTagName() { return document.getElementById('parent-name'); },
+    getTagTextColorValue() { return tagTextColor.value; },
 
-    get tagColor() { return document.getElementById('color'); },
+    getParentTagNameValue() { return parentTagName.value; },
 
-    get tagTextColor() { return document.getElementById('textcolor'); },
+    closeModal() {
+        parentTag.innerHTML = '';      
+        parentTagName.value = '';
+        modal.classList.add('hidden');
+    },
 
-    get parentTagLabel() { return document.getElementById('parent-tag'); },
+    openModal(tagModalState) {
+        title.value = tagModalState.title;
+        tagName.value = tagModalState.tagName;
+        tagColor.value = tagModalState.tagColor;
+        tagTextColor.value = tagModalState.tagTextColor;
 
-    get cancelButton() { return document.getElementById('tag-modal-cancel'); },
-    
-    get okButton() { return document.getElementById('tag-modal-ok'); },
+        if(tagModalState.tagHierarchy) {
+            const div = tagsView.renderTagHierarchyDiv(tagModalState.tagHierarchy);
+            parentTag.appendChild(div);
+        } else {
+            parentTag.innerHTML = '';
+        }
 
-    get clearParentTagButton() { return document.getElementById('clear-parent-tag'); },
+        modal.classList.remove('hidden');
+        tagName.focus();
+    },
 
-    get parentNameSuggestions() { return document.getElementById('parent-name-suggestions'); }
+    clearParentTag() {
+        parentTag.innerHTML = '';
+        parentTagName.value = '';    
+    },
+
+    clearParentSuggestions() {
+        parentTagSuggestions.innerHTML = '';
+    },
+
+    hideParentSuggestions() {
+        parentTagSuggestions.classList.add('hidden');
+    },
+
+    showParentSuggestions() {
+        parentTagSuggestions.classList.remove('hidden');
+    },
+
+    renderParentSuggestion(tagHierarchy) {
+        const li = document.createElement('li');
+        const div = tagsView.renderTagHierarchyDiv(tagHierarchy);
+        li.appendChild(div);
+        parentTagSuggestions.appendChild(li);
+        return li;
+    },
+
+    setSelectedParentTag(tagHierarchy) {
+        const div = tagsView.renderTagHierarchyDiv(tagHierarchy);
+        parentTag.appendChild(div);
+    },
+
+    onCancelClick(handler) {
+        const el = document.getElementById('tag-modal-cancel');
+        el.addEventListener('click', () => handler());
+    },
+
+    onOkClick(handler) {
+        const el = document.getElementById('tag-modal-ok');
+        el.addEventListener('click', () => handler());
+    },
+
+    onClearParentTagClick(handler) {
+        const el = document.getElementById('clear-parent-tag');
+        el.addEventListener('click', () => handler());
+    },
+
+    onParentTagNameBlur(handler) {
+        parentTagName.addEventListener('blur', () => handler());
+    },
+
+    onParentTagNameFocus(handler) {
+        parentTagName.addEventListener('focus', () => handler());
+    },
+
+    onParentTagNameInput(handler) {
+        parentTagName.addEventListener('input', () => handler());
+    }
 }

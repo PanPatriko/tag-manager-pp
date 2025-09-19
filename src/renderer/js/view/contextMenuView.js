@@ -1,4 +1,4 @@
-function _adjustPosition(x, y, contextMenu) { 
+function adjustPosition(x, y, contextMenu) { 
     const menuWidth = contextMenu.offsetWidth;
     const menuHeight = contextMenu.offsetHeight;
     const windowWidth = window.innerWidth;
@@ -50,7 +50,7 @@ export const contextMenuView = {
         });
 
         document.body.appendChild(menu);
-        _adjustPosition(x, y, menu);
+        adjustPosition(x, y, menu);
     },
     
     hideMenu(event) {

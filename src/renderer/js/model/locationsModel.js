@@ -61,6 +61,10 @@ export const locationsModel = {
         return locations.find(location => location.id === id);
     },
 
+    findLocationByPath(path) {
+        return locations.find(location => location.path === path);
+    },
+
     async getDirectoryHierarchy(directoryPath) {
         try {
             return await window.api.getDirectoryHierarchy(directoryPath);

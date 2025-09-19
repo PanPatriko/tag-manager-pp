@@ -17,60 +17,59 @@ import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
 import { updateSelectedFileCount } from "../content/filesInfo.js";
 import { getSelectedFiles } from "../content/content.js"
 
-window.editTag = _editTag;
-window.addChildTag = _addChildTag;
-window.confirmDeleteTag = _confirmDeleteTag;
-window.confirmDeleteFileTag = _confirmDeleteFileTag;
+window.editTag = editTag;
+window.addChildTag = addChildTag;
+window.confirmDeleteTag = confirmDeleteTag;
+window.confirmDeleteFileTag = confirmDeleteFileTag;
 
-window.addTagFile = _addTagFile;
+window.addTagFile = addTagFile;
 window.copyTags = copyTags;
 window.pasteTags = pasteTags;
 window.openFileNewTab = openFileNewTab
-window.openFileExt = _openFileExt;
-window.openFileLocation = _openFileLocation;
-window.confirmDeleteFile = _confirmDeleteFile;
+window.openFileExt = openFileExt;
+window.openFileLocation = openFileLocation;
+window.confirmDeleteFile = confirmDeleteFile;
 
-window.editLocation = _editLocation;
-window.confirmDeleteLocation = _confirmDeleteLocation;
+window.editLocation = editLocation;
+window.confirmDeleteLocation = confirmDeleteLocation;
 
-export let previewWindow = null;
+export let previewWindow = null; // TODO zabrać to stąd
 
-async function _editTag(tagId) {
-    const tag = tagsModel.tags.find(t => t.id === tagId);
+async function editTag(id) {
+    const tag = tagsModel.findTagById(id);
     if (tag) {
         openEditTagModal(tag);
     } else {
-        console.warn('Tag not found:', tagId);
+        console.warn('Tag not found:', id);
     }
 }
 
-async function _addChildTag(tagId) {
-    const tag = tagsModel.tags.find(t => t.id === tagId);
-    console.log(tag);
+async function addChildTag(id) {
+    const tag = tagsModel.findTagById(id);
     if (tag) {
         openNewTagModal(tag);
     } else {
-        console.warn('Tag not found:', tagId);
+        console.warn('Tag not found:', id);
     }
 }
 
-async function _confirmDeleteTag(tagId) {
+async function confirmDeleteTag(id) {
     const result = await showPopup('', i18nModel.t('confirm-del-tag'), 
         'question', true);
 
     if (result.isConfirmed) {
-        await tagsModel.deleteTag(tagId);
+        await tagsModel.deleteTag(id);
         refreshTagsContainer();
     }
 }
 
-async function _addTagFile() {
+async function addTagFile() {
     openFileModal();
 }
 
-export async function copyTags(fileId) {
+export async function copyTags(id) {
     try {
-        const tags = await window.api.getFileTags(fileId);
+        const tags = await window.api.getFileTags(id);
         if (tags.length > 0) {
             setCopiedTags(tags);
         } else {
@@ -136,30 +135,30 @@ export async function pasteTags() {
     setCopiedTags(null);
 }
 
-async function _confirmDeleteFile(fileId) {
-    if(fileId) {
-        const result = await showPopup('', i18nModel.t('confirm-del-file'), 
-            'question', true);
-    
-        if (result.isConfirmed) {
-            await window.api.deleteFileById(fileId);
-            filesModel.files.filter(f => f.id !== fileId);
-            if (fileId === currentFile.id) {
-                setCurrentFileId(null);
-            }
-            refreshFileInfo();
+async function confirmDeleteFile(id) {
+    if (id == null || id === 'null') {
+        showPopup('', i18nModel.t('cntx-menu-delete-file-no-id'), 'warning');
+        return;
+    }
+
+    const result = await showPopup('', i18nModel.t('confirm-del-file'),
+        'question', true);
+
+    if (result.isConfirmed) {
+        await window.api.deleteFileById(id);
+        filesModel.files.filter(f => f.id !== id);
+        if (id === currentFile.id) {
+            setCurrentFileId(null);
         }
-    } else {
-        showPopup(i18nModel.t('cntx-menu-delete-file-no-id-title'), 
-            i18nModel.t('cntx-menu-delete-file-no-id'), 'warning');
-    }    
+        refreshFileInfo();
+    }   
 }
 
-async function _openFileExt(path) {
+async function openFileExt(path) {
     window.api.openExt(path);
 }
 
-async function _openFileLocation(path) {
+async function openFileLocation(path) {
     window.api.openExplorer(path);
 }
 
@@ -178,41 +177,41 @@ export function openFileNewTab() {
     }
 }
 
-async function _confirmDeleteFileTag(tagId) {
+async function confirmDeleteFileTag(id) {
     const result = await showPopup('', i18nModel.t('confirm-del-tag'), 
         'question', true);
 
     if (result.isConfirmed) {
-        await window.api.deleteFileTag(currentFile.id, tagId);
+        await window.api.deleteFileTag(currentFile.id, id);
         refreshFileInfo();
     }
 }
 
-async function _editLocation(locId) {
-    const location = locationsModel.locations.find(l => l.id === locId);
+async function editLocation(id) {
+    const location = locationsModel.findLocationById(id);
     if (location) {
         openLocationModal(location);
     } else {
-        console.warn('Location not found:', locId);
+        console.warn('Location not found:', id);
     }
 }
 
-async function _confirmDeleteLocation(locId) {
+async function confirmDeleteLocation(id) {
     const result = await showPopup('', i18nModel.t('confirm-del-loc'), 
         'question', true);
 
     if (result.isConfirmed) {
-        await locationsModel.deleteLocation(locId);
+        await locationsModel.deleteLocation(id);
         refreshLocations()
     }
 }
 
-function _repeatCheckboxOnChange (event) {
-    const vid = document.querySelector('#file-preview > *');
+function repeatCheckboxOnChange (event) {
+    const vid = document.querySelector('#file-preview > *'); // TODO improve selector with file previe refactor
     vid.loop = event.target.checked;
 }
 
-function _controlsCheckboxOnChange (event) {
+function controlsCheckboxOnChange (event) {
     const vid = document.querySelector('#file-preview > *');
     vid.controls = event.target.checked;
 }
@@ -225,23 +224,23 @@ export function initContextMenu() {
 
         if (target.closest('.tag-item')) {
             items = [
-                { type: 'button', label: i18nModel.t('cntx-menu-edit-tag'), onClick: () => _editTag(id) },
-                { type: 'button', label: i18nModel.t('cntx-menu-add-child-tag'), onClick: () => _addChildTag(id) },
-                { type: 'button', label: i18nModel.t('cntx-menu-del-tag'), onClick: () => _confirmDeleteTag(id) }
+                { type: 'button', label: i18nModel.t('cntx-menu-edit-tag'), onClick: () => editTag(id) },
+                { type: 'button', label: i18nModel.t('cntx-menu-add-child-tag'), onClick: () => addChildTag(id) },
+                { type: 'button', label: i18nModel.t('cntx-menu-del-tag'), onClick: () => confirmDeleteTag(id) }
             ];
         }
 
         if (target.closest('.file-tag-item')) {
             items = [
-                { type: 'button', label: i18nModel.t('cntx-menu-edit-tag'), onClick: () => _editTag(id) },
-                { type: 'button', label: i18nModel.t('cntx-menu-del-file-tag'), onClick: () => _confirmDeleteFileTag(id) }
+                { type: 'button', label: i18nModel.t('cntx-menu-edit-tag'), onClick: () => editTag(id) },
+                { type: 'button', label: i18nModel.t('cntx-menu-del-file-tag'), onClick: () => confirmDeleteFileTag(id) }
             ];
         }
 
         if (target.closest('.loc-item')) {
             items = [
-                { type: 'button', label: i18nModel.t('cntx-menu-edit-loc'), onClick: () => _editLocation(id) },
-                { type: 'button', label: i18nModel.t('cntx-menu-del-loc'), onClick: () => _confirmDeleteLocation(id) }
+                { type: 'button', label: i18nModel.t('cntx-menu-edit-loc'), onClick: () => editLocation(id) },
+                { type: 'button', label: i18nModel.t('cntx-menu-del-loc'), onClick: () => confirmDeleteLocation(id) }
             ];
         }
         
@@ -252,21 +251,21 @@ export function initContextMenu() {
             const fileId = fileContainer.dataset.id;
             const filePath = fileContainer.dataset.path;
             items = [
-                { type: 'button', label: i18nModel.t('cntx-menu-edit-file-tags'), onClick: () => _addTagFile() },
+                { type: 'button', label: i18nModel.t('cntx-menu-edit-file-tags'), onClick: () => addTagFile() },
                 { type: 'button', label: i18nModel.t('cntx-menu-copy-tags'), onClick: () => copyTags(fileId) },
                 { type: 'button', label: i18nModel.t('cntx-menu-paste-tags'), onClick: () => pasteTags() },
                 { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => _openFileExt(filePath) },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => _openFileLocation(filePath) },
-                { type: 'button', label: i18nModel.t('cntx-menu-delete-file'), onClick: () => _confirmDeleteFile(fileId) }
+                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(filePath) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(filePath) },
+                { type: 'button', label: i18nModel.t('cntx-menu-delete-file'), onClick: () => confirmDeleteFile(fileId) }
             ];
         }
 
         if (target.closest('.file-preview-image')) {
             items = [
                 { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => _openFileExt(currentFile.path) },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => _openFileLocation(currentFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(currentFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(currentFile.path) },
             ];
         }
 
@@ -274,10 +273,10 @@ export function initContextMenu() {
             const vid = document.querySelector('#file-preview > *');
             items = [
                 { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => _openFileExt(currentFile.path) },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => _openFileLocation(currentFile.path) },
-                { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-repeat'), checked: vid.loop, onchange: _repeatCheckboxOnChange },
-                { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-show-controls'), checked: vid.controls, onchange: _controlsCheckboxOnChange }
+                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(currentFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(currentFile.path) },
+                { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-repeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
+                { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-show-controls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
             ];
         }
 

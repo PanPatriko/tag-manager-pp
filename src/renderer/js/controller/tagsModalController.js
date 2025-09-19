@@ -19,8 +19,7 @@ async function saveTag() {
     const tagNames = tagName.trim().split(',').map(tag => tag.trim());
 
     if (tagNames.length === 0 || tagNames[0] === '') {
-        showPopup(i18nModel.t('tag-alert-empty-name-title'), 
-            i18nModel.t('tag-alert-empty-name'), 'warning');
+        showPopup('', i18nModel.t('tag-alert-empty-name'), 'warning');
         return;
     }
 

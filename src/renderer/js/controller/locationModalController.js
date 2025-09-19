@@ -23,7 +23,7 @@ async function saveLocation() {
         return;
     }
 
-    if (modalModel.modalMode === ModalMode.NEW && locationsModel.locations.find(loc => loc.path === path)) {
+    if (modalModel.modalMode === ModalMode.NEW && locationsModel.findLocationByPath(path)) {
         showPopup('', i18nModel.t('loc-alert-duplicate-path'), 'warning')
         return;
     }

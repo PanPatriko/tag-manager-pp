@@ -27,7 +27,7 @@ contextBridge.exposeInMainWorld('api', {
     // locations.js
     getLocations: () => ipcRenderer.invoke('dblocations:get-locations'),
     addLocation: (locationData) => ipcRenderer.invoke('dblocations:add-location', locationData),
-    updateLocation: (locationId, locationData) => ipcRenderer.invoke('dblocations:update-location', locationId, locationData),
+    updateLocation: (locationData) => ipcRenderer.invoke('dblocations:update-location', locationData),
     deleteLocation: (locationId) => ipcRenderer.invoke('dblocations:delete-location', locationId),
 
     path: {

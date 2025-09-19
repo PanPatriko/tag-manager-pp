@@ -41,8 +41,8 @@ async function createLocation(locationData) {
     });
 }
 
-async function updateLocation(id, locationData) {
-    const { name, path} = locationData;
+async function updateLocation(locationData) {
+    const {id, name, path} = locationData;
     return new Promise((resolve, reject) => {
         db.run(
             'UPDATE locations SET name = ?, path = ? WHERE id = ?',

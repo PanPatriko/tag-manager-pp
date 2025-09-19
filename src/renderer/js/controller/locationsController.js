@@ -10,32 +10,48 @@ let isResizing = false;
 let startY = 0;
 let startHeight = 0;
 
-async function _onLocationClick(location, locDiv, e) {
-    if (await window.api.fileExists(location.path)) {
-        const dirContainer = locationsView.directoryContainer;
-        dirContainer.innerHTML = '';
-        await locationsView.renderHierarchy(location.path, dirContainer, _onDirectoryClick, async (path) => {
-            return await window.api.getDirectoryHierarchy(path);
-        });
-        dirContainer.querySelector('button').click(); // expand root directory
+async function onLocationClick(event) {
+    const target = event.target;
+    const id = parseInt(target.dataset.id);
+
+    if (target.closest('.loc-item')) {
+
+        const location = locationsModel.findLocationById(id);
+
+        if (!await window.api.fileExists(location.path)) {
+            showPopup('', i18nModel.t('dir-read-error'), 'error');
+            return;
+        }
+
+        await locationsView.renderHierarchy(location.path);
+        locationsView.expandRootDirectory();
+        locationsView.setActiveLocation(location.id);
+
         locationsModel.root = location.path;
         locationsModel.currentDirectory = location.path;
         locationsModel.activeLocation = location;
+
         pushToHistory({ type: 'directory', path: location.path });
-        displayDirectory(location.path);
-        locationsView.setActiveLocation(location.id);
-    } else {
-        showPopup('', i18nModel.t('dir-read-error'), 'error');
+        displayDirectory(location.path);      
     }
 }
 
-function _onDirectoryClick(path, span, li, e) {
-    pushToHistory({ type: 'directory', path });
-    displayDirectory(path);
+async function onDirectoryClick(event) { 
+    const target = event.target;
+    
+    if (target.closest('.loc-item-expand-btn')) {
+        const directoryHierarchy = await window.api.getDirectoryHierarchy(target.path);
+        locationsView.expandButtonClick(target, directoryHierarchy);
+    }
+    if (target.closest('.loc-item-span')) { 
+        const path = target.path;
+        pushToHistory({ type: 'directory', path });
+        displayDirectory(path);
+    } 
 }
 
 export async function refreshLocations() {
-    locationsView.renderLocations(locationsModel.locations, _onLocationClick);
+    locationsView.renderLocations(locationsModel.locations);
     if (locationsModel.activeLocation) {
         locationsView.setActiveLocation(locationsModel.activeLocation.id);
     }
@@ -44,23 +60,22 @@ export async function refreshLocations() {
 export async function restoreLocation(historyRecord) {
     locationsModel.root = historyRecord.root;
     locationsModel.activeLocation = historyRecord.activeLocation;
-    
+
     refreshLocations();
-    locationsView.directoryContainer.innerHTML = '';
-    await locationsView.renderHierarchy(historyRecord.path, locationsView.directoryContainer, _onDirectoryClick, async (path) => {
-        return await window.api.getDirectoryHierarchy(path);
-    });
+    await locationsView.renderHierarchy(historyRecord.path);
 }
 
 export async function initLocations() {
     await locationsModel.getLocationsFromDB();
     refreshLocations();
 
-    locationsView.addLocationButton.addEventListener('click', () => {
-        openLocationModal();
-    });
+    locationsView.onAddLocationClick(() => { openLocationModal(); });
 
-    locationsView.resizeHandle.addEventListener('mousedown', (e) => {
+    locationsView.onLocationContainerClick((event) => onLocationClick(event));
+
+    locationsView.onDirectoryContainerClick((event) => onDirectoryClick(event));
+
+    locationsView.resizeHandle.addEventListener('mousedown', (e) => { // TODO refactor resize handlerów
         isResizing = true;
         startY = e.clientY;
         startHeight = locationsView.locationContainer.offsetHeight;

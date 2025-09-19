@@ -100,8 +100,8 @@ ipcMain.handle('dblocations:add-location', async (event, locationData) => {
   return await createLocation(locationData);
 });
 
-ipcMain.handle('dblocations:update-location', async (event, id, locationData) => {
-  return await updateLocation(id, locationData);
+ipcMain.handle('dblocations:update-location', async (event, locationData) => {
+  return await updateLocation(locationData);
 });
 
 ipcMain.handle('dblocations:delete-location', async (event, locationId) => {

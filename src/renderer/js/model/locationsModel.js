@@ -17,7 +17,8 @@ export const locationsModel = {
     set currentDirectory(newCurrent) { currentDirectory = newCurrent; },
 
     async getLocationsFromDB() { 
-        locations = await window.api.getLocations();
+        const rawLocations = await window.api.getLocations();
+        locations = rawLocations.map(record => new Location(record));
         if (!Array.isArray(locations)) {
             console.error('getLocationsFromDB: window.api.getLocations() did not return an array', locations);
             locations = [];
@@ -25,22 +26,22 @@ export const locationsModel = {
         return locations;
     },
 
-    async addLocation(location) {
+    async addLocation(locationData) {
         try {
-            const newLoc = await window.api.addLocation(location);
-            locations.push(newLoc);
+            const newLoc = await window.api.addLocation(locationData);
+            locations.push(new Location(newLoc));
         } catch (error) {
             console.error('Error during adding location', error);
             showPopup('', error, 'error');
         }
     },
 
-    async updateLocation(id, locationData) {
+    async updateLocation(locationData) {
         try {
-            await window.api.updateLocation(id, locationData);
-            const index = locations.findIndex(loc => loc.id === id);
+            await window.api.updateLocation(locationData);
+            const index = locations.findIndex(loc => loc.id === locationData.id);
             if (index !== -1) {
-                locations[index] = { id, ...locationData };
+                locations[index] = new Location(locationData);
             }
         } catch (error) {
             console.error('Error during updating location', error);
@@ -56,6 +57,10 @@ export const locationsModel = {
         }
     },
 
+    findLocationById(id) {
+        return locations.find(location => location.id === id);
+    },
+
     async getDirectoryHierarchy(directoryPath) {
         try {
             return await window.api.getDirectoryHierarchy(directoryPath);
@@ -65,4 +70,12 @@ export const locationsModel = {
         }
     }
     
+}
+
+class Location {
+  constructor({ id, path, name}) {
+    this.id = id;
+    this.path = path;
+    this.name = name;
+  }
 }

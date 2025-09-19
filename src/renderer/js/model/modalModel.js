@@ -30,6 +30,14 @@ export class TagModalState {
   }
 }
 
+export class LocationModalState {
+  constructor({ title, name, path }) {
+    this.title = title;
+    this.name = name;
+    this.path = path;
+  }
+}
+
 export const ModalMode = Object.freeze({
     NEW: 'new',
     EDIT: 'edit'

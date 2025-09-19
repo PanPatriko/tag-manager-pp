@@ -1,18 +1,17 @@
 import { locationModalView } from "../view/locationModalView.js";
 import { i18nModel } from "../model/i18nModel.js";
-import { modalModel, ModalMode } from "../model/modalModel.js";
+import { modalModel, ModalMode, LocationModalState } from "../model/modalModel.js";
 import { refreshLocations } from "./locationsController.js";
 import { locationsModel } from "../model/locationsModel.js";
 
-function _closeModal() {
-    locationModalView.locationModal.classList.add('hidden');
-    locationModalView.nameInput.value = '';
-    locationModalView.pathInput.value = '';
+function closeModal() {
+    modalModel.locationToEdit = null;
+    locationModalView.closeModal();
 }
 
-async function _saveLocation() {
-    const name = locationModalView.nameInput.value.trim();
-    const path = locationModalView.pathInput.value.trim();
+async function saveLocation() {
+    const name = locationModalView.getNameValue();
+    const path = locationModalView.getPathValue();
 
     if (name == null || name === '') {
         showPopup('', i18nModel.t('loc-alert-empty-name'), 'warning')
@@ -30,42 +29,46 @@ async function _saveLocation() {
     }
     
     if (modalModel.modalMode === ModalMode.EDIT) {
-        await locationsModel.updateLocation(modalModel.locationToEdit.id, { name, path });
+        await locationsModel.updateLocation({id: modalModel.locationToEdit.id, name, path });
     } else if (modalModel.modalMode === ModalMode.NEW) {
         await locationsModel.addLocation({ name, path });    
     } else {
         console.error('Unknown modal mode:', modalModel.modalMode);
     }
 
-    _closeModal();
+    closeModal();
     refreshLocations();
 }
 
-async function _openFolderDialog() { 
+async function openFolderDialog() { 
     const folderPath = await window.api.openFolderDialog();
     if (folderPath) {
-        locationModalView.pathInput.value = folderPath;
+        locationModalView.setPathValue(folderPath);
     }
 }
 
 export function initLocationsModal() {
-    locationModalView.pathBrowseButton.addEventListener('click', _openFolderDialog);
-    locationModalView.cancelButton.addEventListener('click', _closeModal);
-    locationModalView.okButton.addEventListener('click', _saveLocation);
+    locationModalView.onBrowseClick(openFolderDialog);
+    locationModalView.onCancelClick(closeModal);
+    locationModalView.onOkClick(saveLocation);
 }
 
 export async function openLocationModal(location = null) {
+    let title, name, path;
     modalModel.locationToEdit = location;
+    
     if(location == null) {
         modalModel.modalMode = ModalMode.NEW;
-        locationModalView.modalTitle.innerText = i18nModel.t('loc-add');
-        locationModalView.nameInput.value = '';
-        locationModalView.pathInput.value = '';
+        title = i18nModel.t('loc-add');
+        name = '';
+        path = '';
     } else {
         modalModel.modalMode = ModalMode.EDIT;
-        locationModalView.modalTitle.innerText = i18nModel.t('loc-edit');
-        locationModalView.nameInput.value = location.name;
-        locationModalView.pathInput.value = location.path;
+        title = i18nModel.t('loc-edit');
+        name = location.name;
+        path = location.path;
     }
-    locationModalView.locationModal.classList.remove('hidden');
+
+    const locationModalState = new LocationModalState({ title, name, path });
+    locationModalView.openModal(locationModalState);
 }

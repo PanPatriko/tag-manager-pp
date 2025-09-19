@@ -34,7 +34,10 @@ export const locationsView = {
     },
 
     expandRootDirectory() {
-        directoryContainer.querySelector('button').click(); 
+        const button = directoryContainer.querySelector('button');
+        if (button) {
+            button.click();
+        }
     },
 
     async expandButtonClick(expandBtn, directoryHierarchy) {

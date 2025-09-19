@@ -1,15 +1,41 @@
+const modal = document.getElementById('location-form-modal');
+const title = document.getElementById('loc-modal-title');
+const name = document.getElementById('loc-name');
+const path = document.getElementById('loc-path');
+
 export const locationModalView = {
-    get locationModal() { return document.getElementById('location-form-modal'); },
 
-    get modalTitle() { return document.getElementById('loc-modal-title');},
+    getNameValue() { return name.value.trim(); },
 
-    get nameInput() { return document.getElementById('loc-name'); },
+    getPathValue() { return path.value.trim(); },
 
-    get pathInput() { return document.getElementById('loc-path'); },
+    setPathValue(directoryPath) {
+        path.value = directoryPath;
+    }, 
 
-    get pathBrowseButton() { return document.getElementById('loc-path-btn'); },
+    openModal(locationModalState) {
+        title.innerText = locationModalState.title;
+        name.value = locationModalState.name;
+        path.value = locationModalState.path;
+        modal.classList.remove('hidden');
+    },
 
-    get okButton() { return document.getElementById('loc-modal-ok'); },
+    closeModal() {
+        modal.classList.add('hidden');
+    },
 
-    get cancelButton() { return document.getElementById('loc-modal-cancel'); },
+    onBrowseClick(handler) {
+        const el = document.getElementById('loc-path-btn');
+        el.addEventListener('click', () => handler());
+    },
+
+    onOkClick(handler) {
+        const el = document.getElementById('loc-modal-ok');
+        el.addEventListener('click', () => handler());
+    },
+
+    onCancelClick(handler) {
+        const el = document.getElementById('loc-modal-cancel');
+        el.addEventListener('click', () => handler());
+    }
 }

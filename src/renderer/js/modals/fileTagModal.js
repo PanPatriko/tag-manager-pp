@@ -32,11 +32,10 @@ removeTagsButton.addEventListener('click', removeTags);
 closeFileTagFormModal.addEventListener('click', closeFileModal);
 
 export async function openFileModal() { // controller or view
-    const tagHierarchy = tagsModel.buildTagHierarchy(tagsModel.tags);
+    const tagHierarchy = tagsModel.buildTagHierarchy();
     tagsView.renderTagTree({
         container: 'modal-file-tags-tree',
         tagHierarchy,
-        tagClass: 'modal-tag-label',
         childrenInitiallyVisible: true,
         onTagClick: (tag, span, li) => {
             const container = document.getElementById('modal-file-tags-container');
@@ -57,7 +56,7 @@ function _addTagDivToContainer(tag, container) {
     tagDiv.dataset.id = tag.id
     tagDiv.className = 'tag';
     tagDiv.textContent = tag.name;            
-    tagDiv.style.color = tag.textcolor;
+    tagDiv.style.color = tag.textColor;
     tagDiv.style.backgroundColor = tag.color;
     tagDiv.addEventListener('click', function() {
         container.removeChild(tagDiv);
@@ -135,6 +134,18 @@ function fileTagsModalSearch() { // controller
         completeTags = tagsModel.addMissingChildTags(completeTags, query);
     }
     const tagHierarchy = tagsModel.buildTagHierarchy(completeTags);
-    tagsView.renderTagsFileTagsModal(tagHierarchy);
+    tagsView.renderTagTree({
+        container: 'modal-file-tags-tree',
+        tagHierarchy,
+        childrenInitiallyVisible: true,
+        onTagClick: (tag, span, li) => {
+            const container = document.getElementById('modal-file-tags-container');
+            const currentTags = Array.from(container.querySelectorAll('.tag')).map(tagDiv => tagDiv.dataset.id);
+            if (!currentTags.includes(tag.id.toString())) {
+                _addTagDivToContainer(tag, container);
+            }
+            document.getElementById('file-tag-search').focus();
+        }
+    });   
     highlightText(query, 'modal-file-tags-tree', 'li span');
 }

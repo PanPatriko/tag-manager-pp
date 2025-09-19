@@ -2,10 +2,10 @@ import { displayFiles } from "../content/content.js"
 import { currentFile, setCurrentFile } from "../state.js"
 
 import { filesModel } from "../model/filesModel.js";
-import { tagsModel, TagClass, TagType } from '../model/tagsModel.js';
+import { tagsModel, TagType } from '../model/tagsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
 
-import { tagsView } from "../view/tagsView.js";
+import { tagsView, TagClass } from "../view/tagsView.js";
 
 const showFileInfoButton = document.getElementById('show-file-info');
 const fileInfoSection = document.getElementById('file-info');
@@ -172,9 +172,9 @@ export async function renderFileInfo(file) {
             const completeTags = tagsModel.addMissingParentTags(tags);
             const tagHierarchy = tagsModel.buildTagHierarchy(completeTags);
             tagsView.renderTagTree({
-                container: tagsView.fileTagsContainer,
+                container: tagsView.getFileTagsContainer(),
                 tagHierarchy,
-                tagClass: 'tag-label file-tag-item',
+                tagClass: TagClass.FILE_TAG_ITEM,
                 childrenInitiallyVisible: false
             });            
             tagsView.applyExpandedTags(tagsModel.getExpandedTags(TagType.EXPANDED_FILE_TAGS), TagClass.FILE_TAG_ITEM);

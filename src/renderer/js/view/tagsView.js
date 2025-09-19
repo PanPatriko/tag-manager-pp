@@ -32,6 +32,14 @@ export const tagsView = {
         });
     },
 
+    isTagItem(target) {
+        return target.closest('.tag-item');
+    },
+
+    isFileTagItem(target) {
+        return target.closest('.file-tag-item');
+    },
+
     renderTagHierarchyString(hierarchy) { 
         const hierarchyTagNames = hierarchy.map(t => t.name);
         return hierarchyTagNames.join(' > ');
@@ -78,7 +86,8 @@ export const tagsView = {
                 
                 span.dataset.id = tag.id;
                 span.textContent = tag.name;
-                if (tagClass) tagClass.split(' ').forEach(cls => span.classList.add(cls));           
+                span.className = 'tag-label';
+                if (tagClass) span.classList.add(tagClass);           
                 span.style.color = tag.textColor;
                 span.style.backgroundColor = tag.color;
 
@@ -128,3 +137,8 @@ export const tagsView = {
         fileTagsContainer.addEventListener('click', (e) => handler(e));
     }
 }
+
+export const TagClass = Object.freeze({
+    FILE_TAG_ITEM: 'file-tag-item',
+    TAG_ITEM: 'tag-item'
+});

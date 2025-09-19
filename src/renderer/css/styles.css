@@ -187,7 +187,6 @@ body.dark-theme .parent-li.expanded:hover {
 }
 
 .tag-label {
-    display: block;
     padding: 2px 5px;
     border-radius: 10px;
     font-size: small;

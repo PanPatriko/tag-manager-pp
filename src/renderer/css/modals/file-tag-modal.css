@@ -17,11 +17,6 @@
     transition: 0.5s;
 }
 
-.modal-tag-label {
-    padding: 2px 5px;
-    border-radius: 10px;
-}
-
 body.light-theme .tag:hover {
     box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.4);
 }

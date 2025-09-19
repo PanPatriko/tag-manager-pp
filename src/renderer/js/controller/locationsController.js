@@ -14,7 +14,7 @@ async function onLocationClick(event) {
     const target = event.target;
     const id = parseInt(target.dataset.id);
 
-    if (target.closest('.loc-item')) {
+    if (locationsView.isLocationItem(target)) {
 
         const location = locationsModel.findLocationById(id);
 
@@ -39,11 +39,11 @@ async function onLocationClick(event) {
 async function onDirectoryClick(event) { 
     const target = event.target;
     
-    if (target.closest('.loc-item-expand-btn')) {
+    if (locationsView.isExpandButton(target)) {
         const directoryHierarchy = await window.api.getDirectoryHierarchy(target.path);
         locationsView.expandButtonClick(target, directoryHierarchy);
     }
-    if (target.closest('.loc-item-span')) { 
+    if (locationsView.isDirectorySpan(target)) { 
         const path = target.path;
         pushToHistory({ type: 'directory', path });
         displayDirectory(path);

@@ -57,7 +57,7 @@ export const tagsModel = {
 
     searchTags(query, mode) {
         const lowerCaseQuery = query.toLowerCase();
-        if (mode === 'inlude') {
+        if (mode === 'include') {
             return tags.filter(tag => tag.name.toLowerCase().includes(lowerCaseQuery));
         } else if (mode === 'startsWith') {
             return tags.filter(tag => tag.name.toLowerCase().startsWith(lowerCaseQuery));
@@ -168,11 +168,6 @@ export const tagsModel = {
 export const TagType = Object.freeze({
     EXPANDED_FILE_TAGS: 'expandedFileTags',
     EXPANDED_TAGS: 'expandedTags'
-});
-
-export const TagClass = Object.freeze({
-    FILE_TAG_ITEM: 'file-tag-item',
-    TAG_ITEM: 'tag-item'
 });
 
 class Tag {

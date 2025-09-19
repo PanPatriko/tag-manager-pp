@@ -1,6 +1,6 @@
-import { tagsModel, TagType, TagClass } from '../model/tagsModel.js';
+import { tagsModel, TagType } from '../model/tagsModel.js';
 
-import { tagsView } from '../view/tagsView.js';
+import { tagsView, TagClass } from '../view/tagsView.js';
 
 function onTagItemClick(tag, tagType, tagItem) {
     const tagId = tagsView.getTagItemId(tag);
@@ -23,7 +23,7 @@ export function refreshTagsContainer() {
     tagsView.renderTagTree({
         container: tagsView.getTagsContainer(),
         tagHierarchy,
-        tagClass: 'tag-label tag-item',
+        tagClass: TagClass.TAG_ITEM,
         childrenInitiallyVisible: false
     });  
 
@@ -39,14 +39,14 @@ export async function initTags() {
     refreshTagsContainer();
 
     tagsView.onTagsContainerClick((event) => { 
-        const tag = event.target.closest(`.${TagClass.TAG_ITEM}`);
+        const tag = tagsView.isTagItem(event.target);
         if (tag) {
             onTagItemClick(tag, TagType.EXPANDED_TAGS, TagClass.TAG_ITEM);
         }
     });
 
     tagsView.onFileTagsContainerClick((event) => { 
-        const fileTag = event.target.closest(`.${TagClass.FILE_TAG_ITEM}`);
+        const fileTag = tagsView.isFileTagItem(event.target);
         if (fileTag) {
             onTagItemClick(fileTag, TagType.EXPANDED_FILE_TAGS, TagClass.FILE_TAG_ITEM);
         }

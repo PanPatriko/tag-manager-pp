@@ -14,6 +14,18 @@ export const locationsView = {
 
     get resizeHandle() { return document.getElementById('location-resize-handle'); },
 
+    isLocationItem(target) {
+        return target.closest('.loc-item');
+    },
+
+    isExpandButton(target) {
+        return target.closest('.loc-item-expand-btn');
+    },
+
+    isDirectorySpan(target) {
+        return target.closest('.loc-item-span');
+    },
+
     renderLocations(locations) {
         locationContainer.innerHTML = "";
         locations.forEach(location => {

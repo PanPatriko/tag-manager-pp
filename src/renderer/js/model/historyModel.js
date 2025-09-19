@@ -2,17 +2,17 @@ const MAX_HISTORY = 10;
 let history = [];
 let historyIndex = -1;
 
-function _getCurrentHistory() {
+function getCurrentHistory() {
     if (historyIndex >= 0 && historyIndex < history.length) {
         return history[historyIndex];
     }
     return null;
 }
 
-function _goTo(index) {
+function goTo(index) {
     if (index >= 0 && index < history.length) {
         historyIndex = index;
-        return _getCurrentHistory();
+        return getCurrentHistory();
     }
     return null;
 }
@@ -32,11 +32,11 @@ export const historyModel = {
     },
 
     goBack() {
-        return this.canGoBack() ? _goTo(this.historyIndex - 1) : null;
+        return this.canGoBack() ? goTo(this.historyIndex - 1) : null;
     },
 
     goForward() {
-        return this.canGoForward() ? _goTo(this.historyIndex + 1) : null;
+        return this.canGoForward() ? goTo(this.historyIndex + 1) : null;
     },
 
     pushToHistory(record) {

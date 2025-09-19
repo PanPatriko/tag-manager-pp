@@ -1,21 +1,19 @@
 import { displayDirectory } from "../content/content.js";
 
-import { searchModel } from "../model/searchModel.js";
 import { locationsModel } from "../model/locationsModel.js";
 import { historyModel } from "../model/historyModel.js";
 
-import { locationsView } from "../view/locationsView.js";
 import { historyView } from "../view/historyView.js";
 
 import { searchFiles, restoreSearchTags } from "./searchController.js";
 import { restoreLocation } from "./locationsController.js";
 
-function _updateHistoryButtons() {
-    historyView.prevHistoryBtn.disabled = !historyModel.canGoBack();
-    historyView.nextHistoryBtn.disabled = !historyModel.canGoForward();
+function updateHistoryButtons() {
+    historyView.setPreviousButtonState(!historyModel.canGoBack());
+    historyView.setNextButtonState(!historyModel.canGoForward());
 }
 
-function _updateFiles(record) {
+function updateFiles(record) {
     if (record.type === 'directory') {
         displayDirectory(record.path);
         restoreSearchTags([], [], []);
@@ -27,7 +25,7 @@ function _updateFiles(record) {
         restoreSearchTags(andTags, orTags, notTags);
         searchFiles();
     }
-    _updateHistoryButtons();  
+    updateHistoryButtons();  
 }
 
 export function pushToHistory(record) {
@@ -36,23 +34,23 @@ export function pushToHistory(record) {
         record.activeLocation = locationsModel.activeLocation;
     }
     historyModel.pushToHistory(record);
-    _updateHistoryButtons();
+    updateHistoryButtons();
 }
 
 export async function initHistory() {
-    _updateHistoryButtons();
+    updateHistoryButtons();
 
-    historyView.prevHistoryBtn.addEventListener('click', () => {
+    historyView.onPreviousClick(() => {
         const record = historyModel.goBack();
         if (record) {
-            _updateFiles(record);
+            updateFiles(record);
         }
     });
 
-    historyView.nextHistoryBtn.addEventListener('click', () => {
+    historyView.onNextClick(() => {
         const record = historyModel.goForward();
         if (record) {
-            _updateFiles(record);
+            updateFiles(record);
         }
     });
 }

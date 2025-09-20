@@ -211,7 +211,7 @@ export async function displayDirectory(dirPath) {
     const dirFiles = await window.api.getFilesInPath(dirPath);
     if (dirFiles.error) {
         console.error(dirFiles.error);
-        showPopup("", dirFiles.error, 'error');
+        showPopup('', dirFiles.error, 'error');
         return;
     }
 

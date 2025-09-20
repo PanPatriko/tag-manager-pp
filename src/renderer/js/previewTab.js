@@ -1,15 +1,18 @@
 import { createFilePreview } from './rightSidebar/filePreview.js';
 
-import { settingsModel } from './model/settingsModel.js';
-import { settingsView } from './view/settingsView.js';
-import { i18nModel } from './model/i18nModel.js';
-import { i18nView } from './view/i18nView.js';
+// import { settingsModel } from './model/settingsModel.js';
+// import { settingsView } from './view/settingsView.js';
+// import { i18nModel } from './model/i18nModel.js';
+// import { i18nView } from './view/i18nView.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    document.body.className = settingsModel.theme;
+    // document.body.className = settingsModel.theme;
     
-    i18nView.applyTranslations(settingsModel.language);
-    document.title = i18nModel.t('title-file-preview') || 'File Preview';
+    // i18nView.applyTranslations(settingsModel.language);
+    // document.title = i18nModel.t('title-file-preview') || 'File Preview';
+
+    document.body.className = 'dark-theme';
+    document.title = 'File Preview';
 });
 
 document.addEventListener('contextmenu', (event) => {
@@ -56,7 +59,7 @@ function showVidContextMenu(x, y) {
     };
 
     const repeatLabel = document.createElement('label');
-    repeatLabel.textContent = i18nModel.t('cntx-menu-vid-repeat')
+    repeatLabel.textContent = 'xd'//i18nModel.t('cntx-menu-vid-repeat')
     repeatLabel.htmlFor = 'repeatCheckbox';
 
     repeatContainer.appendChild(repeatLabel);
@@ -76,7 +79,7 @@ function showVidContextMenu(x, y) {
     };
 
     const controlsLabel = document.createElement('label');
-    controlsLabel.textContent = i18nModel.t('cntx-menu-vid-show-controls')
+    controlsLabel.textContent = 'xd2'//i18nModel.t('cntx-menu-vid-show-controls')
     controlsLabel.htmlFor = 'controlsCheckbox';
     
     controlsContainer.appendChild(controlsLabel);
@@ -117,11 +120,11 @@ window.addEventListener('message', async (event) => {
         createFilePreview(event.data.file);
     }
     if (event.data && event.data.type === 'update-lang' && event.data.language) {
-        i18nView.applyTranslations(event.data.language);
-        document.title = i18nModel.t('title-file-preview') || 'File Preview';
+        //i18nView.applyTranslations(event.data.language);
+        //document.title = i18nModel.t('title-file-preview') || 'File Preview';
     }
     if (event.data && event.data.type === 'update-theme' && event.data.theme) {
-        document.body.className = event.data.theme;
+        //document.body.className = event.data.theme;
     }
 
 });

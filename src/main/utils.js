@@ -79,7 +79,9 @@ async function getVideoDimensions(filePath) {
 }
 
 async function generateThumbnail(filePath, thumbnailPath) {
-    if(await fs.access(filePath) === false) {
+    try {
+        await fs.access(filePath);
+    } catch (err) {
         console.warn(`generateThumbnail: File does not exist: ${filePath}`);
         return;
     }

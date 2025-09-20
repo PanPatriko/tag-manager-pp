@@ -18,7 +18,7 @@ export const searchModel = {
         return files;
     },
 
-    getHistoryRecord() {
+    createHistoryRecord() {
         return {
             type: 'search',
             andTags: [...andTags],
@@ -27,10 +27,10 @@ export const searchModel = {
         }
     },
 
-    updateTags(_andTags, _orTags, _notTags) {
-        andTags = [..._andTags];
-        orTags = [..._orTags];
-        notTags = [..._notTags];
+    clearTags() {
+        andTags = [];
+        orTags = [];
+        notTags = [];
     },
 
     addTag(tagId, operation) {

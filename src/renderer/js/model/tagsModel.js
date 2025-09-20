@@ -170,7 +170,7 @@ export const TagType = Object.freeze({
     EXPANDED_TAGS: 'expandedTags'
 });
 
-class Tag {
+export class Tag {
   constructor({ id, name, parent_id = null, color, textcolor }) {
     this.id = id;
     this.parentId = parent_id;

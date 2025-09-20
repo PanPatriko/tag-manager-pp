@@ -13,140 +13,109 @@ import { displayFiles } from "../content/content.js"
 
 let isMouseOverSearchSuggestions = false;
 
-function _onSuggestionButtonClick(tag, tagOperation) {
-
-    const existingTag = searchView.tagsContainer.querySelector(
-        `div[data-id="${tag.id}"][data-operation="${tagOperation.name}"]`
-    );
-    if (existingTag) {
-        console.warn(`Tag with name "${tag.name}" (ID: "${tag.id}") and operation "${tagOperation.name}" already exists.`);
-        return;
-    }
-
-
+function addTag(tag, tagOperation) {
     const tagTitle = tagsView.renderTagHierarchyString(
         tagsModel.buildSingleTagHierarchy(tag));
 
-    searchView.addSearchTagToView(tag, tagOperation, tagTitle);
     searchModel.addTag(tag.id, tagOperation.name);
-
-
-    searchView.suggestions.innerHTML = '';
-    searchView.searchInput.value = '';
-    isMouseOverSearchSuggestions = false;
-}
+    searchView.addSearchTagToView(tag, tagOperation, tagTitle);
+} 
 
 export function restoreSearchTags(andTags, orTags, notTags) {
-    searchModel.updateTags(andTags, orTags, notTags);
-
-    searchView.tagsContainer.innerHTML = '';
-
-    function _restoreTag (tagId, tagOperation) {
-        const tag = tagsModel.tags.find(t => t.id === tagId);
-
-        const tagTitle = tagsView.renderTagHierarchyString(
-            tagsModel.buildSingleTagHierarchy(tag));
-
-        searchView.addSearchTagToView(tag, tagOperation, tagTitle);
-    } 
+    searchModel.clearTags();
+    searchView.clearTagsContainer();
 
     andTags.forEach(tagId => {
-        _restoreTag(tagId, TagOperation.AND)
+        const tag = tagsModel.findTagById(tagId);
+        addTag(tag, TagOperation.AND)
     });
     orTags.forEach(tagId => {
-        _restoreTag(tagId, TagOperation.OR)
+        const tag = tagsModel.findTagById(tagId);
+        addTag(tag, TagOperation.OR)
     });
     notTags.forEach(tagId => {
-        _restoreTag(tagId, TagOperation.NOT)
+        const tag = tagsModel.findTagById(tagId);
+        addTag(tag, TagOperation.NOT)
     });
 }
 
-export async function searchFiles() {   
-    document.getElementById('parent-directory').disabled = true;
-    document.getElementById('dir-name').classList.add('hidden');
+export async function searchFiles() {  
+    searchView.disableSearch(true);
+    
     locationsModel.currentDirectory = null;
+    pushToHistory(searchModel.createHistoryRecord());
+
+    document.getElementById('parent-directory').disabled = true; // todo razem z refactor content files
+    document.getElementById('dir-name').classList.add('hidden');
+    
     await searchModel.searchFiles();
-    displayFiles();
+    await displayFiles();
+
+    searchView.disableSearch(false);
 }
 
 export async function initSearch() {
+    searchView.onSearchInput(() => {
+        searchView.clearSuggestions();
 
-    searchView.searchInput.addEventListener('input', function() {
-        const query = searchView.searchInput.value.trim().toLowerCase();
-        searchView.suggestions.innerHTML = '';
+        const query = searchView.getSearchValue();      
         if (query.length > 0) {
+
+            const buttonData = [
+                { operation: TagOperation.AND, title: i18nModel.t(`title-${TagOperation.AND.name}-button`) },
+                { operation: TagOperation.OR, title: i18nModel.t(`title-${TagOperation.OR.name}-button`) },
+                { operation: TagOperation.NOT, title: i18nModel.t(`title-${TagOperation.NOT.name}-button`) }
+            ];
+            
             const filteredTags = tagsModel.searchTags(query, 'startsWith');
             filteredTags.forEach(tag => {
-                const suggestionItem = searchView.createSuggestionItem(tag);
+                const tagHierarchyDiv = tagsView.renderTagHierarchyDiv(
+                                        tagsModel.buildSingleTagHierarchy(tag));
 
-                const div = tagsView.renderTagHierarchyDiv(tagsModel.buildSingleTagHierarchy(tag));
-                suggestionItem.appendChild(div);
-    
-                const buttonsContainer = searchView.createButtonsContainer();
-                
-                const andTitle = i18nModel.t(`title-${TagOperation.AND.name}-button`);
-                const andButton = searchView.createSuggestionButton(TagOperation.AND, andTitle);
-
-                const orTitle = i18nModel.t(`title-${TagOperation.OR.name}-button`);
-                const orButton = searchView.createSuggestionButton(TagOperation.OR, orTitle);
-
-                const notTitle = i18nModel.t(`title-${TagOperation.NOT.name}-button`);
-                const notButton = searchView.createSuggestionButton(TagOperation.NOT, notTitle);
-    
-                buttonsContainer.appendChild(andButton);
-                buttonsContainer.appendChild(orButton);
-                buttonsContainer.appendChild(notButton);    
-                
-                suggestionItem.appendChild(buttonsContainer);
-                searchView.suggestions.appendChild(suggestionItem);
+                searchView.createSuggestion(tag, tagHierarchyDiv, buttonData)
             });
             highlightText(query, 'search-suggestions', 'li span:last-child');
         }
     });
 
-    searchView.searchInput.addEventListener('focusout', function() {
-        if (!isMouseOverSearchSuggestions) {
-            searchView.suggestions.innerHTML = '';
-            searchView.searchInput.value = '';
+    searchView.onSearchFocusOut(() => {
+        if (isMouseOverSearchSuggestions) {
+            searchView.focusSearch();
         } else {
-            searchView.searchInput.focus();
+            searchView.clearSearchBar();
         }
     });
 
-    searchView.searchButton.addEventListener('click', () => { 
-        pushToHistory(searchModel.getHistoryRecord());
+    searchView.onSearchClick(() => { 
         searchFiles();
     });
 
-    searchView.suggestions.addEventListener('mouseenter', () => {
-        isMouseOverSearchSuggestions = true;
-    });
+    searchView.onTagsContainerClick((event) => {
+        const tagDiv = searchView.isSearchTag(event.target);
 
-     searchView.suggestions.addEventListener('mouseleave', () => {
-        isMouseOverSearchSuggestions = false;
-    });
-
-    searchView.tagsContainer.addEventListener('click', (event) => {
-        const tagDiv = event.target.closest('.search-tag');
-        if (tagDiv && searchView.tagsContainer.contains(tagDiv)) {
-            const tagId = parseInt(tagDiv.dataset.id);
+        if (tagDiv) {
+            const id = parseInt(tagDiv.dataset.id);
             const operation = tagDiv.dataset.operation;
-            searchView.tagsContainer.removeChild(tagDiv);
-            searchModel.removeTag(tagId, operation);
+
+            searchModel.removeTag(id, operation);
+            searchView.removeSearchTag(tagDiv);
         }
     });
 
-    searchView.suggestions.addEventListener('click', (event) => {
-        const btn = event.target.closest('.suggestion-button');
-        if (!btn) return;
+    searchView.onSuggestionMouseEnter(() => {
+        isMouseOverSearchSuggestions = true;
+    });
 
-        const operationName = btn.dataset.operation;
-        const tagDiv = btn.closest('.suggestion-item');
-        if (!tagDiv) return;
+    searchView.onSuggestionMouseLeave(() => {
+        isMouseOverSearchSuggestions = false;
+    });
 
-        const tag = tagDiv._tag;
-        if (!tag) return;
+    searchView.onSuggestionClick((event) => {
+        const data = searchView.isSuggestionBtnClicked(event.target);
 
-        _onSuggestionButtonClick(tag, TagOperation[operationName.toUpperCase()]);
+        if(data) {
+            addTag(data.tag, TagOperation[data.operationName.toUpperCase()])
+            isMouseOverSearchSuggestions = false;
+        }
     });
 }

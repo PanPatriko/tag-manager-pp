@@ -2,6 +2,7 @@ import { highlightText } from "../utils.js";
 import { getSelectedFiles } from "../content/content.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
+import { i18nModel } from "../model/i18nModel.js";
 import { tagsModel } from "../model/tagsModel.js";
 import { fileTagsModel } from "../model/fileTagsModel.js";
 import { modalModel } from "../model/modalModel.js";
@@ -14,6 +15,7 @@ async function addTags() {
     const selectedFiles = getSelectedFiles();
 
     if (modalModel.isTagIdsEmpty()) {
+        showPopup(i18nModel.t('alert-no-tags-selected'), 'warning');
         return;
     }
 
@@ -46,6 +48,7 @@ async function removeTags() {
     const selectedFiles = getSelectedFiles(); 
 
     if (modalModel.isTagIdsEmpty()) {
+        showPopup(i18nModel.t('alert-no-tags-selected'), 'warning');
         return;
     }
 

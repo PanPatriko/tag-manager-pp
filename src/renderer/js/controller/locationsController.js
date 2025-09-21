@@ -19,7 +19,7 @@ async function onLocationClick(event) {
         const location = locationsModel.findLocationById(id);
 
         if (!await window.api.fileExists(location.path)) {
-            showPopup('', i18nModel.t('dir-read-error'), 'error');
+            showPopup(i18nModel.t('dir-read-error'), 'error');
             return;
         }
 

@@ -14,17 +14,17 @@ async function saveLocation() {
     const path = locationModalView.getPathValue();
 
     if (name == null || name === '') {
-        showPopup('', i18nModel.t('loc-alert-empty-name'), 'warning')
+        showPopup(i18nModel.t('loc-alert-empty-name'), 'warning')
         return;
     }
 
     if (path == null || path === '') {
-        showPopup('', i18nModel.t('loc-alert-empty-path'), 'warning')
+        showPopup(i18nModel.t('loc-alert-empty-path'), 'warning')
         return;
     }
 
     if (modalModel.modalMode === ModalMode.NEW && locationsModel.findLocationByPath(path)) {
-        showPopup('', i18nModel.t('loc-alert-duplicate-path'), 'warning')
+        showPopup(i18nModel.t('loc-alert-duplicate-path'), 'warning')
         return;
     }
     

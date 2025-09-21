@@ -1,19 +1,32 @@
 import Swal from 'sweetalert2';
-import { i18nModel } from './model/i18nModel';
 
-
-function showPopup(title, text, icon, showCancelButton = false) {
+function showPopup(text, icon, showCancelButton = false) {
     return Swal.fire({
-        title: title,
         text: text,
         icon: icon,
         showCancelButton: showCancelButton,
-        confirmButtonText: i18nModel.t('ok'),
-        cancelButtonText: i18nModel.t('cancel'),
+        confirmButtonText: '✓',
+        cancelButtonText: '✗',
         customClass: {
-            popup: 'custom-swal-popup'
+            confirmButton: 'swal2-transparent-btn swal2-confirm-check',
+            cancelButton: 'swal2-transparent-btn swal2-cancel-cross'
+        }
+    });
+}
+
+function showPopupTextFormat(text, icon, showCancelButton = false) {
+    return Swal.fire({
+        html: '<pre>' + text + '</pre>',
+        icon: icon,
+        showCancelButton: showCancelButton,
+        confirmButtonText: '✓',
+        cancelButtonText: '✗',
+        customClass: {
+            confirmButton: 'swal2-transparent-btn swal2-confirm-check',
+            cancelButton: 'swal2-transparent-btn swal2-cancel-cross'
         }
     });
 }
 
 window.showPopup = showPopup;
+window.showPopupTextFormat = showPopupTextFormat;

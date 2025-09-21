@@ -38,7 +38,7 @@ parentDirButton.addEventListener('click', async () => {
             pushToHistory({ type: 'directory', path: parentLocation });
             displayDirectory(parentLocation);
         } catch(error) {
-            showPopup('', error, 'error');
+            showPopup(error, 'error');
         }
     }
 });

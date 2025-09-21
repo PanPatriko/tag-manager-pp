@@ -67,6 +67,7 @@
     "alert-file-no-tags": "This file has no tags",
     "alert-fetching-tags": "An error occurred while fetching tags. Please try again",
     "alert-no-files-selected": "No files selected",
+    "alert-no-tags-selected": "No tags selected",
     "alert-no-copied-tags": "No copied tags",
     "alert-tags-paste-success": "Tags pasted successfully",
     "alert-tags-paste-problems": "Errors occurred for the following files:\n{conflictMessages}\nOther tags pasted successfully",

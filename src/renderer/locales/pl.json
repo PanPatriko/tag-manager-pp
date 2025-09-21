@@ -67,6 +67,7 @@
     "alert-file-no-tags": "Ten plik nie ma tagów",
     "alert-fetching-tags": "Wystąpił błąd podczas pobierania tagów. Spróbuj ponownie",
     "alert-no-files-selected": "Nie zaznaczono plików",
+    "alert-no-tags-selected": "Nie wybrano tagów",
     "alert-no-copied-tags": "Brak tagów do skopiowania",
     "alert-tags-paste-success": "Tagi skopiowane pomyślnie",
     "alert-tags-paste-problems": "Wystąpiły problemy przy kopiowaniu dla następujących plików:\n{conflictMessages}\nInne tagi skopiowane pomyślnie",

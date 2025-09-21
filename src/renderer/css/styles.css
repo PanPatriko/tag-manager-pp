@@ -257,18 +257,34 @@ body.dark-theme .resize-handle:hover {
     display: none;
 }
 
-body.light-theme .custom-swal-popup {
+body.light-theme .swal2-popup {
     background-color: var(--light-bg);
     color: var(--light-text);
 }
 
-body.dark-theme .custom-swal-popup {
+body.dark-theme .swal2-popup {
     background-color: var(--dark-bg);
     color: var(--dark-text);
 }
 
-.custom-swal-popup {
-    border-radius: 10%;
+.swal2-transparent-btn {
+    background: transparent !important;
+    font-size: 3rem !important;
+    padding: 0 !important;
+}
+
+.swal2-actions {
+    gap: 50px;
+}
+
+.swal2-confirm-check {
+    color: #27ae60 !important;
+    /* green */
+}
+
+.swal2-cancel-cross {
+    color: #e74c3c !important;
+    /* red */
 }
 
 ::-webkit-scrollbar {

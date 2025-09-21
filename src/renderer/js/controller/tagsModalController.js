@@ -19,7 +19,7 @@ async function saveTag() {
     const tagNames = tagName.trim().split(',').map(tag => tag.trim());
 
     if (tagNames.length === 0 || tagNames[0] === '') {
-        showPopup('', i18nModel.t('tag-alert-empty-name'), 'warning');
+        showPopup(i18nModel.t('tag-alert-empty-name'), 'warning');
         return;
     }
 
@@ -43,7 +43,7 @@ async function saveTag() {
 
 function handleParentTagSelection(tag, hierarchy) {
     if (tagsModel.isDescendantTag(modalModel.tagToEdit, tag)) {
-        showPopup('', i18nModel.t('tag-alert-not-allowed-parent-tag'), 'warning');
+        showPopup(i18nModel.t('tag-alert-not-allowed-parent-tag'), 'warning');
         return;
     }
 

@@ -124,7 +124,7 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                showPopup('', i18nModel.t('file-prev-name-save-error') + result.error, 'error');
+                showPopup(i18nModel.t('file-prev-name-save-error') + result.error, 'error');
             }
         } else {
             const result = await window.api.updateFileNotDB(newFileName, oldFilePath);
@@ -138,11 +138,11 @@ fileNameSaveButton.addEventListener('click', async () => {
                 }
                 displayFiles();
             } else {
-                showPopup('', i18nModel.t('file-prev-name-save-error') + error, 'error');
+                showPopup(i18nModel.t('file-prev-name-save-error') + error, 'error');
             }
         }      
     } catch (error) {
-        showPopup('', i18nModel.t('file-prev-name-save-error') + error, 'error');
+        showPopup(i18nModel.t('file-prev-name-save-error') + error, 'error');
     }
 });
 

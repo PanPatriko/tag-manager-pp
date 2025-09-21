@@ -32,7 +32,7 @@ export const locationsModel = {
             locations.push(new Location(newLoc));
         } catch (error) {
             console.error('Error during adding location', error);
-            showPopup('', error, 'error');
+            showPopup(error, 'error');
         }
     },
 

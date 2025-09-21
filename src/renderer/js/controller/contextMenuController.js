@@ -55,7 +55,7 @@ async function addChildTag(id) {
 }
 
 async function confirmDeleteTag(id) {
-    const result = await showPopup('', i18nModel.t('confirm-del-tag'), 
+    const result = await showPopup(i18nModel.t('confirm-del-tag'), 
         'question', true);
 
     if (result.isConfirmed) {
@@ -70,27 +70,27 @@ async function addTagFile() {
 
 export async function copyTags(id) {
     try {
-        const tags = fileTagsModel.getFileTags(id);
+        const tags = await fileTagsModel.getFileTags(id);
         if (tags.length > 0) {
             tagsModel.copiedTags = tags;
         } else {
-            showPopup('', i18nModel.t('alert-file-no-tags'), 'warning');       
+            showPopup(i18nModel.t('alert-file-no-tags'), 'warning');       
         }
     } catch (error) {
         console.error('Error fetching tags:', error);
-        showPopup('', i18nModel.t('alert-fetching-tags'), 'warning');
+        showPopup(i18nModel.t('alert-fetching-tags'), 'warning');
     }
 }
 
 export async function pasteTags() {
     const selectedFiles = getSelectedFiles();
     if (selectedFiles.length === 0) {
-        showPopup('', i18nModel.t('alert-no-files-selected'), 'warning');
+        showPopup(i18nModel.t('alert-no-files-selected'), 'warning');
         return;
     }
 
     if (tagsModel.copiedTags === null || tagsModel.copiedTags.length === 0) {
-        showPopup('', i18nModel.t('alert-no-copied-tags'), 'warning');
+        showPopup(i18nModel.t('alert-no-copied-tags'), 'warning');
         return;
     }
 
@@ -116,7 +116,6 @@ export async function pasteTags() {
                 console.warn(`Error adding tag (${tag.id}) to file (${fileId}):`, error);
                 conflicts.push({ fileId, tagId: tag.id });
             }
-            conflicts.push({ fileId, tagId: tag.id });
         }
     }
 
@@ -125,9 +124,9 @@ export async function pasteTags() {
         const text = formatString(i18nModel.t('alert-tags-paste-problems'), {
                 conflictMessages: conflictMessages
         })
-        showPopup('', text, 'warning');
+        showPopupTextFormat(text, 'warning');
     } else {
-        showPopup('', i18nModel.t('alert-tags-paste-success'), 'success');
+        showPopup(i18nModel.t('alert-tags-paste-success'), 'success');
     }
 
     await refreshFileInfo();
@@ -136,11 +135,11 @@ export async function pasteTags() {
 
 async function confirmDeleteFile(id) {
     if (id == null || id === 'null') {
-        showPopup('', i18nModel.t('cntx-menu-delete-file-no-id'), 'warning');
+        showPopup(i18nModel.t('cntx-menu-delete-file-no-id'), 'warning');
         return;
     }
 
-    const result = await showPopup('', i18nModel.t('confirm-del-file'),
+    const result = await showPopup(i18nModel.t('confirm-del-file'),
         'question', true);
 
     if (result.isConfirmed) {
@@ -177,7 +176,7 @@ export function openFileNewTab() {
 }
 
 async function confirmDeleteFileTag(id) {
-    const result = await showPopup('', i18nModel.t('confirm-del-tag'), 
+    const result = await showPopup(i18nModel.t('confirm-del-tag'), 
         'question', true);
 
     if (result.isConfirmed) {
@@ -196,7 +195,7 @@ async function editLocation(id) {
 }
 
 async function confirmDeleteLocation(id) {
-    const result = await showPopup('', i18nModel.t('confirm-del-loc'), 
+    const result = await showPopup(i18nModel.t('confirm-del-loc'), 
         'question', true);
 
     if (result.isConfirmed) {

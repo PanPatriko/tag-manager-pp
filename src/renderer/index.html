@@ -202,12 +202,14 @@
     </div>
     <div id="file-tag-form-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="close" id="close-file-tag-form-modal">&times;</span>
+            <span class="close" id="close-file-tag-modal-button">&times;</span>
             <h2 data-i18n="file-tag-title"></h2>
-            <form id="file-tag-form">
+            <form>
                 <div id="modal-file-tags-container"></div>
-                    <span data-i18n="file-tag-show-child-tags"></span>
+                <div>
+                    <label type="text" for="show-child-tags" data-i18n="file-tag-show-child-tags"></label>
                     <input type="checkbox" id="show-child-tags">
+                </div>
                 <div>
                     <label for="file-tag-search" data-i18n="file-tag-search"></label>
                     <input type="text" id="file-tag-search" name="file-tag-search"

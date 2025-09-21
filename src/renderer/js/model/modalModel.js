@@ -5,19 +5,40 @@ let selectedParentTag = null;
 
 let locationToEdit = null;
 
+let tagIds = [];
+
 export const modalModel = { 
 
-    get modalMode() { return modalMode; },
-    set modalMode(mode) { modalMode = mode; },
+  get modalMode() { return modalMode; },
+  set modalMode(mode) { modalMode = mode; },
 
-    get tagToEdit() { return tagToEdit; },
-    set tagToEdit(tag) { tagToEdit = tag; },
+  get tagToEdit() { return tagToEdit; },
+  set tagToEdit(tag) { tagToEdit = tag; },
 
-    get selectedParentTag() { return selectedParentTag; },
-    set selectedParentTag(tag) { selectedParentTag = tag; },
+  get selectedParentTag() { return selectedParentTag; },
+  set selectedParentTag(tag) { selectedParentTag = tag; },
 
-    get locationToEdit() { return locationToEdit; },
-    set locationToEdit(location) { locationToEdit = location; }
+  get locationToEdit() { return locationToEdit; },
+  set locationToEdit(location) { locationToEdit = location; },
+
+  get tagIds() { return tagIds; },
+  set tagIds(ids) { tagIds = ids; },
+
+  canAddTag(id) {
+    return !tagIds.includes(id);
+  },
+
+  addTagId(tagId) {
+    tagIds.push(tagId);
+  },
+
+  removeTagId(tagId) {
+    tagIds = tagIds.filter(id => id !== tagId);
+  },
+
+  isTagIdsEmpty() {
+    return tagIds.length === 0;
+  }
 }
 
 export class TagModalState {

@@ -1,4 +1,5 @@
-import { tagsModel } from "../model/tagsModel.js";
+import { tagsModel, Tag } from "../model/tagsModel.js";
+import { fileTagsModel } from "../model/fileTagsModel.js";
 import { locationsModel } from '../model/locationsModel.js';
 import { i18nModel } from '../model/i18nModel.js';
 import { filesModel } from "../model/filesModel.js";
@@ -7,12 +8,12 @@ import { contextMenuView } from '../view/contextMenuView.js';
 
 import { refreshTagsContainer } from "./tagsController.js";
 import { openNewTagModal, openEditTagModal } from "./tagsModalController.js";
+import { openFileTagsModal  } from "./fileTagsModalController.js";
 import { refreshLocations } from "./locationsController.js";
 import { openLocationModal } from "./locationModalController.js"
 
-import { copiedTags, setCopiedTags, currentFile, setCurrentFileId } from "../state.js"
+import { currentFile, setCurrentFileId } from "../state.js"
 import { formatString } from "../utils.js"
-import { openFileModal } from "../modals/fileTagModal.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
 import { updateSelectedFileCount } from "../content/filesInfo.js";
 import { getSelectedFiles } from "../content/content.js"
@@ -64,14 +65,14 @@ async function confirmDeleteTag(id) {
 }
 
 async function addTagFile() {
-    openFileModal();
+    openFileTagsModal();
 }
 
 export async function copyTags(id) {
     try {
-        const tags = await window.api.getFileTags(id);
+        const tags = fileTagsModel.getFileTags(id);
         if (tags.length > 0) {
-            setCopiedTags(tags);
+            tagsModel.copiedTags = tags;
         } else {
             showPopup('', i18nModel.t('alert-file-no-tags'), 'warning');       
         }
@@ -87,7 +88,8 @@ export async function pasteTags() {
         showPopup('', i18nModel.t('alert-no-files-selected'), 'warning');
         return;
     }
-    if (copiedTags === null) {
+
+    if (tagsModel.copiedTags === null || tagsModel.copiedTags.length === 0) {
         showPopup('', i18nModel.t('alert-no-copied-tags'), 'warning');
         return;
     }
@@ -107,32 +109,29 @@ export async function pasteTags() {
             filesModel.files.find(f => f.path === filePath).id = fileId;
         }
 
-        for (const tag of copiedTags) {
+        for (const tag of tagsModel.copiedTags) {
             try {
-                await window.api.addFileTag(fileId, tag.id);
+                await fileTagsModel.addFileTag(fileId, tag.id);
             } catch (error) {
-                console.warn(`Error adding tag ${tag.name} to file ${fileId}:`, error);
-                conflicts.push({ fileId: fileId, tagName: tag.name });
+                console.warn(`Error adding tag (${tag.id}) to file (${fileId}):`, error);
+                conflicts.push({ fileId, tagId: tag.id });
             }
+            conflicts.push({ fileId, tagId: tag.id });
         }
     }
 
     if (conflicts.length > 0) {
-        const conflictMessages = conflicts.map(conflict => `File ID: ${conflict.fileId}, Tag: ${conflict.tagName}`).join('\n');
+        const conflictMessages = conflicts.map(conflict => `File ID: ${conflict.fileId}, Tag: ${conflict.tagId}`).join('\n');
         const text = formatString(i18nModel.t('alert-tags-paste-problems'), {
                 conflictMessages: conflictMessages
         })
-        Swal.fire({
-            html: '<pre>' + text + '</pre>',
-            icon: 'info',
-            confirmButtonText: 'OK',
-        });
+        showPopup('', text, 'warning');
     } else {
         showPopup('', i18nModel.t('alert-tags-paste-success'), 'success');
     }
 
     await refreshFileInfo();
-    setCopiedTags(null);
+    tagsModel.copiedTags = null;
 }
 
 async function confirmDeleteFile(id) {
@@ -182,7 +181,7 @@ async function confirmDeleteFileTag(id) {
         'question', true);
 
     if (result.isConfirmed) {
-        await window.api.deleteFileTag(currentFile.id, id);
+        await fileTagsModel.deleteFileTag(currentFile.id, id);
         refreshFileInfo();
     }
 }

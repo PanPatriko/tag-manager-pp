@@ -95,7 +95,7 @@ export const tagsView = {
 
                 span.addEventListener("click", () => {
                     if (onTagClick) {
-                        onTagClick(tag, span, li);
+                        onTagClick(tag);
                     } else if (li.querySelector("ul")) {
                         // Default expand/collapse behavior
                         const childUl = li.querySelector("ul");

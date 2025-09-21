@@ -2,7 +2,8 @@ import { displayFiles } from "../content/content.js"
 import { currentFile, setCurrentFile } from "../state.js"
 
 import { filesModel } from "../model/filesModel.js";
-import { tagsModel, TagType, Tag } from '../model/tagsModel.js';
+import { tagsModel, TagType } from '../model/tagsModel.js';
+import { fileTagsModel } from '../model/fileTagsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
 
 import { tagsView, TagClass } from "../view/tagsView.js";
@@ -165,8 +166,7 @@ export async function renderFileInfo(file) {
         fileNameInput.value = file.name || "";
         filePathInput.value = file.path || "";
 
-        const rawTags = await window.api.getFileTags(file.id);
-        const tags = rawTags.map(record => new Tag(record));
+        const tags = await fileTagsModel.getFileTags(file.id);
         if (!tags || tags.length === 0) {
             fileTagsTree.textContent = i18nModel.t('file-prev-no-tags');
         } else {

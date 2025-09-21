@@ -1,9 +1,13 @@
 let tags = [];
+let copiedTags = [];
 
 export const tagsModel = { 
 
     get tags() { return tags;},
     set tags(newTags) { tags = newTags; },
+
+    get copiedTags() { return copiedTags; },
+    set copiedTags(tags) { copiedTags = tags; },
 
     async getTagsFromDB() { 
         const rawTags = await window.api.getTags();

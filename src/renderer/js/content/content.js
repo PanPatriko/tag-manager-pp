@@ -2,10 +2,10 @@ import { currentPage, thumbnailDir } from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
 import { updateFilePages } from "./pagination.js"
 import { createFilePreview } from "../rightSidebar/filePreview.js"
-import { openFileModal } from "../modals/fileTagModal.js"
 import { setCurrentFile } from "../state.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 
+import { openFileTagsModal } from "../controller/fileTagsModalController.js";
 import { previewWindow, copyTags, pasteTags } from "../controller/contextMenuController.js";
 import { pushToHistory } from "../controller/historyController.js"
 
@@ -41,7 +41,7 @@ document.addEventListener('keydown', function(e) {
         }
         if (e.ctrlKey && e.key === 'e') {          
             if(firstSelectedFile) {
-                openFileModal();
+                openFileTagsModal();
             }
         }
         if (e.ctrlKey && e.key === 'v') {

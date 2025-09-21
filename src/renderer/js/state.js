@@ -1,6 +1,5 @@
 export let currentFile = null;
 export let currentPage = 1;
-export let copiedTags = null;
 export const thumbnailDir = '.t'
 
 // Settery
@@ -14,8 +13,4 @@ export function setCurrentFileId(id) {
 
 export function setCurrentPage(page) {
     currentPage = page;
-}
-
-export function setCopiedTags(tags) {
-    copiedTags = tags;
 }

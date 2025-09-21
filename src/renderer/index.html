@@ -29,6 +29,7 @@
 </head>
 
 <body>
+
     <header>
         <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
         <button id="theme-toggle" class="ico-bttn" data-i18n-title="title-theme"></button>
@@ -41,6 +42,7 @@
         <div id="search-tags-container"></div>
         <button id="toggle-file-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
     </header>
+
     <div id="app">
         <aside id="left-sidebar">
             <div id="left-resize-handle" class="left-sidebar-item resize-handle"></div>
@@ -61,6 +63,7 @@
                 <div id="directory-container"></div>
             </div>
         </aside>
+
         <section id="content">
             <section id="files-info">
                 <button id="sort-by-name" class="ico-bttn" data-i18n-title="title-sort-by-name"></button>
@@ -81,6 +84,7 @@
             <section id="files-panel">
             </section>
         </section>
+        
         <aside id="right-sidebar">
             <div id="right-resize-handle" class="right-sidebar-item resize-handle"></div>
             <div id="right-sidebar-menu" class="right-sidebar-item">
@@ -109,123 +113,136 @@
             </section>
         </aside>
     </div>
+
     <div id="settings-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="close" id="close-settings-modal">&times;</span>
-            <ul id="settings-container">
-                <li>
-                    <span data-i18n="settings-lang"></span>
-                    <select id="language-select">
-                        <option value="en" data-i18n="settings-lang-en"></option>
-                        <option value="pl" data-i18n="settings-lang-pl"></option>
-                    </select>
-                </li>
-                <li>
-                    <span data-i18n="settings-file-icon-size"></span>
-                    <select id="icon-size">
-                        <option value="50">50px</option>
-                        <option value="100">100px</option>
-                        <option value="125">125px</option>
-                        <option value="150">150px</option>
-                        <option value="200">200px</option>
-                    </select>
-                </li>
-                <li>
-                    <span data-i18n="settings-max-files-on-page"></span>
-                    <select id="max-files">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                    </select>
-                </li>
-                <li>
-                    <span data-i18n="settings-vid-auto-play"></span>
-                    <input type="checkbox" id="vid-autoplay">
-                </li>
-                <li>
-                    <span data-i18n="settings-vid-loop"></span>
-                    <input type="checkbox" id="vid-loop">
-                </li>
-                <li>
-                    <span data-i18n="settings-def-tag-bgcolor"></span>
-                    <input type="color" id="def-tag-bgcolor">
-                </li>
-                <li>
-                    <span data-i18n="settings-def-tag-textcolor"></span>
-                    <input type="color" id="def-tag-textcolor">
-                </li>
-            </ul>
+            <span class="modal-close" id="close-settings-modal" data-i18n-title="close" tabindex="0">&times;</span>
+            <h2 class="modal-title" data-i18n="title-settings"></h2>
+            <div class="modal-body">
+                <ul id="settings-container">
+                    <li>
+                        <span data-i18n="settings-lang"></span>
+                        <select id="language-select">
+                            <option value="en" data-i18n="settings-lang-en"></option>
+                            <option value="pl" data-i18n="settings-lang-pl"></option>
+                        </select>
+                    </li>
+                    <hr>
+                    <li>
+                        <span data-i18n="settings-file-icon-size"></span>
+                        <select id="icon-size">
+                            <option value="50">50px</option>
+                            <option value="100">100px</option>
+                            <option value="125">125px</option>
+                            <option value="150">150px</option>
+                            <option value="200">200px</option>
+                        </select>
+                    </li>
+                    <li>
+                        <span data-i18n="settings-max-files-on-page"></span>
+                        <select id="max-files">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                        </select>
+                    </li>
+                    <hr>
+                    <li>
+                        <span data-i18n="settings-vid-auto-play"></span>
+                        <input type="checkbox" id="vid-autoplay">
+                    </li>                  
+                    <li>
+                        <span data-i18n="settings-vid-loop"></span>
+                        <input type="checkbox" id="vid-loop">
+                    </li>
+                    <hr>
+                    <li>
+                        <span data-i18n="settings-def-tag-bgcolor"></span>
+                        <input type="color" id="def-tag-bgcolor">
+                    </li>
+                    <li>
+                        <span data-i18n="settings-def-tag-textcolor"></span>
+                        <input type="color" id="def-tag-textcolor">
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
+
     <div id="tag-form-modal" class="modal hidden">
         <div class="modal-content">
-            <h2 id="tag-modal-title"></h2>
-            <label for="tag-name" data-i18n="tag-name"></label>
-            <input type="text" id="tag-name" data-i18n-placeholder="tag-name-placeholder">
-            <span data-i18n="tag-parent-name"></span>
-            <div id="parent-tag"></div>
-            <button id="clear-parent-tag" data-i18n="tag-clear-parent"></button>
-            <div id="parent-tag-search-container">
-                <input type="text" id="parent-name" data-i18n-placeholder="tag-parent-name-placeholder">
-                <ul id="parent-name-suggestions" class="suggestions-container hidden"></ul>
+            <span class="modal-close" data-i18n-title="close" tabindex="0">&times;</span>
+            <h2 class="modal-title" id="tag-modal-title"></h2>
+            <div class="modal-body">
+                <span data-i18n="tag-name"></span>
+                <input type="text" id="tag-name" data-i18n-placeholder="tag-name-placeholder"/>
+                <span data-i18n="tag-parent-name"></span>
+                <div id="parent-tag-search-container">
+                    <input type="text" id="parent-name" data-i18n-placeholder="tag-parent-name-placeholder">
+                    <ul id="parent-name-suggestions" class="suggestions-container hidden"></ul>
+                </div>
+                <div id="parent-tag"></div>
+                <button id="clear-parent-tag" data-i18n="tag-clear-parent"></button>     
+                <span data-i18n="tag-color"></span>
+                <input type="color" id="color">
+                <span data-i18n="tag-text-color"></span>
+                <input type="color" id="textcolor">
             </div>
-            <label for="color" data-i18n="tag-color"></label>
-            <input type="color" id="color">
-            <label for="textcolor" data-i18n="tag-text-color"></label>
-            <input type="color" id="textcolor">
-            <div class="tag-modal-buttons">
-                <button id="tag-modal-ok" data-i18n="ok"></button>
-                <button id="tag-modal-cancel" data-i18n="cancel"></button>
+            <div class="modal-footer">
+                <button class="modal-cancel" id="tag-modal-cancel" data-i18n-title="cancel">✗</button>
+                <button class="modal-confirm" id="tag-modal-ok" data-i18n-title="save">✓</button>
             </div>
         </div>
     </div>
+
     <div id="location-form-modal" class="modal hidden">
         <div class="modal-content">
-            <h2 id="loc-modal-title"></h2>
-            <label for="loc-name" data-i18n="loc-name"></label>
-            <input type="text" id="loc-name" data-i18n-placeholder="loc-name-placeholder">
-            <label for="loc-path" data-i18n="loc-path"></label>
-            <div class="loc-path-container">
-                <input type="text" id="loc-path" data-i18n-placeholder="loc-path-placeholder" readonly>
-                <button id="loc-path-btn" data-i18n="browse"></button>
+            <span class="modal-close" data-i18n-title="close" tabindex="0">&times;</span>
+            <h2 id="loc-modal-title" class="modal-title"></h2>
+            <div class="modal-body">
+                <span data-i18n="loc-name"></span>
+                <input type="text" id="loc-name" data-i18n-placeholder="loc-name-placeholder">
+                <span data-i18n="loc-path"></span>
+                <div class="loc-path-container">
+                    <input type="text" id="loc-path" data-i18n-placeholder="loc-path-placeholder" readonly>
+                    <button id="loc-path-btn" data-i18n="browse"></button>
+                </div>
             </div>
-            <div class="tag-modal-buttons">
-                <button id="loc-modal-ok" data-i18n="ok"></button>
-                <button id="loc-modal-cancel" data-i18n="cancel"></button>
+            <div class="modal-footer">           
+                <button id="loc-modal-cancel" class="modal-cancel" data-i18n-title="cancel">✗</button>
+                <button id="loc-modal-ok" class="modal-confirm" data-i18n-title="save">✓</button>
             </div>
         </div>
     </div>
+
     <div id="file-tag-form-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="close" id="close-file-tag-modal-button">&times;</span>
-            <h2 data-i18n="file-tag-title"></h2>
-            <form>
+            <span id="close-file-tag-modal-button" class="modal-close" data-i18n-title="close" tabindex="0">&times;</span>
+            <h2 class="modal-title" data-i18n="file-tag-title"></h2>
+            <div class="modal-body">
                 <div id="modal-file-tags-container"></div>
+                <span data-i18n="file-tag-search"></span>
+                <input type="text" id="file-tag-search" data-i18n-placeholder="file-tag-search-placeholder">
                 <div>
-                    <label type="text" for="show-child-tags" data-i18n="file-tag-show-child-tags"></label>
                     <input type="checkbox" id="show-child-tags">
+                    <span data-i18n="file-tag-show-child-tags"></span>
                 </div>
-                <div>
-                    <label for="file-tag-search" data-i18n="file-tag-search"></label>
-                    <input type="text" id="file-tag-search" name="file-tag-search"
-                        data-i18n-placeholder="file-tag-search-placeholder">
-                </div>
-                <label for="modal-file-tags-tree" data-i18n="file-tag-select-list"></label>
                 <div id="modal-file-tags-tree"></div>
-                <div class="file-modal-buttons">
-                    <button type="button" id="add-tags-button" data-i18n="file-tag-add"></button>
-                    <button type="button" id="remove-tags-button" data-i18n="file-tag-remove"></button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">              
+                <button id="remove-tags-button" class="modal-cancel" data-i18n-title="file-tag-remove">–</button>
+                <button id="add-tags-button" class="modal-confirm" data-i18n-title="file-tag-add">+</button>
+            </div>
         </div>
     </div>
+
     <script src="webpack/bundle.js"></script>
     <script type="module" src="js/main.js"></script>
+
 </body>
 
 </html>

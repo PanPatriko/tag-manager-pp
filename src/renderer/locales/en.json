@@ -20,9 +20,8 @@
     "tag-alert-empty-name": "Tag name cannot be empty",
     "tag-alert-not-allowed-parent-tag": "You can't set a child tag as parent tag",
     "file-tag-title": "Edit file tags",
-    "file-tag-search": "Search tags:",
+    "file-tag-search": "Search tags and select from the list:",
     "file-tag-search-placeholder": "Enter tag to search ...",
-    "file-tag-select-list": "Select tags from list:",
     "file-tag-add": "Add tags",
     "file-tag-remove": "Remove tags",
     "file-tag-show-child-tags":"Show child tags",
@@ -100,5 +99,6 @@
     "browse": "Browse",
     "save": "Save",
     "next": "Next",
-    "back": "Back"
+    "back": "Back",
+    "close": "Close"
 }

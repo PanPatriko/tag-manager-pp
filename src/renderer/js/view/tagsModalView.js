@@ -28,7 +28,7 @@ export const tagsModalView = {
     },
 
     openModal(tagModalState) {
-        title.value = tagModalState.title;
+        title.innerText = tagModalState.title;
         tagName.value = tagModalState.tagName;
         tagColor.value = tagModalState.tagColor;
         tagTextColor.value = tagModalState.tagTextColor;
@@ -77,6 +77,7 @@ export const tagsModalView = {
     onCancelClick(handler) {
         const el = document.getElementById('tag-modal-cancel');
         el.addEventListener('click', () => handler());
+        modal.querySelector('.modal-close').addEventListener('click', () => handler());
     },
 
     onOkClick(handler) {

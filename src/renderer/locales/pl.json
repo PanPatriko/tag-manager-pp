@@ -20,9 +20,8 @@
     "tag-alert-empty-name": "Nazwa tagu nie może być pusta",
     "tag-alert-not-allowed-parent-tag": "Nie możesz ustawić tagu podrzędnego jak tag nadrzędny",
     "file-tag-title": "Edytuj tagi dla pliku",
-    "file-tag-search": "Szukaj tagów:",
+    "file-tag-search": "Znajdź i wybierz tag z listy:",
     "file-tag-search-placeholder": "Wpisz szukany tag ...",
-    "file-tag-select-list": "Wybierz tag z listy:",
     "file-tag-add": "Dodaj tagi",
     "file-tag-remove": "Usuń tagi",
     "file-tag-show-child-tags": "Pokaż tagi podrzędne",
@@ -100,5 +99,6 @@
     "browse": "Przeglądaj",
     "save": "Zapisz",
     "next": "Dalej",
-    "back": "Wstecz"
+    "back": "Wstecz",
+    "close": "Zamknij"
 }

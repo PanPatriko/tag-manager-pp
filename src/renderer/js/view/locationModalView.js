@@ -37,5 +37,6 @@ export const locationModalView = {
     onCancelClick(handler) {
         const el = document.getElementById('loc-modal-cancel');
         el.addEventListener('click', () => handler());
+        modal.querySelector('.modal-close').addEventListener('click', () => handler());
     }
 }

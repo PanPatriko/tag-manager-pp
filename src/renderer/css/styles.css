@@ -45,8 +45,6 @@ body.dark-theme {
 }
 
 button {
-    padding: 5px;
-    border-radius: 10px;
     cursor: pointer;
     border: var(--border);
     transition: background-color 0.5s ease, transform 0.3s ease;
@@ -219,7 +217,9 @@ body.dark-theme .parent-li.expanded:hover {
 .ico-bttn {
     width: 3em;
     height: 3em;
+    padding: 5px;                
     margin: 5px;
+    border-radius: 10px;
     background-size: 75%;
     background-repeat: no-repeat;
     background-position: center;
@@ -268,23 +268,30 @@ body.dark-theme .swal2-popup {
 }
 
 .swal2-transparent-btn {
+    min-width: 80px !important;
     background: transparent !important;
-    font-size: 3rem !important;
+    font-size: 2rem !important;
     padding: 0 !important;
 }
 
 .swal2-actions {
-    gap: 50px;
+    gap: 25px;
 }
 
 .swal2-confirm-check {
     color: #27ae60 !important;
-    /* green */
 }
 
 .swal2-cancel-cross {
     color: #e74c3c !important;
-    /* red */
+}
+
+.swal2-confirm-check:hover {
+    background: #27ae6010 !important;
+}
+
+.swal2-cancel-cross:hover {
+    background: #e74c3c10 !important;
 }
 
 ::-webkit-scrollbar {

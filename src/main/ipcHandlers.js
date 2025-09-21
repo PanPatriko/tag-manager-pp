@@ -78,7 +78,7 @@ ipcMain.handle('dbfiles:update-file-not-db', async (event, newFileName, oldFileP
   }
 });
 
-// ipcMain.handle dla filetags.js
+// ipcMain.handle for filetags.js
 ipcMain.handle('dbfiletags:get-file-tags', async (event, fileId) => {
   return await getFileTags(fileId);
 });
@@ -91,7 +91,7 @@ ipcMain.handle('dbfiletags:delete-file-tag', async (event, fileId, tagId) => {
   return await deleteFileTag(fileId, tagId);
 });
 
-// ipcMain.handle dla locations.js
+// ipcMain.handle for locations.js
 ipcMain.handle('dblocations:get-locations', async (event,) => {
   return await getLocations();
 });
@@ -108,7 +108,7 @@ ipcMain.handle('dblocations:delete-location', async (event, locationId) => {
   return await deleteLocation(locationId);
 });
 
-// ipcMain.handle dla manipulacji ścieżkami
+// ipcMain.handle for path and shell operations
 ipcMain.handle('path-join', (event, ...args) => {
   return path.join(...args);
 });
@@ -149,6 +149,10 @@ ipcMain.handle('dialog:openFolder', async (event) => {
   } else {
     return result.filePaths[0];
   }
+});
+
+ipcMain.handle('dialog:show-dialog', async (event, options) => {
+  return await dialog.showMessageBox(options);
 });
 
 ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {

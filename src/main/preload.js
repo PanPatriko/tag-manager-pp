@@ -41,6 +41,7 @@ contextBridge.exposeInMainWorld('api', {
     openExplorer: async (path) => await ipcRenderer.invoke('ext:open-file-explorer', path),
 
     openFolderDialog: () => ipcRenderer.invoke('dialog:openFolder'),
+    showDialog: (options) => ipcRenderer.invoke('dialog:show-dialog', options),
 
     fileExists: (path) => ipcRenderer.invoke('files:fileExists', path),
     getFilesInPath: (path) => ipcRenderer.invoke('files:getFilesInPath', path),

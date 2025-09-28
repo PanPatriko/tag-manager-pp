@@ -58,8 +58,7 @@ export const searchView = {
             return;
         }
 
-        suggestions.innerHTML = '';
-        searchInput.value = '';
+        this.clearSearchBar();
 
         return { tag, operationName };
     },

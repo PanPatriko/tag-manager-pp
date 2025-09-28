@@ -1,29 +1,42 @@
-#files-info {
-    flex: 0 0 auto;
+#files-bar {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
     border-bottom: var(--border);
+    box-sizing: border-box;
     overflow: auto;
 }
 
-#files-info > * {
-    flex-shrink: 0;
+.files-bar-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-#files-info span {
-    margin: 5px;
+.files-bar-group+.files-bar-group {
+    border-left: 1px solid #ccc;
+    padding-left: 1.5rem;
+    margin-left: 1.5rem;
+}
+
+.files-bar-info {
+    gap: 0.75rem;
+    font-size: 0.95em;
+    color: var(--files-bar-info-color, #333);
+}
+
+#files-bar span {
     padding: 5px;
     border: var(--border);
     border-radius: 15px;
+    flex-shrink: 0;
 }
 
 #file-pages {
     border-radius: 15px;
-    width: auto;
+    min-width: 3em;
     height: 3em;
-    margin: 5px;
+    text-align: center;
 }
 
 #sort-by-name {

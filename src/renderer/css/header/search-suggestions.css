@@ -8,10 +8,6 @@
     max-height: 600px; 
     box-sizing: border-box;
     list-style-type: none; 
-    padding: 0;
-    margin: 0;
-    border: var(--border);
-    border-top: none;
 }
 
 .suggestion-item {
@@ -20,7 +16,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    border-top: var(--border);
+    border: var(--border);
 }
 
 .suggestion-item div {

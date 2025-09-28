@@ -37,7 +37,7 @@
     "header-search-placeholder": "Szukaj po tagach ...",
     "content-page": "Strona:",
     "content-files-count": "Pliki: {count}",
-    "content-files-and-directories-count": "Pliki: {count} Katalogi: {folders} Razem: {total}",
+    "content-files-and-directories-count": "Pliki: {count} | Katalogi: {folders} | Razem: {total}",
     "content-selected-files-count": "Wybrane pliki: {selectedCount}",
     "content-current-files-range": "Zakres {start}-{end}",
     "content-deleted-file": "Nie można znaleźć pliku. Prawdopodobnie został usunięty lub ma inną nazwę",

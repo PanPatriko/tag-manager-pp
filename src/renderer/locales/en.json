@@ -37,7 +37,7 @@
     "header-search-placeholder": "Search by tags ...",
     "content-page": "Page:",
     "content-files-count": "Files: {count}",
-    "content-files-and-directories-count": "Files: {count} Directories: {folders} Total: {total}",
+    "content-files-and-directories-count": "Files: {count} | Directories: {folders} | Total: {total}",
     "content-selected-files-count": "Selected files: {selectedCount}",
     "content-current-files-range": "Range {start}-{end}",
     "content-deleted-file": "Cannot find file. Looks like it was deleted or renamed",

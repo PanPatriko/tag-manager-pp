@@ -65,18 +65,29 @@
         </aside>
 
         <section id="content">
-            <section id="files-info">
-                <button id="sort-by-name" class="ico-bttn" data-i18n-title="title-sort-by-name"></button>
-                <span id="current-files" class="color-span"></span>
-                <span id="selected-file-count" class="color-span"></span>
-                <span id="total-file-count" class="color-span"></span>
-                <button id="parent-directory" class="ico-bttn" data-i18n-title="title-up-dir" disabled></button>
-                <button id="prev-button" class="ico-bttn" data-i18n-title="back"></button>
-                <button id="next-button" class="ico-bttn" data-i18n-title="next"></button>
-                <span id="dir-name" class="hidden color-span"></span>             
-                <button id="prev-page" class="ico-bttn" data-i18n-title="title-prev-page"></button>
-                <select id="file-pages"></select>
-                <button id="next-page" class="ico-bttn" data-i18n-title="title-next-page"></button>
+            <section id="files-bar">
+                <div class="files-bar-group">
+                    <button id="prev-button" class="ico-bttn" data-i18n-title="back"></button>
+                    <button id="next-button" class="ico-bttn" data-i18n-title="next"></button>
+                    <button id="parent-directory" class="ico-bttn" data-i18n-title="title-up-dir" disabled></button>
+                </div>
+                
+                <div class="files-bar-group">
+                    <button id="sort-by-name" class="ico-bttn" data-i18n-title="title-sort-by-name"></button>
+                </div>
+                
+                <div class="files-bar-group">
+                    <button id="prev-page" class="ico-bttn" data-i18n-title="title-prev-page"></button>
+                    <select id="file-pages"></select>
+                    <button id="next-page" class="ico-bttn" data-i18n-title="title-next-page"></button>
+                </div>
+                
+                <div class="files-bar-group files-bar-info">
+                    <span id="dir-name" class="hidden color-span"></span>
+                    <span id="current-files" class="color-span"></span>
+                    <span id="total-file-count" class="color-span"></span>
+                    <span id="selected-file-count" class="color-span"></span>
+                </div>
             </section>
             <div id="loading-bar-container" class="hidden">
                 <div id="loading-bar"></div>

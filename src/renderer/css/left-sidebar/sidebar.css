@@ -15,13 +15,11 @@
 }
 
 #add-tag {
-    margin: 5px;
     align-self: center;
     background-image: url('../../images/tag-add.png');
 }
 
 #add-location {
-    margin: 5px;
     align-self: center;
     background-image: url('../../images/directory-add.png');
 }
@@ -46,6 +44,8 @@
     flex: 0 0 auto;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 0.5rem;
+    gap: 0.5rem;
     border-bottom: var(--border);
     overflow: auto;
 }
@@ -56,7 +56,8 @@
     flex-direction: column;
     overflow-y: auto;
     height: 100%;
-    gap: 5px;
+    padding: 0.5rem 0;
+    gap: 0.5rem;
 }
 
 #tags-container {

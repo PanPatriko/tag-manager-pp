@@ -2,17 +2,29 @@ import { thumbnailDir } from "../state.js"
 
 const path = window.api.path;
 
+const locationPanel = document.getElementById('location-panel');
 const locationContainer = document.getElementById('location-container');
 const directoryContainer = document.getElementById('directory-container');
 
 export const locationsView = {
-    get locationPanel() {return document.getElementById('location-panel'); },
 
     get locationContainer() { return document.getElementById('location-container'); },
 
     get directoryContainer() { return document.getElementById('directory-container'); },
 
-    get resizeHandle() { return document.getElementById('location-resize-handle'); },
+    getLocationPanelHeight() {
+        return locationPanel.offsetHeight;
+    },
+
+    getLocationContainerHeight() {
+        return locationContainer.offsetHeight;
+    },
+
+    setLocationContainerHeight(height) {
+        height = Math.max(40, height);
+        height = Math.min(this.getLocationPanelHeight() - 40, height);
+        locationContainer.style.height = height + 'px';
+    },
 
     isLocationItem(target) {
         return target.closest('.loc-item');
@@ -139,8 +151,8 @@ export const locationsView = {
         directoryContainer.addEventListener('click', (e) => handler(e));
     },
 
-    // onLanguageChange(handler) {
-    //     languageSelect.addEventListener('change', (e) => handler(e.target.value));
-    // },
-
+    onResizeHandleMouseDown(handler) {
+        const el = document.getElementById('location-resize-handle');
+        el.addEventListener('mousedown', (e) => handler(e));
+    }
 }

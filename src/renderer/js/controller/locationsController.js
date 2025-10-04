@@ -6,7 +6,6 @@ import { locationsModel } from "../model/locationsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
 import { locationsView } from "../view/locationsView.js";
 
-let isResizing = false;
 let startY = 0;
 let startHeight = 0;
 
@@ -50,6 +49,18 @@ async function onDirectoryClick(event) {
     } 
 }
 
+function onMouseMove(e) {
+    const dy = e.clientY - startY;
+    const newHeight = startHeight + dy;
+    
+    locationsView.setLocationContainerHeight(newHeight);
+}
+
+function onMouseUp() {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+}
+
 export async function refreshLocations() {
     locationsView.renderLocations(locationsModel.locations);
     if (locationsModel.activeLocation) {
@@ -75,26 +86,10 @@ export async function initLocations() {
 
     locationsView.onDirectoryContainerClick((event) => onDirectoryClick(event));
 
-    locationsView.resizeHandle.addEventListener('mousedown', (e) => { // TODO refactor resize handlerów
-        isResizing = true;
+    locationsView.onResizeHandleMouseDown((e) => { 
         startY = e.clientY;
-        startHeight = locationsView.locationContainer.offsetHeight;
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        const dy = e.clientY - startY;
-        let newHeight = startHeight + dy;
-        // Optional: set min/max height
-        newHeight = Math.max(40, newHeight);
-        newHeight = Math.min(locationsView.locationPanel.offsetHeight - 40, newHeight);
-        locationsView.locationContainer.style.height = newHeight + 'px';
-        locationsView.directoryContainer.style.flex = '1 1 0';
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isResizing) {
-            isResizing = false;
-        }
+        startHeight = locationsView.getLocationContainerHeight();
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
     });
 }

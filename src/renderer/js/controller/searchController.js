@@ -43,7 +43,6 @@ export async function searchFiles() {
     searchView.disableSearch(true);
     
     locationsModel.currentDirectory = null;
-    pushToHistory(searchModel.createHistoryRecord());
 
     document.getElementById('parent-directory').disabled = true; // todo razem z refactor content files
     document.getElementById('dir-name').classList.add('hidden');
@@ -88,6 +87,7 @@ export async function initSearch() {
 
     searchView.onSearchClick(() => { 
         searchFiles();
+        pushToHistory(searchModel.createHistoryRecord());
     });
 
     searchView.onTagsContainerClick((event) => {

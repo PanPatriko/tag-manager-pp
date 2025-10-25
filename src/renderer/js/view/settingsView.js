@@ -1,5 +1,7 @@
-import { setCurrentPage } from '../state.js';
-import { updateFilePages } from "../content/pagination.js";
+import { paginationModel } from '../model/paginationModel.js';
+
+import { updateFilePages } from "../controller/paginationController.js"
+
 import { displayFiles } from "../content/content.js";
 
 const settingsModal = document.getElementById('settings-modal');
@@ -118,7 +120,7 @@ export const settingsView = {
     },
 
     applyMaxFiles(value) {
-        setCurrentPage(1);
+        paginationModel.setCurrentPage(1);
         updateFilePages();
         displayFiles();
     },

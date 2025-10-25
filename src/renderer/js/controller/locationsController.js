@@ -73,7 +73,8 @@ export async function restoreLocation(historyRecord) {
     locationsModel.activeLocation = historyRecord.activeLocation;
 
     refreshLocations();
-    await locationsView.renderHierarchy(historyRecord.path);
+    await locationsView.renderHierarchy(historyRecord.root);
+    locationsView.expandRootDirectory();
 }
 
 export async function initLocations() {

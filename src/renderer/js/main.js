@@ -4,6 +4,7 @@ import { initHistory } from './controller/historyController.js';
 import { initLayout } from './controller/layoutController.js';
 import { initLocations } from './controller/locationsController.js';
 import { initLocationsModal } from './controller/locationModalController.js';
+import { initPagination } from './controller/paginationController.js';
 import { initSearch } from './controller/searchController.js';
 import { initSettings } from './controller/settingsController.js';
 import { initTags } from './controller/tagsController.js';
@@ -20,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Left sidebar
     await initTags();
     await initLocations();
+
+    // Content area
+    initPagination();
 
     // Modals
     initTagsModal();

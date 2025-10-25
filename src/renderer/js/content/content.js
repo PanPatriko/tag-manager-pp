@@ -1,6 +1,6 @@
-import { currentPage, thumbnailDir } from "../state.js"
+import { thumbnailDir } from "../state.js"
 import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
-import { updateFilePages } from "./pagination.js"
+
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { setCurrentFile } from "../state.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
@@ -8,12 +8,15 @@ import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 import { openFileTagsModal } from "../controller/fileTagsModalController.js";
 import { previewWindow, copyTags, pasteTags } from "../controller/contextMenuController.js";
 import { pushToHistory } from "../controller/historyController.js"
+import { updateFilePages } from "../controller/paginationController.js"
 
 import { filesModel } from "../model/filesModel.js"
 import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';
+import { paginationModel } from '../model/paginationModel.js';
 
 const path = window.api.path;
+const parentDirButton = document.getElementById('parent-directory');
 const sortByNameButton = document.getElementById('sort-by-name');
 const dirNameSpan = document.getElementById('dir-name');
 
@@ -22,6 +25,18 @@ const loadingBar = document.getElementById('loading-bar');
 
 let lastSelectedIndex = null;
 let sortOrder = 'asc';  // Default sort order
+
+parentDirButton.addEventListener('click', async () => {
+    if (locationsModel.currentDirectory != locationsModel.root) {
+        try {
+            const parentLocation = await window.api.getDirectoryParent(locationsModel.currentDirectory);
+            pushToHistory({ type: 'directory', path: parentLocation });
+            displayDirectory(parentLocation);
+        } catch (error) {
+            showPopup(error, 'error');
+        }
+    }
+});
 
 document.addEventListener('keydown', function(e) {
     if (isModalOpen()) {
@@ -246,7 +261,7 @@ export async function displayFiles() {
     updateFilePages();
     sortFiles();
 
-    const start = (currentPage - 1) * settingsModel.maxFilesPerPage;
+    const start = (paginationModel.getCurrentPage() - 1) * settingsModel.maxFilesPerPage;
     const end = Math.min(start + settingsModel.maxFilesPerPage, filesModel.files.length);
     const currentFiles = filesModel.files.slice(start, end);
 

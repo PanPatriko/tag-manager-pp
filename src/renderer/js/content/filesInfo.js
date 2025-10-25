@@ -30,7 +30,7 @@ export function updateSelectedFileCount() {
     const fileContainers = Array.from(document.querySelectorAll('.file-container'));
     const selectedCount = fileContainers.filter(el => el.getAttribute('data-checked') === 'true').length;
     selectedFileCountLabel.textContent = formatString(i18nModel.t('content-selected-files-count'), {
-        selectedCount: selectedCount || '0'
+       selectedCount: selectedCount || '0'
     });
 }
 

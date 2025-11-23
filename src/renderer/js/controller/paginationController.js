@@ -2,10 +2,13 @@ import { i18nModel } from '../model/i18nModel.js';
 import { paginationModel } from '../model/paginationModel.js';
 import { filesModel } from '../model/filesModel.js';
 import { settingsModel } from '../model/settingsModel.js';
+import { locationsModel } from '../model/locationsModel.js';
 
 import { paginationView } from '../view/paginationView.js';
 
-import { displayFiles } from '../content/content.js';
+import { pushToHistory } from './historyController.js';
+
+import { displayFiles, displayDirectory } from '../content/content.js';
 import { formatString } from '../utils.js';
 
 export function updateFileCount(count, folders) {
@@ -82,6 +85,19 @@ export function initPagination() {
         paginationModel.setCurrentPage(parseInt(e.target.value, 10));
         displayFiles();
     });
+
+    paginationView.onParentDirClick(async () => {
+        if (locationsModel.currentDirectory != locationsModel.root) {
+            try {
+                const parentLocation = await window.api.getDirectoryParent(locationsModel.currentDirectory);
+                pushToHistory({ type: 'directory', path: parentLocation });
+                displayDirectory(parentLocation);
+            } catch (error) {
+                showPopup(error, 'error');
+            }
+        }
+    });
+
 }
 
 export function updateFilePages() {

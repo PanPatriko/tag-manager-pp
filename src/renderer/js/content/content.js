@@ -14,29 +14,15 @@ import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';
 import { paginationModel } from '../model/paginationModel.js';
 
+import { paginationView } from "../view/paginationView.js";
+
 
 const path = window.api.path;
-const parentDirButton = document.getElementById('parent-directory');
-const sortByNameButton = document.getElementById('sort-by-name');
-const dirNameSpan = document.getElementById('dir-name');
 
 const loadingBarContainer = document.getElementById('loading-bar-container');
 const loadingBar = document.getElementById('loading-bar');
 
 let lastSelectedIndex = null;
-let sortOrder = 'asc';  // Default sort order
-
-parentDirButton.addEventListener('click', async () => {
-    if (locationsModel.currentDirectory != locationsModel.root) {
-        try {
-            const parentLocation = await window.api.getDirectoryParent(locationsModel.currentDirectory);
-            pushToHistory({ type: 'directory', path: parentLocation });
-            displayDirectory(parentLocation);
-        } catch (error) {
-            showPopup(error, 'error');
-        }
-    }
-});
 
 document.addEventListener('keydown', function(e) {
     if (isModalOpen()) {
@@ -101,39 +87,6 @@ function isTextInputFocused() {
 function isModalOpen() {
     const modals = document.querySelectorAll('.modal');
     return Array.from(modals).some(modal => !modal.classList.contains('hidden'));
-}
-
-sortByNameButton.addEventListener('click', function() {
-    if (filesModel.files.length === 0) return;
-    sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-    displayFiles();
-    updateSortDirectionIndicator();
-});
-
-export function sortFiles() { // model
-    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-    const sortedFiles = [...filesModel.files].sort((a, b) => {
-        if (a.isDirectory && !b.isDirectory) {
-            return -1;
-        }
-        if (!a.isDirectory && b.isDirectory) {
-            return 1;
-        }
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-        return sortOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
-    });
-    filesModel.files = sortedFiles;
-}
-
-function updateSortDirectionIndicator() {
-    if (sortOrder === 'asc') {
-        //sortDirectionElement.textContent = '▲'; // Old style
-        sortByNameButton.style.backgroundImage = "url('images/sort-up-az.png')"
-    } else {
-        sortByNameButton.style.backgroundImage = "url('images/sort-down-az.png')"
-        //sortDirectionElement.textContent = '▼'; // Old style
-    }
 }
 
 export function getSelectedFiles() {
@@ -241,14 +194,9 @@ export async function displayDirectory(dirPath) {
         }
     }
 
-    const prevDirBttn = document.getElementById('parent-directory');
-    if(locationsModel.root === dirPath) {     
-        prevDirBttn.disabled = true;
-    } else {
-        prevDirBttn.disabled = false;
-    }
-    dirNameSpan.classList.remove('hidden');
-    dirNameSpan.textContent = await path.basename(dirPath, "");
+    paginationView.disableParentDir(locationsModel.root === dirPath);
+    paginationView.setDirectoryName(await path.basename(dirPath)); 
+
     locationsModel.currentDirectory = dirPath;
     filesModel.files = dirFiles;
     displayFiles();
@@ -259,7 +207,7 @@ export async function displayFiles() {
     panel.innerHTML = '';
     
     updateFilePages();
-    sortFiles();
+    filesModel.sortFiles();
 
     const start = (paginationModel.getCurrentPage() - 1) * settingsModel.maxFilesPerPage;
     const end = Math.min(start + settingsModel.maxFilesPerPage, filesModel.files.length);

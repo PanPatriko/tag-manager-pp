@@ -1,23 +1,38 @@
 const pagesSelect = document.getElementById('file-pages');
 const prevPageButton = document.getElementById('prev-page');
 const nextPageButton = document.getElementById('next-page');
+const parentDirButton = document.getElementById('parent-directory');
 
-const fileCountLabel = document.getElementById('total-file-count');
-const selectedFileCountLabel = document.getElementById('selected-file-count');
-const currentFilesLabel = document.getElementById('current-files');
+const fileCount = document.getElementById('total-file-count');
+const selectedFileCount = document.getElementById('selected-file-count');
+const currentFiles = document.getElementById('current-files');
+const dirName = document.getElementById('dir-name');
 
 export const paginationView = {
     
     setFileCount(text) {
-        fileCountLabel.textContent = text;
+        fileCount.textContent = text;
     },
 
     setCurrentFilesRange(text) {
-        currentFilesLabel.textContent = text;
+        currentFiles.textContent = text;
     },
 
     setSelectedFileCount(text) {
-        selectedFileCountLabel.textContent = text;
+        selectedFileCount.textContent = text;
+    },
+
+    setDirectoryName(text) {
+        dirName.classList.remove('hidden');
+        dirName.textContent = text;
+    },
+
+    hideDirectoryName() {
+        dirName.classList.add('hidden');
+    },
+
+    disableParentDir(disable) {
+        parentDirButton.disabled = disable;
     },
 
     renderPagesSelect(totalPages, currentPage) {
@@ -37,6 +52,10 @@ export const paginationView = {
 
     onNextPageClick(handler) {
         nextPageButton.addEventListener('click', () => handler());
+    },
+
+    onParentDirClick(handler) {
+        parentDirButton.addEventListener('click', () => handler());
     },
 
     onPageSelectChange(handler) {

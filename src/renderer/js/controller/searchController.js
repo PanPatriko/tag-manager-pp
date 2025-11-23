@@ -5,6 +5,7 @@ import { i18nModel } from '../model/i18nModel.js';
 
 import { tagsView } from '../view/tagsView.js';
 import { searchView } from '../view/searchView.js';
+import { paginationView } from '../view/paginationView.js';
 
 import { pushToHistory } from './historyController.js';
 
@@ -44,8 +45,8 @@ export async function searchFiles() {
     
     locationsModel.currentDirectory = null;
 
-    document.getElementById('parent-directory').disabled = true; // todo razem z refactor content files
-    document.getElementById('dir-name').classList.add('hidden');
+    paginationView.hideDirectoryName();
+    paginationView.disableParentDir(true);
     
     await searchModel.searchFiles();
     await displayFiles();

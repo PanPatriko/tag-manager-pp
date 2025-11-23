@@ -1,4 +1,5 @@
 import { initContextMenu } from './controller/contextMenuController.js';
+import { initFiles } from './controller/filesController.js';
 import { initFileTagsModal } from './controller/fileTagsModalController.js';
 import { initHistory } from './controller/historyController.js';
 import { initLayout } from './controller/layoutController.js';
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Content area
     initPagination();
+    initFiles();
 
     // Modals
     initTagsModal();

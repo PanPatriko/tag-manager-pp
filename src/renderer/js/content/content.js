@@ -1,5 +1,4 @@
 import { thumbnailDir } from "../state.js"
-import { updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount} from "./filesInfo.js"
 
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 import { setCurrentFile } from "../state.js"
@@ -8,12 +7,13 @@ import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 import { openFileTagsModal } from "../controller/fileTagsModalController.js";
 import { previewWindow, copyTags, pasteTags } from "../controller/contextMenuController.js";
 import { pushToHistory } from "../controller/historyController.js"
-import { updateFilePages } from "../controller/paginationController.js"
+import { updateFilePages, updateFileCount, updateCurrentFilesLabel, updateSelectedFileCount } from "../controller/paginationController.js"
 
 import { filesModel } from "../model/filesModel.js"
 import { locationsModel } from "../model/locationsModel.js"
 import { settingsModel } from '../model/settingsModel.js';
 import { paginationModel } from '../model/paginationModel.js';
+
 
 const path = window.api.path;
 const parentDirButton = document.getElementById('parent-directory');

@@ -11,11 +11,11 @@ import { openNewTagModal, openEditTagModal } from "./tagsModalController.js";
 import { openFileTagsModal  } from "./fileTagsModalController.js";
 import { refreshLocations } from "./locationsController.js";
 import { openLocationModal } from "./locationModalController.js"
+import { updateSelectedFileCount } from "./paginationController.js";
 
 import { currentFile, setCurrentFileId } from "../state.js"
 import { formatString } from "../utils.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
-import { updateSelectedFileCount } from "../content/filesInfo.js";
 import { getSelectedFiles } from "../content/content.js"
 
 window.editTag = editTag;

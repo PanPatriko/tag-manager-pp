@@ -2,7 +2,23 @@ const pagesSelect = document.getElementById('file-pages');
 const prevPageButton = document.getElementById('prev-page');
 const nextPageButton = document.getElementById('next-page');
 
-export const paginationView = {    
+const fileCountLabel = document.getElementById('total-file-count');
+const selectedFileCountLabel = document.getElementById('selected-file-count');
+const currentFilesLabel = document.getElementById('current-files');
+
+export const paginationView = {
+    
+    setFileCount(text) {
+        fileCountLabel.textContent = text;
+    },
+
+    setCurrentFilesRange(text) {
+        currentFilesLabel.textContent = text;
+    },
+
+    setSelectedFileCount(text) {
+        selectedFileCountLabel.textContent = text;
+    },
 
     renderPagesSelect(totalPages, currentPage) {
         pagesSelect.innerHTML = "";

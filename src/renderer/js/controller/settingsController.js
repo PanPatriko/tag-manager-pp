@@ -5,12 +5,12 @@ import { i18nView } from '../view/i18nView.js';
 import { settingsView } from '../view/settingsView.js';
 
 import { previewWindow } from './contextMenuController.js';
-import { refreshLabels } from '../content/filesInfo.js';
+import { refreshPaginationLabels } from './paginationController.js';
 
 async function setLanguage(locale) {
     await i18nModel.load(locale);
     i18nView.applyTranslations(i18nModel.translations);
-    refreshLabels(); // TODO - tymczasowo do refaktoru reszty kodu
+    refreshPaginationLabels();
 }
 
 function previewWindowPostMessage(type, data) {

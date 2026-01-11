@@ -9,7 +9,8 @@ import { pushToHistory } from './historyController.js';
 import { updateSelectedFileCount, updateFilePages, updateFileCount } from './paginationController.js';
 import { previewWindow } from "./contextMenuController.js";
 
-import { setCurrentFile, thumbnailDir } from "../state.js"
+import { setCurrentFile } from "../state.js"
+import { thumbnailDir } from "../utils.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 import { createFilePreview } from "../rightSidebar/filePreview.js"
 

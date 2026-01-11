@@ -1,3 +1,5 @@
+export const thumbnailDir = '.t'
+
 function hexToRgb(hex) {
     hex = hex.replace(/^#/, '');
     let bigint = parseInt(hex, 16);

@@ -1,4 +1,4 @@
-import { thumbnailDir } from "../state.js"
+import { thumbnailDir } from "../utils.js"
 
 const path = window.api.path;
 

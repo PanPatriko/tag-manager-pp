@@ -1,5 +1,4 @@
 export let currentFile = null;
-export const thumbnailDir = '.t'
 
 // Settery
 export function setCurrentFile(file) {

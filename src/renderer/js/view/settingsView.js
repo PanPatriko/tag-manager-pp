@@ -1,8 +1,7 @@
 import { paginationModel } from '../model/paginationModel.js';
 
 import { updateFilePages } from "../controller/paginationController.js"
-
-import { displayFiles } from "../content/content.js";
+import { displayFiles } from "../controller/filesController.js";
 
 const settingsModal = document.getElementById('settings-modal');
 

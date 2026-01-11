@@ -1,10 +1,12 @@
-import { displayDirectory } from "../content/content.js"
 
-import { pushToHistory } from "./historyController.js"
-import { openLocationModal } from "./locationModalController.js";
 import { locationsModel } from "../model/locationsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
+
 import { locationsView } from "../view/locationsView.js";
+
+import { displayDirectory } from "./filesController.js";
+import { pushToHistory } from "./historyController.js"
+import { openLocationModal } from "./locationModalController.js";
 
 let startY = 0;
 let startHeight = 0;

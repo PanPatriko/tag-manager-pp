@@ -15,6 +15,7 @@ export const searchModel = {
     async searchFiles() {
         const files = await window.api.searchFiles(andTags, orTags, notTags);
         filesModel.files = files;
+        await filesModel.sortFiles();
         return files;
     },
 

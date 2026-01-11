@@ -39,7 +39,7 @@
     "content-files-count": "Pliki: {count}",
     "content-files-and-directories-count": "Pliki: {count} | Katalogi: {folders} | Razem: {total}",
     "content-selected-files-count": "Wybrane pliki: {selectedCount}",
-    "content-current-files-range": "Zakres {start}-{end}",
+    "content-current-files-range": "Zakres {start} - {end}",
     "content-deleted-file": "Nie można znaleźć pliku. Prawdopodobnie został usunięty lub ma inną nazwę",
     "file-prev-no-ID": "ND",
     "file-prev-name": "Nazwa",
@@ -82,6 +82,7 @@
     "title-search": "Szukaj",
     "title-up-dir": "W górę do folderu nadrzędny",
     "title-sort-by-name": "Sortuj po nazwie",
+    "title-sort-by-date": "Sortuj po dacie",
     "title-prev-page": "Poprzednia strona",
     "title-next-page": "Następna strona",
     "title-file-tags": "Tagi pliku",
@@ -100,5 +101,6 @@
     "save": "Zapisz",
     "next": "Dalej",
     "back": "Wstecz",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "generate-thumbnails": "Generowanie miniatur..."
 }

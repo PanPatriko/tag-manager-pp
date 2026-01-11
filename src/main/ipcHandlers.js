@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent } = require('./utils.js');
+const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, formatDateYYYYMMDD } = require('./utils.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
 const { getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
@@ -160,16 +160,29 @@ ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
     const files = await fs.promises.readdir(directoryPath, { withFileTypes: true });
     return files
       .filter(file => !(file.isDirectory() && file.name === '.t') && file.name !== 'desktop.ini' && file.name !== 'Thumbs.db')
-      .map(file => ({
-        name: file.name,
-        path: path.join(directoryPath, file.name),
-        isDirectory: file.isDirectory(),
-      }));
+      .map(file => {
+        const filePath = path.join(directoryPath, file.name);
+        return {
+          name: file.name,
+          path: filePath,
+          isDirectory: file.isDirectory(),
+        };
+      });
   } catch (error) {
     console.error(`Error reading directory ${directoryPath}:`, error);
     return { error: 'Unable to read directory' };
   }
-});
+}); 
+
+ipcMain.handle('files:getFileCreationDate', async (event, filePath) => {
+  try {
+    const stat = fs.statSync(filePath);
+    return formatDateYYYYMMDD(stat.birthtime);
+  } catch (error) {
+    console.error(`Error getting file creation date for ${filePath}:`, error);
+    return null;
+  }
+}); 
 
 ipcMain.handle('files:getDirectoryHierarchy', async (event, directoryPath) => {
   try {

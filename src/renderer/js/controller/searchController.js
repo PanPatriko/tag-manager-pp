@@ -8,9 +8,10 @@ import { searchView } from '../view/searchView.js';
 import { paginationView } from '../view/paginationView.js';
 
 import { pushToHistory } from './historyController.js';
+import { displayFiles } from "./filesController.js";
 
 import { highlightText } from "../utils.js";
-import { displayFiles } from "../content/content.js"
+
 
 let isMouseOverSearchSuggestions = false;
 

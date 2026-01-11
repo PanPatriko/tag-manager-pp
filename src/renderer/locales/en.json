@@ -39,7 +39,7 @@
     "content-files-count": "Files: {count}",
     "content-files-and-directories-count": "Files: {count} | Directories: {folders} | Total: {total}",
     "content-selected-files-count": "Selected files: {selectedCount}",
-    "content-current-files-range": "Range {start}-{end}",
+    "content-current-files-range": "Range {start} - {end}",
     "content-deleted-file": "Cannot find file. Looks like it was deleted or renamed",
     "file-prev-no-ID": "N/A",
     "file-prev-name": "Name",
@@ -82,6 +82,7 @@
     "title-search": "Search",
     "title-up-dir": "Up to parent directory",
     "title-sort-by-name": "Sort by name",
+    "title-sort-by-date": "Sort by date",
     "title-prev-page": "Previous page",
     "title-next-page": "Next page",
     "title-file-tags": "File tags",
@@ -100,5 +101,6 @@
     "save": "Save",
     "next": "Next",
     "back": "Back",
-    "close": "Close"
+    "close": "Close",
+    "generate-thumbnails": "Generating thumbnails..."
 }

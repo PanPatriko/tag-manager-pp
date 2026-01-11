@@ -1,10 +1,11 @@
-import { tagsModel, Tag } from "../model/tagsModel.js";
+import { tagsModel } from "../model/tagsModel.js";
 import { fileTagsModel } from "../model/fileTagsModel.js";
 import { locationsModel } from '../model/locationsModel.js';
 import { i18nModel } from '../model/i18nModel.js';
 import { filesModel } from "../model/filesModel.js";
 
 import { contextMenuView } from '../view/contextMenuView.js';
+import { filesView } from "../view/filesView.js";
 
 import { refreshTagsContainer } from "./tagsController.js";
 import { openNewTagModal, openEditTagModal } from "./tagsModalController.js";
@@ -16,7 +17,6 @@ import { updateSelectedFileCount } from "./paginationController.js";
 import { currentFile, setCurrentFileId } from "../state.js"
 import { formatString } from "../utils.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
-import { getSelectedFiles } from "../content/content.js"
 
 window.editTag = editTag;
 window.addChildTag = addChildTag;
@@ -83,7 +83,8 @@ export async function copyTags(id) {
 }
 
 export async function pasteTags() {
-    const selectedFiles = getSelectedFiles();
+    const selectedFiles = filesModel.getSelectedFiles();
+
     if (selectedFiles.length === 0) {
         showPopup(i18nModel.t('alert-no-files-selected'), 'warning');
         return;
@@ -94,43 +95,26 @@ export async function pasteTags() {
         return;
     }
 
-    const conflicts = [];
-
     for (const file of selectedFiles) {
-        let fileId = file.dataset.id;
-        let filePath = file.dataset.path;
+        let fileId = file.id;
+        let filePath = file.path;
 
-        if (fileId === 'null') {
-            const fileName = filePath.split('\\').pop();
-            await window.api.createFile({ name: fileName, path: filePath});
-            const newFile = await window.api.getFileByPath(filePath);
-            fileId = newFile.id;
-            file.dataset.id = fileId;
-            filesModel.files.find(f => f.path === filePath).id = fileId;
+        if (fileId === 'null' || !fileId) {
+            const createdFile = await filesModel.createFile(filePath);
+            filesView.addIdToContainer(createdFile);
+            fileId = createdFile.id;
         }
 
         for (const tag of tagsModel.copiedTags) {
             try {
                 await fileTagsModel.addFileTag(fileId, tag.id);
             } catch (error) {
-                console.warn(`Error adding tag (${tag.id}) to file (${fileId}):`, error);
-                conflicts.push({ fileId, tagId: tag.id });
+                console.error(error);
             }
         }
     }
 
-    if (conflicts.length > 0) {
-        const conflictMessages = conflicts.map(conflict => `File ID: ${conflict.fileId}, Tag: ${conflict.tagId}`).join('\n');
-        const text = formatString(i18nModel.t('alert-tags-paste-problems'), {
-                conflictMessages: conflictMessages
-        })
-        showPopupTextFormat(text, 'warning');
-    } else {
-        showPopup(i18nModel.t('alert-tags-paste-success'), 'success');
-    }
-
     await refreshFileInfo();
-    tagsModel.copiedTags = null;
 }
 
 async function confirmDeleteFile(id) {
@@ -143,11 +127,8 @@ async function confirmDeleteFile(id) {
         'question', true);
 
     if (result.isConfirmed) {
-        await window.api.deleteFileById(id);
-        filesModel.files.filter(f => f.id !== id);
-        if (id === currentFile.id) {
-            setCurrentFileId(null);
-        }
+        await filesModel.deleteFile(id);
+        filesView.removeIdFromContainer(id);
         refreshFileInfo();
     }   
 }

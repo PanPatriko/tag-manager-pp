@@ -20,3 +20,10 @@
     background-color: #4caf50;
     transition: width 0.2s;
 }
+
+#loading-bar-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: large;
+}

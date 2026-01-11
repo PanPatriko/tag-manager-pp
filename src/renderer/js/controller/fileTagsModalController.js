@@ -1,5 +1,4 @@
 import { highlightText } from "../utils.js";
-import { getSelectedFiles } from "../content/content.js";
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js";
 
 import { i18nModel } from "../model/i18nModel.js";
@@ -10,9 +9,10 @@ import { filesModel } from "../model/filesModel.js";
 
 import { tagsView } from '../view/tagsView.js';
 import { fileTagsModalView } from "../view/fileTagsModalView.js";
+import { filesView } from "../view/filesView.js";
 
 async function addTags() {
-    const selectedFiles = getSelectedFiles();
+    const selectedFiles = filesModel.getSelectedFiles();
 
     if (modalModel.isTagIdsEmpty()) {
         showPopup(i18nModel.t('alert-no-tags-selected'), 'warning');
@@ -20,16 +20,13 @@ async function addTags() {
     }
 
     for (const file of selectedFiles) {
-        let fileId = file.dataset.id;
-        let filePath = file.dataset.path;
+        let fileId = file.id;
+        let filePath = file.path;
 
-        if (fileId === 'null') {
-            const fileName = filePath.split('\\').pop();
-            await window.api.createFile({ name: fileName, path: filePath });
-            const newFile = await window.api.getFileByPath(filePath);
-            fileId = newFile.id;
-            file.dataset.id = fileId;
-            filesModel.files.find(f => f.path === filePath).id = fileId;
+        if (fileId === 'null' || !fileId) {
+            const createdFile = await filesModel.createFile(filePath);
+            filesView.addIdToContainer(createdFile);
+            fileId = createdFile.id;
         }
 
         for (const tagId of modalModel.tagIds) {
@@ -45,7 +42,7 @@ async function addTags() {
 }
 
 async function removeTags() {
-    const selectedFiles = getSelectedFiles(); 
+    const selectedFiles = filesModel.getSelectedFiles();
 
     if (modalModel.isTagIdsEmpty()) {
         showPopup(i18nModel.t('alert-no-tags-selected'), 'warning');
@@ -53,9 +50,9 @@ async function removeTags() {
     }
 
     for (const file of selectedFiles) {
-        let fileId = file.dataset.id;
+        let fileId = file.id;
 
-        if (fileId != 'null') {     
+        if (fileId != 'null' && fileId) {     
             for (const tagId of modalModel.tagIds) {
                 try {
                     await fileTagsModel.deleteFileTag(fileId, tagId);

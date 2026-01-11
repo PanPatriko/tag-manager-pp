@@ -1,5 +1,3 @@
-import { displayDirectory } from "../content/content.js";
-
 import { locationsModel } from "../model/locationsModel.js";
 import { historyModel } from "../model/historyModel.js";
 
@@ -7,6 +5,7 @@ import { historyView } from "../view/historyView.js";
 
 import { searchFiles, restoreSearchTags } from "./searchController.js";
 import { restoreLocation } from "./locationsController.js";
+import { displayDirectory } from "./filesController.js";
 
 function updateHistoryButtons() {
     historyView.setPreviousButtonState(!historyModel.canGoBack());

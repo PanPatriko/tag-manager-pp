@@ -7,44 +7,15 @@ import { locationsModel } from '../model/locationsModel.js';
 import { paginationView } from '../view/paginationView.js';
 
 import { pushToHistory } from './historyController.js';
+import { displayDirectory, displayFiles } from "./filesController.js";
 
-import { displayFiles, displayDirectory } from '../content/content.js';
 import { formatString } from '../utils.js';
 
-export function updateFileCount(count, folders) {
-    paginationModel.setFileCount(count);
-    paginationModel.setFolderCount(folders);
-
-    let text = '';
-
-    if (folders > 0) {
-        text = formatString(i18nModel.t('content-files-and-directories-count'), {
-            count: count || '0',
-            folders: folders,
-            total: count + folders
-        });       
-    } else {
-        text = formatString(i18nModel.t('content-files-count'), {
-            count: count || '0'
-        });
+function updateCurrentFilesLabel() {
+    let { start, end } = filesModel.getCurrentPageRange();
+    if (filesModel.files.length > 0) {
+        start += 1;
     }
-
-    paginationView.setFileCount(text);
-}
-
-export function updateSelectedFileCount() { // TODO selectes files as model, not from DOM
-    const fileContainers = Array.from(document.querySelectorAll('.file-container'));
-    const selectedCount = fileContainers.filter(el => el.getAttribute('data-checked') === 'true').length;
-
-    const text = formatString(i18nModel.t('content-selected-files-count'), {
-       selectedCount: selectedCount || '0'
-    });
-    paginationView.setSelectedFileCount(text);
-}
-
-export function updateCurrentFilesLabel(start, end) {
-    paginationModel.setRange(start, end);
-
     const text = formatString(i18nModel.t('content-current-files-range'), {
         start: start || '0',
         end: end || '0'
@@ -53,14 +24,46 @@ export function updateCurrentFilesLabel(start, end) {
     paginationView.setCurrentFilesRange(text);
 }
 
-export function refreshPaginationLabels() {
-    const { start, end } = paginationModel.getRange();
-    const files = paginationModel.getFileCount();
-    const folders = paginationModel.getFolderCount();
+export function updateFileCount() {
+    const { total, directories, files } = filesModel.getFilesCount();
 
-    updateFileCount(files, folders);
+    let text = '';
+
+    if (directories > 0) {
+        text = formatString(i18nModel.t('content-files-and-directories-count'), {
+            count: files || '0',
+            folders: directories,
+            total: total
+        });       
+    } else {
+        text = formatString(i18nModel.t('content-files-count'), {
+            count: files || '0'
+        });
+    }
+
+    paginationView.setFileCount(text);
+    updateCurrentFilesLabel();
     updateSelectedFileCount();
-    updateCurrentFilesLabel(start, end);
+}
+
+export function updateSelectedFileCount() {
+    const selectedCount = filesModel.getSelectedFiles().length;
+
+    const text = formatString(i18nModel.t('content-selected-files-count'), {
+       selectedCount: selectedCount || '0'
+    });
+    paginationView.setSelectedFileCount(text);
+}
+
+export function updateFilePages() {
+    const totalPages = Math.ceil(filesModel.files.length / settingsModel.maxFilesPerPage);
+    const currentPage = paginationModel.getCurrentPage();
+
+    if (currentPage > totalPages) {
+        paginationModel.setCurrentPage(1);
+    }
+
+    paginationView.renderPagesSelect(totalPages, currentPage);
 }
 
 export function initPagination() {
@@ -98,15 +101,4 @@ export function initPagination() {
         }
     });
 
-}
-
-export function updateFilePages() {
-    const totalPages = Math.ceil(filesModel.files.length / settingsModel.maxFilesPerPage);
-    const currentPage = paginationModel.getCurrentPage();
-
-    if (currentPage > totalPages) {
-        paginationModel.setCurrentPage(1);
-    }
-
-    paginationView.renderPagesSelect(totalPages, currentPage);
 }

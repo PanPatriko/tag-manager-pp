@@ -47,7 +47,7 @@ async function createFile(fileData) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    getFileById(this.lastID).then(resolve).catch(reject);
                 }
             }
         );

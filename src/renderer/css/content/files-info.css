@@ -43,6 +43,10 @@
     background-image: url('../../images/sort-up-az.png');
 }
 
+#sort-by-date {
+    background-image: url('../../images/sort-up-date.png');
+}
+
 #parent-directory {
     background-image: url('../../images/directory-up.png');
 }

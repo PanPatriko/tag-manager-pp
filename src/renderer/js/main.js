@@ -10,6 +10,7 @@ import { initSearch } from './controller/searchController.js';
 import { initSettings } from './controller/settingsController.js';
 import { initTags } from './controller/tagsController.js';
 import { initTagsModal } from './controller/tagsModalController.js';
+import { initKeyboardShortcuts } from './controller/keyboardController.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Main layout
@@ -34,4 +35,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     initHistory();
     initContextMenu();
+    initKeyboardShortcuts();
 });

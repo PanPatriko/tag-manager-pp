@@ -1,4 +1,3 @@
-import { displayFiles } from "../content/content.js"
 import { currentFile, setCurrentFile } from "../state.js"
 
 import { filesModel } from "../model/filesModel.js";
@@ -7,6 +6,8 @@ import { fileTagsModel } from '../model/fileTagsModel.js';
 import { i18nModel } from "../model/i18nModel.js";
 
 import { tagsView, TagClass } from "../view/tagsView.js";
+
+import { displayFiles } from "../controller/filesController.js";
 
 const showFileInfoButton = document.getElementById('show-file-info');
 const fileInfoSection = document.getElementById('file-info');

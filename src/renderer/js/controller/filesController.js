@@ -8,11 +8,10 @@ import { paginationView } from '../view/paginationView.js';
 import { pushToHistory } from './historyController.js';
 import { updateSelectedFileCount, updateFilePages, updateFileCount } from './paginationController.js';
 import { previewWindow } from "./contextMenuController.js";
+import { createFilePreview } from "./filePreviewController.js"
 
-import { setCurrentFile } from "../state.js"
 import { thumbnailDir } from "../utils.js"
 import { renderFileInfo } from "../rightSidebar/fileInfo.js";
-import { createFilePreview } from "../rightSidebar/filePreview.js"
 
 let lastSelectedIndex = null;
 
@@ -24,9 +23,9 @@ function selectFile(file) {
 
     if (!file) {
         lastSelectedIndex = null;
+        filesModel.currentPreviewFile = null;
         updateSelectedFileCount();
         createFilePreview(null);
-        setCurrentFile(null);
         renderFileInfo(null);
         return;
     }
@@ -40,12 +39,13 @@ function selectFile(file) {
         container = filesView.findFileContainerByPath(file.path);
     }
 
-    filesView.setContainerSelected(container, true);
+    filesModel.currentPreviewFile = file;
 
+    filesView.setContainerSelected(container, true);
     updateSelectedFileCount();
     createFilePreview(file);
-    setCurrentFile(file);
     renderFileInfo(file);
+
     if (previewWindow && !previewWindow.closed) {
         previewWindow.postMessage({ type: 'update-preview', file: file }, '*');
     }
@@ -284,16 +284,11 @@ export function initFiles() {
         const path = container.dataset.path;
         const current = (id && id !== 'null') ? filesModel.getFileById(id) : filesModel.getFileByPath(path);
 
-        if (!current) {
-            createFilePreview(null);
-            setCurrentFile(null);
-            renderFileInfo(null);
-            return;
-        }
+        filesModel.currentPreviewFile = current;
 
         createFilePreview(current);
-        setCurrentFile(current);
         renderFileInfo(current);
+
         if (previewWindow && !previewWindow.closed) {
             previewWindow.postMessage({ type: 'update-preview', file: current }, '*');
         }

@@ -14,8 +14,6 @@ import { refreshLocations } from "./locationsController.js";
 import { openLocationModal } from "./locationModalController.js"
 import { updateSelectedFileCount } from "./paginationController.js";
 
-import { currentFile, setCurrentFileId } from "../state.js"
-import { formatString } from "../utils.js"
 import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
 
 window.editTag = editTag;
@@ -142,15 +140,15 @@ async function openFileLocation(path) {
 }
 
 export function openFileNewTab() {
-    if (!currentFile || !currentFile.path) return;
+    if (!filesModel.currentPreviewFile) return;
 
-    const fileUrl = `preview.html?file=${encodeURIComponent(currentFile.path)}`;
+    const fileUrl = `preview.html?file=${encodeURIComponent(filesModel.currentPreviewFile.path)}`;
 
     // Open or reuse the preview tab
     if (previewWindow && !previewWindow.closed) {
         previewWindow.focus();
         // Send updated file info
-        previewWindow.postMessage({ type: 'update-preview', file: currentFile }, '*');
+        previewWindow.postMessage({ type: 'update-preview', file: filesModel.currentPreviewFile }, '*');
     } else {
         previewWindow = window.open(fileUrl, 'filePreviewTab');
     }
@@ -161,7 +159,7 @@ async function confirmDeleteFileTag(id) {
         'question', true);
 
     if (result.isConfirmed) {
-        await fileTagsModel.deleteFileTag(currentFile.id, id);
+        await fileTagsModel.deleteFileTag(filesModel.currentPreviewFile.id, id);
         refreshFileInfo();
     }
 }
@@ -243,8 +241,8 @@ export function initContextMenu() {
         if (target.closest('.file-preview-image')) {
             items = [
                 { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(currentFile.path) },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(currentFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(filesModel.currentPreviewFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(filesModel.currentPreviewFile.path) },
             ];
         }
 
@@ -252,8 +250,8 @@ export function initContextMenu() {
             const vid = document.querySelector('#file-preview > *');
             items = [
                 { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(currentFile.path) },
-                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(currentFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(filesModel.currentPreviewFile.path) },
+                { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(filesModel.currentPreviewFile.path) },
                 { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-repeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
                 { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-show-controls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
             ];

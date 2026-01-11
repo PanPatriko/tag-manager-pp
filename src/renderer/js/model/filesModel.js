@@ -1,9 +1,8 @@
 import { paginationModel } from "./paginationModel.js";
 import { settingsModel } from "./settingsModel.js";
 
-import { currentFile, setCurrentFileId } from "../state.js"
-
 let files = [];
+let currentPreviewFile = null;
 let sortByNameOrder = 'asc';
 let sortByDateOrder = 'asc';
 let sortBy = 'name';   // Default sort by name
@@ -69,6 +68,8 @@ async function sortFilesByDate() {
 export const filesModel = { 
     get files() { return files;},
     set files(newFiles) { files = newFiles; },
+    get currentPreviewFile() { return currentPreviewFile; },
+    set currentPreviewFile(file) { currentPreviewFile = file; },
     get sortByNameOrder() { return sortByNameOrder; },
     get sortByDateOrder() { return sortByDateOrder; },
 
@@ -85,8 +86,8 @@ export const filesModel = {
     async deleteFile(id) {
         await window.api.deleteFileById(id);
         files.find(file => file.id == id).id = null;
-        if (id == currentFile.id) {
-            setCurrentFileId(null);
+        if (id == currentPreviewFile.id) {
+            currentPreviewFile.id = null;
         }
     },
 

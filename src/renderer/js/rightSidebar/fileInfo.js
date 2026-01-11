@@ -1,5 +1,3 @@
-import { currentFile, setCurrentFile } from "../state.js"
-
 import { filesModel } from "../model/filesModel.js";
 import { tagsModel, TagType } from '../model/tagsModel.js';
 import { fileTagsModel } from '../model/fileTagsModel.js';
@@ -90,7 +88,7 @@ function updateResizeHandleVisibility() {
 }
 
 fileNameInput.addEventListener('focus', async () => {
-    if(await window.api.fileExists(currentFile.path)) {
+    if (await window.api.fileExists(filesModel.currentPreviewFile.path)) {
         fileNameSaveButton.hidden = false;
     } else {
         // TODO Set new path for file
@@ -104,13 +102,13 @@ fileNameInput.addEventListener('focusout', () => {
 });
 
 fileNameSaveButton.addEventListener('click', async () => {
-    if(!currentFile) {
+    if (!filesModel.currentPreviewFile) {
         return;
     }
     
     const newFileName = fileNameInput.value;
-    const fileId = currentFile.id;
-    const oldFilePath = currentFile.path;
+    const fileId = filesModel.currentPreviewFile.id;
+    const oldFilePath = filesModel.currentPreviewFile.path;
 
     try {
         if(fileId != null) { 
@@ -132,7 +130,7 @@ fileNameSaveButton.addEventListener('click', async () => {
             if (result.success) {
                 filePathInput.value = result.newFilePath;
                 fileNameSaveButton.hidden = true;
-                const file = filesModel.files.find(file => file.name === currentFile.name);
+                const file = filesModel.files.find(file => file.name === filesModel.currentPreviewFile.name);
                 if (file) {
                     file.name = newFileName;
                     file.path = result.newFilePath;
@@ -148,10 +146,9 @@ fileNameSaveButton.addEventListener('click', async () => {
 });
 
 export async function refreshFileInfo() {
-    if (currentFile) {
-        const updatedFile = await fetchFileInfo(currentFile);
-        setCurrentFile(updatedFile || currentFile);
-        await renderFileInfo(currentFile);
+    if (filesModel.currentPreviewFile) {
+        filesModel.currentPreviewFile = await fetchFileInfo(filesModel.currentPreviewFile);
+        await renderFileInfo(filesModel.currentPreviewFile);
     }
 }
 

@@ -1,4 +1,4 @@
-import { createFilePreview } from './rightSidebar/filePreview.js';
+import { createFilePreview } from './controller/filePreviewController.js';
 
 // import { settingsModel } from './model/settingsModel.js';
 // import { settingsView } from './view/settingsView.js';

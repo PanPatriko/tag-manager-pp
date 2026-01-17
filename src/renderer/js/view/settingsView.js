@@ -1,7 +1,7 @@
 import { paginationModel } from '../model/paginationModel.js';
 
-import { updateFilePages } from "../controller/paginationController.js"
-import { displayFiles } from "../controller/filesController.js";
+import { paginationController } from "../controller/paginationController.js"
+import { filesController } from "../controller/filesController.js";
 
 const settingsModal = document.getElementById('settings-modal');
 
@@ -120,7 +120,7 @@ export const settingsView = {
 
     applyMaxFiles(value) {
         paginationModel.setCurrentPage(1);
-        updateFilePages();
-        displayFiles();
+        paginationController.updateFilePages();
+        filesController.displayFiles();
     },
 };

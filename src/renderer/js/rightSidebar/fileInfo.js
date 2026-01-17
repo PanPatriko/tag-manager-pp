@@ -5,7 +5,7 @@ import { i18nModel } from "../model/i18nModel.js";
 
 import { tagsView, TagClass } from "../view/tagsView.js";
 
-import { displayFiles } from "../controller/filesController.js";
+import { filesController } from "../controller/filesController.js";
 
 const showFileInfoButton = document.getElementById('show-file-info');
 const fileInfoSection = document.getElementById('file-info');
@@ -121,7 +121,7 @@ fileNameSaveButton.addEventListener('click', async () => {
                     file.name = newFileName;
                     file.path = result.newFilePath;
                 }
-                displayFiles();
+                filesController.displayFiles();
             } else {
                 showPopup(i18nModel.t('file-prev-name-save-error') + result.error, 'error');
             }
@@ -135,7 +135,7 @@ fileNameSaveButton.addEventListener('click', async () => {
                     file.name = newFileName;
                     file.path = result.newFilePath;
                 }
-                displayFiles();
+                filesController.displayFiles();
             } else {
                 showPopup(i18nModel.t('file-prev-name-save-error') + error, 'error');
             }

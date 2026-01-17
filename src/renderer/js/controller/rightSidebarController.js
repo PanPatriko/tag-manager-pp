@@ -4,15 +4,17 @@ import { layoutModel } from '../model/layoutModel.js';
 import { rightSidebarView } from '../view/rightSidebarView.js';
 import { layoutView } from '../view/layoutView.js';
 
-export function initRightSidebar() {
+export const rightSidebarController = {
 
-    rightSidebarView.showPanel();
-    
-    rightSidebarView.onToggleSidebarClick(() => {
-        const isHidden = rightSidebarView.toggleSidebar();
+    init() {
+        rightSidebarView.showPanel();
 
-        layoutModel.updateState({ rightHidden: isHidden });
-        const state = layoutModel.getState();
-        layoutView.render(state);
-    });
+        rightSidebarView.onToggleSidebarClick(() => {
+            const isHidden = rightSidebarView.toggleSidebar();
+
+            layoutModel.updateState({ rightHidden: isHidden });
+            const state = layoutModel.getState();
+            layoutView.render(state);
+        });
+    }
 }

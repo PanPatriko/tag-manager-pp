@@ -1,12 +1,60 @@
-import { highlightText } from '../utils.js';
-
 import { i18nModel } from "../model/i18nModel.js";
 import { settingsModel } from '../model/settingsModel.js';
 import { tagsModel } from '../model/tagsModel.js';
 import { modalModel, ModalMode, TagModalState } from '../model/modalModel.js';
-import { refreshTagsContainer } from './tagsController.js';
+
 import { tagsModalView } from '../view/tagsModalView.js';
 import { tagsView } from '../view/tagsView.js';
+
+import { tagsController } from './tagsController.js';
+
+import { highlightText } from '../utils.js';
+
+export const tagsModalController = {
+
+    init() {
+        tagsView.onAddTagClick(() => { this.openNewTagModal(); })
+        tagsModalView.onCancelClick(closeModal);
+
+        tagsModalView.onOkClick(saveTag);
+
+        tagsModalView.onClearParentTagClick(() => {
+            modalModel.selectedParentTag = null;
+            tagsModalView.clearParentTag();
+        });
+
+        tagsModalView.onParentTagNameInput(() => {
+            const query = tagsModalView.getParentTagNameValue();
+            if (query.length > 0) {
+                searchParentTag(query);
+            } else {
+                tagsModalView.hideParentSuggestions();
+            }
+        });
+
+        tagsModalView.onParentTagNameFocus(() => {
+            const query = tagsModalView.getParentTagNameValue();
+            if (query.length > 0) {
+                tagsModalView.showParentSuggestions();
+            }
+        });
+
+        tagsModalView.onParentTagNameBlur(() => {
+            setTimeout(() => {
+                tagsModalView.hideParentSuggestions();
+            }, 200);
+        });
+    },
+
+    openNewTagModal(parentTag) {
+        openTagModal({ mode: ModalMode.NEW, parentTag });
+    },
+
+    openEditTagModal(tag) {
+        openTagModal({ mode: ModalMode.EDIT, tag });
+    }
+
+}
 
 function closeModal() {
     modalModel.tagToEdit = null;
@@ -37,7 +85,7 @@ async function saveTag() {
         console.error('Unknown modal mode:', modalModel.modalMode);
     }
 
-    refreshTagsContainer();
+    tagsController.refreshTagsContainer();
     closeModal();
 }
 
@@ -109,47 +157,4 @@ function openTagModal({ mode, tag = null, parentTag = null }) {
 
     const tagModalState = new TagModalState({ title, tagName, tagColor, tagTextColor, tagHierarchy });
     tagsModalView.openModal(tagModalState);
-}
-
-export function initTagsModal() {
-
-    tagsView.onAddTagClick(() => { openNewTagModal(); })
-    tagsModalView.onCancelClick(closeModal);
-
-    tagsModalView.onOkClick(saveTag);
-
-    tagsModalView.onClearParentTagClick(() => {
-        modalModel.selectedParentTag = null;
-        tagsModalView.clearParentTag();    
-    });
-
-    tagsModalView.onParentTagNameInput(() => {
-        const query = tagsModalView.getParentTagNameValue();
-        if (query.length > 0) {
-            searchParentTag(query);
-        } else {
-            tagsModalView.hideParentSuggestions();
-        }
-    });
-
-    tagsModalView.onParentTagNameFocus(() => {
-        const query = tagsModalView.getParentTagNameValue();
-        if (query.length > 0) {
-            tagsModalView.showParentSuggestions();
-        }
-    });
-
-    tagsModalView.onParentTagNameBlur(() => {
-        setTimeout(() => {
-            tagsModalView.hideParentSuggestions();
-        }, 200);
-    });
-}
-
-export function openNewTagModal(parentTag) {
-    openTagModal({mode: ModalMode.NEW, parentTag });
-}
-
-export function openEditTagModal(tag) {
-    openTagModal({mode: ModalMode.EDIT, tag });
 }

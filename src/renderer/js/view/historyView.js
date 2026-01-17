@@ -1,22 +1,33 @@
-const prevBtn = document.getElementById('prev-button');
-const nextBtn = document.getElementById('next-button');    
+export const historyView = {
+    prevBtn: null,
+    nextBtn: null,
 
-export const historyView = {    
-
-    setPreviousButtonState(disabled) {
-        prevBtn.disabled = disabled;
+    init() {
+        this.prevBtn = document.getElementById('prev-button');
+        this.nextBtn = document.getElementById('next-button');
     },
 
-    setNextButtonState(disabled) {
-        nextBtn.disabled = disabled;
+    disablePreviousButton() {
+        this.prevBtn.disabled = true;
+    },
+
+    enablePreviousButton() {
+        this.prevBtn.disabled = false;
+    },
+
+    disableNextButton() {
+        this.nextBtn.disabled = true;
+    },
+
+    enableNextButton() {
+        this.nextBtn.disabled = false;
     },
 
     onPreviousClick(handler) {
-        prevBtn.addEventListener('click', handler);
+        this.prevBtn.addEventListener('click', handler);
     },
 
     onNextClick(handler) {
-        nextBtn.addEventListener('click', handler);
-    },
-
-}
+        this.nextBtn.addEventListener('click', handler);
+    }
+};

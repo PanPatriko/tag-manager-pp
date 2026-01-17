@@ -2,25 +2,28 @@ import { layoutModel } from '../model/layoutModel.js';
 
 import { layoutView } from '../view/layoutView.js';
 
-import { initLeftSidebar } from './leftSidebarController.js';
-import { initRightSidebar } from './rightSidebarController.js';
+import { leftSidebarController } from './leftSidebarController.js';
+import { rightSidebarController } from './rightSidebarController.js';
 
 let isResizing = null;
 let startX, startLeft, startRight, startContent;
 
-export function initLayout() {
-    layoutView.render(layoutModel.restoreState());
-    
-    initLeftSidebar();
-    initRightSidebar();
+export const layoutController = {
 
-    document.getElementById('left-resize-handle')
-        .addEventListener('mousedown', e => startResizing(e, 'left'));
+    init() {
+        layoutView.render(layoutModel.restoreState());
 
-    document.getElementById('right-resize-handle')
-        .addEventListener('mousedown', e => startResizing(e, 'right'));
+        leftSidebarController.init();
+        rightSidebarController.init();
 
-    document.addEventListener('mouseup', stopResizing);
+        document.getElementById('left-resize-handle') // TODO selectors should be in the view
+            .addEventListener('mousedown', e => startResizing(e, 'left'));
+
+        document.getElementById('right-resize-handle')
+            .addEventListener('mousedown', e => startResizing(e, 'right'));
+
+        document.addEventListener('mouseup', stopResizing);       
+    }
 }
 
 function startResizing(e, side) {

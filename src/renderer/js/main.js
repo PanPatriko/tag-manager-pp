@@ -1,39 +1,40 @@
-import { initContextMenu } from './controller/contextMenuController.js';
-import { initFiles } from './controller/filesController.js';
-import { initFileTagsModal } from './controller/fileTagsModalController.js';
-import { initHistory } from './controller/historyController.js';
-import { initLayout } from './controller/layoutController.js';
-import { initLocations } from './controller/locationsController.js';
-import { initLocationsModal } from './controller/locationModalController.js';
-import { initPagination } from './controller/paginationController.js';
-import { initSearch } from './controller/searchController.js';
-import { initSettings } from './controller/settingsController.js';
-import { initTags } from './controller/tagsController.js';
-import { initTagsModal } from './controller/tagsModalController.js';
-import { initKeyboardShortcuts } from './controller/keyboardController.js';
+import { contextMenuController } from './controller/contextMenuController.js';
+import { filesController } from './controller/filesController.js';
+import { fileTagsModalController } from './controller/fileTagsModalController.js';
+import { historyController } from './controller/historyController.js';
+import { keyboardController } from './controller/keyboardController.js';
+import { layoutController } from './controller/layoutController.js';
+import { locationModalController } from './controller/locationModalController.js';
+import { locationsController } from './controller/locationsController.js';
+import { paginationController } from './controller/paginationController.js';
+import { searchController } from './controller/searchController.js';
+import { settingsController } from './controller/settingsController.js';
+import { tagsController } from './controller/tagsController.js';
+import { tagsModalController } from './controller/tagsModalController.js';
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Main layout
-    initLayout();
-
-    // Header
-    await initSettings();
-    initSearch();
-
-    // Left sidebar
-    await initTags();
-    await initLocations();
+    layoutController.init();
 
     // Content area
-    initPagination();
-    initFiles();
+    paginationController.init();
+    filesController.init();
+
+    // Header
+    await settingsController.init();
+    searchController.init();
+
+    // Left sidebar
+    await tagsController.init();
+    await locationsController.init();
 
     // Modals
-    initTagsModal();
-    initFileTagsModal();
-    initLocationsModal();
+    tagsModalController.init();
+    fileTagsModalController.init();
+    locationModalController.init();
 
-    initHistory();
-    initContextMenu();
-    initKeyboardShortcuts();
+    historyController.init();
+    contextMenuController.init();
+    keyboardController.init();
 });

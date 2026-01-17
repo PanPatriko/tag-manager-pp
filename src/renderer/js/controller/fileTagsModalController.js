@@ -11,6 +11,50 @@ import { tagsView } from '../view/tagsView.js';
 import { fileTagsModalView } from "../view/fileTagsModalView.js";
 import { filesView } from "../view/filesView.js";
 
+export const fileTagsModalController = {
+
+    init() {
+
+        fileTagsModalView.onModalClick((event) => {
+            fileTagsModalView.searchAutoFocus(event.target);
+        });
+
+        fileTagsModalView.onCloseModalClick(() => {
+            modalModel.tagIds = [];
+            fileTagsModalView.closeModal();
+        });
+
+        fileTagsModalView.onAddTagsClick(addTags);
+
+        fileTagsModalView.onRemoveTagsClick(removeTags);
+
+        fileTagsModalView.onSearchInput(tagsSearch);
+
+        fileTagsModalView.onShowChildTagsChange(tagsSearch);
+
+        fileTagsModalView.onTagsContainerClick((event) => {
+            const target = event.target;
+            if (fileTagsModalView.isTagClicked(target)) {
+                modalModel.removeTagId(parseInt(target.dataset.id));
+                fileTagsModalView.removeTag(target);
+            }
+        });
+    },
+
+    async openFileTagsModal() {
+        const tagHierarchy = tagsModel.buildTagHierarchy();
+
+        tagsView.renderTagTree({
+            container: fileTagsModalView.getFileTagsTreeContainer(),
+            tagHierarchy,
+            childrenInitiallyVisible: true,
+            onTagClick
+        });
+
+        fileTagsModalView.openModal();
+    }
+}
+
 async function addTags() {
     const selectedFiles = filesModel.getSelectedFiles();
 
@@ -90,45 +134,4 @@ function tagsSearch() {
         onTagClick     
     });   
     highlightText(query, 'modal-file-tags-tree', 'li span');
-}
-
-export async function openFileTagsModal() {
-    const tagHierarchy = tagsModel.buildTagHierarchy();
-    tagsView.renderTagTree({
-        container: fileTagsModalView.getFileTagsTreeContainer(),
-        tagHierarchy,
-        childrenInitiallyVisible: true,
-        onTagClick
-    });
-    
-    fileTagsModalView.openModal();
-}
-
-export function initFileTagsModal() {
-
-    fileTagsModalView.onModalClick((event) => {
-        fileTagsModalView.searchAutoFocus(event.target);
-    });
-
-    fileTagsModalView.onCloseModalClick(() => {
-        modalModel.tagIds = [];
-        fileTagsModalView.closeModal();
-    });
-
-    fileTagsModalView.onAddTagsClick(addTags);
-
-    fileTagsModalView.onRemoveTagsClick(removeTags);
-
-    fileTagsModalView.onSearchInput(tagsSearch);
-
-    fileTagsModalView.onShowChildTagsChange(tagsSearch);
-
-    fileTagsModalView.onTagsContainerClick((event) => {
-        const target = event.target;
-        if (fileTagsModalView.isTagClicked(target)) {
-            modalModel.removeTagId(parseInt(target.dataset.id));
-            fileTagsModalView.removeTag(target);
-        }        
-    });
-
 }

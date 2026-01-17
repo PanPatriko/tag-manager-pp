@@ -3,53 +3,67 @@ import { historyModel } from "../model/historyModel.js";
 
 import { historyView } from "../view/historyView.js";
 
-import { searchFiles, restoreSearchTags } from "./searchController.js";
-import { restoreLocation } from "./locationsController.js";
-import { displayDirectory } from "./filesController.js";
+import { searchController } from "./searchController.js";
+import { locationsController } from "./locationsController.js";
+import { filesController } from "./filesController.js";
+
+export const historyController = {
+
+    async init() {
+        historyView.init();
+
+        updateHistoryButtons();
+
+        historyView.onPreviousClick(() => {
+            const record = historyModel.goBack();
+            if (record) {
+                updateFiles(record);
+            }
+        });
+
+        historyView.onNextClick(() => {
+            const record = historyModel.goForward();
+            if (record) {
+                updateFiles(record);
+            }
+        });
+    },
+
+    pushToHistory(record) {
+        if (record.type === 'directory') {
+            record.root = locationsModel.root;
+            record.activeLocation = locationsModel.activeLocation;
+        }
+        historyModel.pushToHistory(record);
+        updateHistoryButtons();
+    }
+};
 
 function updateHistoryButtons() {
-    historyView.setPreviousButtonState(!historyModel.canGoBack());
-    historyView.setNextButtonState(!historyModel.canGoForward());
+    if (historyModel.canGoBack()) {
+        historyView.enablePreviousButton();
+    } else {
+        historyView.disablePreviousButton();
+    }
+
+    if (historyModel.canGoForward()) {
+        historyView.enableNextButton();
+    } else {
+        historyView.disableNextButton();
+    }
 }
 
 function updateFiles(record) {
     if (record.type === 'directory') {
-        displayDirectory(record.path);
-        restoreSearchTags([], [], []);
-        restoreLocation(record)
+        filesController.displayDirectory(record.path);
+        searchController.restoreSearchTags([], [], []);
+        locationsController.restoreLocation(record)
     } else if (record.type === 'search') {
         const andTags = [...record.andTags];
         const orTags = [...record.orTags];
         const notTags = [...record.notTags];
-        restoreSearchTags(andTags, orTags, notTags);
-        searchFiles();
+        searchController.restoreSearchTags(andTags, orTags, notTags);
+        searchController.searchFiles();
     }
     updateHistoryButtons();  
-}
-
-export function pushToHistory(record) {
-    if (record.type === 'directory') {
-        record.root = locationsModel.root;
-        record.activeLocation = locationsModel.activeLocation;
-    }
-    historyModel.pushToHistory(record);
-    updateHistoryButtons();
-}
-
-export async function initHistory() {
-    updateHistoryButtons();
-
-    historyView.onPreviousClick(() => {
-        const record = historyModel.goBack();
-        if (record) {
-            updateFiles(record);
-        }
-    });
-
-    historyView.onNextClick(() => {
-        const record = historyModel.goForward();
-        if (record) {
-            updateFiles(record);
-        }
-    });
 }

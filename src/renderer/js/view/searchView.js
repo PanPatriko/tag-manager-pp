@@ -1,38 +1,23 @@
-const tagsContainer = document.getElementById('search-tags-container');
-const searchInput = document.getElementById('search-input');
-const searchButton = document.getElementById('search-button');
-const suggestions = document.getElementById('search-suggestions');
-
-function createSuggestionItem(tag) {
-    const suggestionItem = document.createElement('li');
-    suggestionItem.className = 'suggestion-item';
-    suggestionItem._tag = tag;
-    return suggestionItem;
-}
-
-function createButtonsContainer() {
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'suggestion-buttons';
-    return buttonsContainer;
-}
-
-function createSuggestionButton(tagOperation, titleText) {
-    const button = document.createElement('button');
-    button.className = `suggestion-button ${tagOperation.name}`;
-    button.textContent = tagOperation.sign;
-    button.setAttribute('title', titleText);
-    button.dataset.operation = tagOperation.name;
-    return button;
-}
-
 export const searchView = {
 
+    tagsContainer: null,
+    searchInput: null,
+    searchButton: null,
+    suggestions: null,
+
+    init() {
+        this.tagsContainer = document.getElementById('search-tags-container');
+        this.searchInput = document.getElementById('search-input');
+        this.searchButton = document.getElementById('search-button');
+        this.suggestions = document.getElementById('search-suggestions');
+    },
+
     getSearchValue() {
-        return searchInput.value.trim();
+        return this.searchInput.value.trim();
     },
 
     isTagInContainer(id, operation) {
-        return tagsContainer.querySelector(
+        return this.tagsContainer.querySelector(
             `div[data-id="${id}"][data-operation="${operation}"]`
         );
     },
@@ -64,28 +49,28 @@ export const searchView = {
     },
 
     clearTagsContainer() {
-        tagsContainer.innerHTML = '';
+        this.tagsContainer.innerHTML = '';
     },
 
     clearSuggestions() {
-        suggestions.innerHTML = '';
+        this.suggestions.innerHTML = '';
     },
 
     clearSearchBar() {
-        suggestions.innerHTML = '';
-        searchInput.value = '';
+        this.suggestions.innerHTML = '';
+        this.searchInput.value = '';
     },
 
     removeSearchTag(tag) {
-        tagsContainer.removeChild(tag);
+        this.tagsContainer.removeChild(tag);
     },
 
     disableSearch(disabled) {
-        searchButton.disabled = disabled;
+        this.searchButton.disabled = disabled;
     },
 
     focusSearch() {
-        searchInput.focus();
+        this.searchInput.focus();
     },
 
     createSuggestion(tag, tagHierarchyDiv, buttonData) {
@@ -100,7 +85,7 @@ export const searchView = {
         });
 
         suggestionItem.appendChild(buttonsContainer);
-        suggestions.appendChild(suggestionItem);
+        this.suggestions.appendChild(suggestionItem);
     },
 
     addSearchTagToView(tag, tagOperation, titleText) {
@@ -117,35 +102,57 @@ export const searchView = {
         tagDiv.dataset.id = tag.id;
         tagDiv.dataset.operation = tagOperation.name;
 
-        tagsContainer.appendChild(tagDiv);
+        this.tagsContainer.appendChild(tagDiv);
         return tagDiv;
     },
 
     onSuggestionMouseEnter(handler) {
-        suggestions.addEventListener('mouseenter', handler);
+        this.suggestions.addEventListener('mouseenter', handler);
     },
 
     onSuggestionMouseLeave(handler) {
-        suggestions.addEventListener('mouseleave', handler);
+        this.suggestions.addEventListener('mouseleave', handler);
     },
 
     onSuggestionClick(handler) {
-        suggestions.addEventListener('click', (e) => handler(e));
+        this.suggestions.addEventListener('click', (e) => handler(e));
     },
 
     onTagsContainerClick(handler) {
-        tagsContainer.addEventListener('click', (e) => handler(e));
+        this.tagsContainer.addEventListener('click', (e) => handler(e));
     },
 
     onSearchClick(handler) {
-        searchButton.addEventListener('click', handler);
+        this.searchButton.addEventListener('click', handler);
     },
 
     onSearchFocusOut(handler) {
-        searchInput.addEventListener('focusout', handler);
+        this.searchInput.addEventListener('focusout', handler);
     },
 
     onSearchInput(handler) {
-        searchInput.addEventListener('input', handler);
-    },
+        this.searchInput.addEventListener('input', handler);
+    }
+}
+
+function createSuggestionItem(tag) {
+    const suggestionItem = document.createElement('li');
+    suggestionItem.className = 'suggestion-item';
+    suggestionItem._tag = tag;
+    return suggestionItem;
+}
+
+function createButtonsContainer() {
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'suggestion-buttons';
+    return buttonsContainer;
+}
+
+function createSuggestionButton(tagOperation, titleText) {
+    const button = document.createElement('button');
+    button.className = `suggestion-button ${tagOperation.name}`;
+    button.textContent = tagOperation.sign;
+    button.setAttribute('title', titleText);
+    button.dataset.operation = tagOperation.name;
+    return button;
 }

@@ -1,83 +1,94 @@
 import { tagsView } from "./tagsView.js";
 
-const modal = document.getElementById('tag-form-modal');
-const title = document.getElementById('tag-modal-title');
-
-const tagName = document.getElementById('tag-name');
-const tagColor = document.getElementById('color');
-const tagTextColor = document.getElementById('textcolor');
-
-const parentTag = document.getElementById('parent-tag');
-const parentTagName = document.getElementById('parent-name');
-const parentTagSuggestions = document.getElementById('parent-name-suggestions');
-
 export const tagsModalView = {
 
-    getTagNameValue() { return tagName.value; },
+    modal: null,
+    title: null,
+    tagName: null,
+    tagColor: null,
+    tagTextColor: null,
+    parentTag: null,
+    parentTagName: null,
+    parentTagSuggestions: null,
 
-    getTagColorValue() { return tagColor.value; },
+    init() {
+        this.modal = document.getElementById('tag-form-modal');
+        this.title = document.getElementById('tag-modal-title');
 
-    getTagTextColorValue() { return tagTextColor.value; },
+        this.tagName = document.getElementById('tag-name');
+        this.tagColor = document.getElementById('color');
+        this.tagTextColor = document.getElementById('textcolor');
 
-    getParentTagNameValue() { return parentTagName.value; },
+        this.parentTag = document.getElementById('parent-tag');
+        this.parentTagName = document.getElementById('parent-name');
+        this.parentTagSuggestions = document.getElementById('parent-name-suggestions');
+    },
+
+    getTagNameValue() { return this.tagName.value; },
+
+    getTagColorValue() { return this.tagColor.value; },
+
+    getTagTextColorValue() { return this.tagTextColor.value; },
+
+    getParentTagNameValue() { return this.parentTagName.value; },
 
     closeModal() {
-        parentTag.innerHTML = '';      
-        parentTagName.value = '';
-        modal.classList.add('hidden');
+        this.parentTag.innerHTML = '';      
+        this.parentTagName.value = '';
+        this.modal.classList.add('hidden');
     },
 
     openModal(tagModalState) {
-        title.innerText = tagModalState.title;
-        tagName.value = tagModalState.tagName;
-        tagColor.value = tagModalState.tagColor;
-        tagTextColor.value = tagModalState.tagTextColor;
+        this.title.innerText = tagModalState.title;
+        this.tagName.value = tagModalState.tagName;
+        this.tagColor.value = tagModalState.tagColor;
+        this.tagTextColor.value = tagModalState.tagTextColor;
 
         if(tagModalState.tagHierarchy) {
             const div = tagsView.renderTagHierarchyDiv(tagModalState.tagHierarchy);
-            parentTag.appendChild(div);
+            this.parentTag.appendChild(div);
         } else {
-            parentTag.innerHTML = '';
+            this.parentTag.innerHTML = '';
         }
 
-        modal.classList.remove('hidden');
-        tagName.focus();
+        this.modal.classList.remove('hidden');
+        this.tagName.focus();
     },
 
     clearParentTag() {
-        parentTag.innerHTML = '';
-        parentTagName.value = '';    
+        this.parentTag.innerHTML = '';
+        this.parentTagName.value = '';    
     },
 
     clearParentSuggestions() {
-        parentTagSuggestions.innerHTML = '';
+        this.parentTagSuggestions.innerHTML = '';
     },
 
     hideParentSuggestions() {
-        parentTagSuggestions.classList.add('hidden');
+        this.parentTagSuggestions.classList.add('hidden');
     },
 
     showParentSuggestions() {
-        parentTagSuggestions.classList.remove('hidden');
+        this.parentTagSuggestions.classList.remove('hidden');
     },
 
     renderParentSuggestion(tagHierarchy) {
         const li = document.createElement('li');
         const div = tagsView.renderTagHierarchyDiv(tagHierarchy);
         li.appendChild(div);
-        parentTagSuggestions.appendChild(li);
+        this.parentTagSuggestions.appendChild(li);
         return li;
     },
 
     setSelectedParentTag(tagHierarchy) {
         const div = tagsView.renderTagHierarchyDiv(tagHierarchy);
-        parentTag.appendChild(div);
+        this.parentTag.appendChild(div);
     },
 
     onCancelClick(handler) {
         const el = document.getElementById('tag-modal-cancel');
         el.addEventListener('click', () => handler());
-        modal.querySelector('.modal-close').addEventListener('click', () => handler());
+        this.modal.querySelector('.modal-close').addEventListener('click', () => handler());
     },
 
     onOkClick(handler) {
@@ -91,14 +102,14 @@ export const tagsModalView = {
     },
 
     onParentTagNameBlur(handler) {
-        parentTagName.addEventListener('blur', () => handler());
+        this.parentTagName.addEventListener('blur', () => handler());
     },
 
     onParentTagNameFocus(handler) {
-        parentTagName.addEventListener('focus', () => handler());
+        this.parentTagName.addEventListener('focus', () => handler());
     },
 
     onParentTagNameInput(handler) {
-        parentTagName.addEventListener('input', () => handler());
+        this.parentTagName.addEventListener('input', () => handler());
     }
 }

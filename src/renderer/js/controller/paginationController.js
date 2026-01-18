@@ -14,6 +14,8 @@ import { formatString } from '../utils.js';
 export const paginationController = {
 
     init() {
+        paginationView.init();
+
         paginationView.onNextPageClick(() => {
             const currentPage = paginationModel.getCurrentPage();
             if (currentPage * settingsModel.maxFilesPerPage < filesModel.files.length) {

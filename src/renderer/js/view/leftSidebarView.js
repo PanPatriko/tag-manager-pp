@@ -1,49 +1,55 @@
-const leftSidebar = document.getElementById('left-sidebar');
-const resizeHandle = document.getElementById('left-resize-handle');
-const toggleSidebar = document.getElementById("toggle-tag-sidebar");
-
-const leftSidebarItems = document.querySelectorAll(".left-sidebar-item");
-const menuElements = document.querySelectorAll(".menu-element");
-
-function setActiveButton(elementId) {
-    const button = document.getElementById(elementId);
-    if (button) {
-        menuElements.forEach(el => el.classList.remove('active'));
-        button.classList.add('active');
-    }
-}
-
-function setToggleButtonIcon(isHidden) {
-    toggleSidebar.style.backgroundImage = isHidden
-        ? "url('images/right-arrow.png')"
-        : "url('images/left-arrow.png')";
-}
-
 export const leftSidebarView = {
+    leftSidebar: null,
+    resizeHandle: null,
+    leftSidebarToggle: null,
+    leftSidebarItems: null,
+    menuElements: null,
+
+    init() {
+        this.leftSidebar = document.getElementById('left-sidebar');
+        this.resizeHandle = document.getElementById('left-resize-handle');
+        this.leftSidebarToggle = document.getElementById("toggle-tag-sidebar");
+        this.leftSidebarItems = document.querySelectorAll(".left-sidebar-item");
+        this.menuElements = document.querySelectorAll(".menu-element");
+    },
 
     showPanel(panelId) {
-        leftSidebarItems.forEach(item => item.classList.add('hidden'));
-        const isHidden = leftSidebar.classList.contains("hidden");
-        setToggleButtonIcon(isHidden);
+        this.leftSidebarItems.forEach(item => item.classList.add('hidden'));
+        const isHidden = this.leftSidebar.classList.contains("hidden");
+        this.setToggleButtonIcon(isHidden);
 
         if (isHidden) return;
 
         document.getElementById(panelId).classList.remove('hidden');
         document.getElementById('left-sidebar-menu').classList.remove('hidden');
-        resizeHandle.classList.remove('hidden');
+        this.resizeHandle.classList.remove('hidden');
 
-        setActiveButton(panelId === 'location-panel' ? 'location-button' : 'tags-button');
+        this.setActiveButton(panelId === 'location-panel' ? 'location-button' : 'tags-button');
     },
 
     getMenuElements() {
-        return menuElements;
+        return this.menuElements;
     },
 
     toggleSidebar() {
-        return leftSidebar.classList.toggle("hidden");
+        return this.leftSidebar.classList.toggle("hidden");
+    },
+
+    setActiveButton(elementId) {
+        const button = document.getElementById(elementId);
+        if (button) {
+            this.menuElements.forEach(el => el.classList.remove('active'));
+            button.classList.add('active');
+        }
+    },
+
+    setToggleButtonIcon(isHidden) {
+        this.leftSidebarToggle.style.backgroundImage = isHidden
+            ? "url('images/right-arrow.png')"
+            : "url('images/left-arrow.png')";
     },
 
     onToggleSidebarClick(handler) {
-        toggleSidebar.addEventListener('click', () => handler());
+        this.leftSidebarToggle.addEventListener('click', () => handler());
     },
-};
+}

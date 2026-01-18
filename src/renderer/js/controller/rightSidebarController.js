@@ -7,6 +7,7 @@ import { layoutView } from '../view/layoutView.js';
 export const rightSidebarController = {
 
     init() {
+        rightSidebarView.init();
         rightSidebarView.showPanel();
 
         rightSidebarView.onToggleSidebarClick(() => {

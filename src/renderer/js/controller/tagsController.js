@@ -5,6 +5,8 @@ import { tagsView, TagClass } from '../view/tagsView.js';
 export const tagsController = {
 
     async init() {
+        tagsView.init();
+
         await tagsModel.getTagsFromDB();
 
         this.refreshTagsContainer();

@@ -1,15 +1,20 @@
-const leftSidebar = document.getElementById("left-sidebar");
-const rightSidebar = document.getElementById("right-sidebar");
-const content = document.getElementById("content");
-
 export const layoutView = {
+    leftSidebar: null,
+    rightSidebar: null,
+    content: null,
+
+    init() {
+        this.leftSidebar = document.getElementById("left-sidebar");
+        this.rightSidebar = document.getElementById("right-sidebar");
+        this.content = document.getElementById("content");
+    },
 
     render(state) {
-        leftSidebar.style.width = state.leftHidden ? "0%" : `${state.leftWidth}%`;
-        rightSidebar.style.width = state.rightHidden ? "0%" : `${state.rightWidth}%`;
-        content.style.width = `${state.contentWidth}%`;
+        this.leftSidebar.style.width = state.leftHidden ? "0%" : `${state.leftWidth}%`;
+        this.rightSidebar.style.width = state.rightHidden ? "0%" : `${state.rightWidth}%`;
+        this.content.style.width = `${state.contentWidth}%`;
 
-        leftSidebar.classList.toggle("hidden", state.leftHidden);
-        rightSidebar.classList.toggle("hidden", state.rightHidden);
+        this.leftSidebar.classList.toggle("hidden", state.leftHidden);
+        this.rightSidebar.classList.toggle("hidden", state.rightHidden);
     }
 }

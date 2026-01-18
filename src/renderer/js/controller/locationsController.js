@@ -14,6 +14,7 @@ let startHeight = 0;
 export const locationsController = {
 
     async init() {
+        locationsView.init();
         await locationsModel.getLocationsFromDB();
         this.refreshLocations();
 

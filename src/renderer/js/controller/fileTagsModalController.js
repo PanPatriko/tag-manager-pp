@@ -14,15 +14,13 @@ import { filesView } from "../view/filesView.js";
 export const fileTagsModalController = {
 
     init() {
+        fileTagsModalView.init();
 
         fileTagsModalView.onModalClick((event) => {
             fileTagsModalView.searchAutoFocus(event.target);
         });
 
-        fileTagsModalView.onCloseModalClick(() => {
-            modalModel.tagIds = [];
-            fileTagsModalView.closeModal();
-        });
+        fileTagsModalView.onCloseModalClick(closeModal);
 
         fileTagsModalView.onAddTagsClick(addTags);
 
@@ -55,6 +53,11 @@ export const fileTagsModalController = {
     }
 }
 
+function closeModal() {
+    modalModel.tagIds = [];
+    fileTagsModalView.closeModal();
+}
+
 async function addTags() {
     const selectedFiles = filesModel.getSelectedFiles();
 
@@ -83,6 +86,7 @@ async function addTags() {
     }
 
     await refreshFileInfo();
+    closeModal();
 }
 
 async function removeTags() {
@@ -107,6 +111,7 @@ async function removeTags() {
     }
 
     await refreshFileInfo();
+    closeModal();
 }
 
 function onTagClick(tag) {

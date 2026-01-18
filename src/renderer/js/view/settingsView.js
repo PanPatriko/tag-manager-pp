@@ -3,54 +3,62 @@ import { paginationModel } from '../model/paginationModel.js';
 import { paginationController } from "../controller/paginationController.js"
 import { filesController } from "../controller/filesController.js";
 
-const settingsModal = document.getElementById('settings-modal');
-
-const languageSelect = document.getElementById('language-select');
-const iconSize = document.getElementById('icon-size');
-const maxFiles = document.getElementById('max-files');
-
-const videoAutoplayCheckbox = document.getElementById('vid-autoplay'); 
-const videoLoopCheckbox = document.getElementById('vid-loop');
-
-const defaultTagColor = document.getElementById('def-tag-bgcolor');
-const defaultTagTextColor = document.getElementById('def-tag-textcolor');
-
 export const settingsView = {
 
+    settingsModal: null,
+    languageSelect: null,
+    iconSize: null,
+    maxFiles: null,
+    videoAutoplayCheckbox: null,
+    videoLoopCheckbox: null,
+    defaultTagColor: null,
+    defaultTagTextColor: null,
+
+    init() {
+        this.settingsModal = document.getElementById('settings-modal');
+        this.languageSelect = document.getElementById('language-select');
+        this.iconSize = document.getElementById('icon-size');
+        this.maxFiles = document.getElementById('max-files');
+        this.videoAutoplayCheckbox = document.getElementById('vid-autoplay');
+        this.videoLoopCheckbox = document.getElementById('vid-loop');
+        this.defaultTagColor = document.getElementById('def-tag-bgcolor');
+        this.defaultTagTextColor = document.getElementById('def-tag-textcolor');
+    },
+
     setLanguage(value) {
-        languageSelect.value = value;
+        this.languageSelect.value = value;
     },
 
     setIconSize(value) {
-        iconSize.value = value;
+        this.iconSize.value = value;
     },
 
     setMaxFiles(value) {
-        maxFiles.value = value;
+        this.maxFiles.value = value;
     },    
 
     setVidAutoplay(value) { 
-       videoAutoplayCheckbox.checked = value;
+        this.videoAutoplayCheckbox.checked = value;
     },
 
     setVidLoop(value) { 
-        videoLoopCheckbox.checked = value;
+        this.videoLoopCheckbox.checked = value;
     },
     
     setDefaultTagColor(value) { 
-       defaultTagColor.value = value;
+        this.defaultTagColor.value = value;
     },
 
     setDefaultTagTextColor(value) { 
-        defaultTagTextColor.value = value;
+        this.defaultTagTextColor.value = value;
     },  
     
     closeModal() { 
-        settingsModal.classList.add('hidden');
+        this.settingsModal.classList.add('hidden');
     },
 
     openModal() { 
-        settingsModal.classList.remove('hidden');
+        this.settingsModal.classList.remove('hidden');
     },
 
     onOpenModalClick(handler) {
@@ -69,31 +77,31 @@ export const settingsView = {
     },
 
     onLanguageChange(handler) {
-        languageSelect.addEventListener('change', (e) => handler(e.target.value));
+        this.languageSelect.addEventListener('change', (e) => handler(e.target.value));
     },
 
     onIconSizeChange(handler) {
-        iconSize.addEventListener('change', (e) => handler(e.target.value));
+        this.iconSize.addEventListener('change', (e) => handler(e.target.value));
     },
 
     onMaxFilesChange(handler) {
-        maxFiles.addEventListener('change', (e) => handler(e.target.value));
+        this.maxFiles.addEventListener('change', (e) => handler(e.target.value));
     },
 
     onVidAutoplayChange(handler) {
-        videoAutoplayCheckbox.addEventListener('change', (e) => handler(e.target.checked));
+        this.videoAutoplayCheckbox.addEventListener('change', (e) => handler(e.target.checked));
     },
 
     onVidLoopChange(handler) {
-        videoLoopCheckbox.addEventListener('change', (e) => handler(e.target.checked));
+        this.videoLoopCheckbox.addEventListener('change', (e) => handler(e.target.checked));
     },
 
     onDefaultTagColorChange(handler) {
-        defaultTagColor.addEventListener('change', (e) => handler(e.target.value));
+        this.defaultTagColor.addEventListener('change', (e) => handler(e.target.value));
     },
 
     onDefaultTagTextColorChange(handler) {
-        defaultTagTextColor.addEventListener('change', (e) => handler(e.target.value));
+        this.defaultTagTextColor.addEventListener('change', (e) => handler(e.target.value));
     },
 
     applyIconSize(value) {
@@ -118,7 +126,7 @@ export const settingsView = {
         filesPanel.style.gridTemplateColumns = `repeat(auto-fill, ${value}px)`;
     },
 
-    applyMaxFiles(value) {
+    applyMaxFiles() {
         paginationModel.setCurrentPage(1);
         paginationController.updateFilePages();
         filesController.displayFiles();

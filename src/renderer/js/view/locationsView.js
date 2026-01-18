@@ -2,28 +2,30 @@ import { thumbnailDir } from "../utils.js"
 
 const path = window.api.path;
 
-const locationPanel = document.getElementById('location-panel');
-const locationContainer = document.getElementById('location-container');
-const directoryContainer = document.getElementById('directory-container');
-
 export const locationsView = {
 
-    get locationContainer() { return document.getElementById('location-container'); },
+    locationPanel: null,
+    locationContainer: null,
+    directoryContainer: null,
 
-    get directoryContainer() { return document.getElementById('directory-container'); },
+    init() {
+        this.locationPanel = document.getElementById('location-panel');
+        this.locationContainer = document.getElementById('location-container');
+        this.directoryContainer = document.getElementById('directory-container');
+    },
 
     getLocationPanelHeight() {
-        return locationPanel.offsetHeight;
+        return this.locationPanel.offsetHeight;
     },
 
     getLocationContainerHeight() {
-        return locationContainer.offsetHeight;
+        return this.locationContainer.offsetHeight;
     },
 
     setLocationContainerHeight(height) {
         height = Math.max(40, height);
         height = Math.min(this.getLocationPanelHeight() - 40, height);
-        locationContainer.style.height = height + 'px';
+        this.locationContainer.style.height = height + 'px';
     },
 
     isLocationItem(target) {
@@ -39,14 +41,14 @@ export const locationsView = {
     },
 
     renderLocations(locations) {
-        locationContainer.innerHTML = "";
+        this.locationContainer.innerHTML = "";
         locations.forEach(location => {
             const locDiv = document.createElement("div");
             locDiv.classList.add("loc-item");
             locDiv.textContent = location.name;
             locDiv.dataset.id = location.id;
             locDiv.setAttribute('title', location.path);
-            locationContainer.appendChild(locDiv);
+            this.locationContainer.appendChild(locDiv);
         });
     },
 
@@ -58,7 +60,7 @@ export const locationsView = {
     },
 
     expandRootDirectory() {
-        const button = directoryContainer.querySelector('button');
+        const button = this.directoryContainer.querySelector('button');
         if (button) {
             button.click();
         }
@@ -113,7 +115,7 @@ export const locationsView = {
     },
 
     async renderHierarchy(locationPath, parentElement = null) {
-        if (!parentElement) parentElement = directoryContainer;
+        if (!parentElement) parentElement = this.directoryContainer;
         parentElement.innerHTML = "";
         const pathName = await path.basename(locationPath);
         
@@ -144,11 +146,11 @@ export const locationsView = {
     },
 
     onLocationContainerClick(handler) {
-        locationContainer.addEventListener('click', (e) => handler(e));
+        this.locationContainer.addEventListener('click', (e) => handler(e));
     },
 
     onDirectoryContainerClick(handler) {
-        directoryContainer.addEventListener('click', (e) => handler(e));
+        this.directoryContainer.addEventListener('click', (e) => handler(e));
     },
 
     onResizeHandleMouseDown(handler) {

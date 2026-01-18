@@ -7,6 +7,7 @@ import { layoutView } from '../view/layoutView.js';
 export const leftSidebarController = {
 
     init() {
+        leftSidebarView.init();
         leftSidebarView.showPanel(leftSidebarModel.getActivePanel());
 
         leftSidebarView.getMenuElements().forEach(button => {

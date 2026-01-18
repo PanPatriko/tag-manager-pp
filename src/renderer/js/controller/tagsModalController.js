@@ -13,6 +13,8 @@ import { highlightText } from '../utils.js';
 export const tagsModalController = {
 
     init() {
+        tagsModalView.init();
+
         tagsView.onAddTagClick(() => { this.openNewTagModal(); })
         tagsModalView.onCancelClick(closeModal);
 

@@ -11,6 +11,7 @@ let startX, startLeft, startRight, startContent;
 export const layoutController = {
 
     init() {
+        layoutView.init();
         layoutView.render(layoutModel.restoreState());
 
         leftSidebarController.init();

@@ -1,11 +1,16 @@
-const tagsContainer = document.getElementById('tags-container');
-const fileTagsContainer = document.getElementById('file-tags-container');
-
 export const tagsView = {
 
-    getTagsContainer() { return tagsContainer; },
+    tagsContainer: null,
+    fileTagsContainer: null,
 
-    getFileTagsContainer() { return fileTagsContainer; },
+    init() {
+        this.tagsContainer = document.getElementById('tags-container');
+        this.fileTagsContainer = document.getElementById('file-tags-container');
+    },
+
+    getTagsContainer() { return this.tagsContainer; },
+
+    getFileTagsContainer() { return this.fileTagsContainer; },
 
     getTagItemId(tag) {
         return tag.dataset.id;
@@ -130,11 +135,11 @@ export const tagsView = {
     },
 
     onTagsContainerClick(handler) {
-        tagsContainer.addEventListener('click', (e) => handler(e));
+        this.tagsContainer.addEventListener('click', (e) => handler(e));
     },
 
     onFileTagsContainerClick(handler) {
-        fileTagsContainer.addEventListener('click', (e) => handler(e));
+        this.fileTagsContainer.addEventListener('click', (e) => handler(e));
     }
 }
 

@@ -1,27 +1,33 @@
-const modal = document.getElementById('location-form-modal');
-const title = document.getElementById('loc-modal-title');
-const name = document.getElementById('loc-name');
-const path = document.getElementById('loc-path');
-
 export const locationModalView = {
+    modal: null,
+    title: null,
+    name: null,
+    path: null,
 
-    getNameValue() { return name.value.trim(); },
+    init() {
+        this.modal = document.getElementById('location-form-modal');
+        this.title = document.getElementById('loc-modal-title');
+        this.name = document.getElementById('loc-name');
+        this.path = document.getElementById('loc-path');
+    },
 
-    getPathValue() { return path.value.trim(); },
+    getNameValue() { return this.name.value.trim(); },
+
+    getPathValue() { return this.path.value.trim(); },
 
     setPathValue(directoryPath) {
-        path.value = directoryPath;
+        this.path.value = directoryPath;
     }, 
 
     openModal(locationModalState) {
-        title.innerText = locationModalState.title;
-        name.value = locationModalState.name;
-        path.value = locationModalState.path;
-        modal.classList.remove('hidden');
+        this.title.innerText = locationModalState.title;
+        this.name.value = locationModalState.name;
+        this.path.value = locationModalState.path;
+        this.modal.classList.remove('hidden');
     },
 
     closeModal() {
-        modal.classList.add('hidden');
+        this.modal.classList.add('hidden');
     },
 
     onBrowseClick(handler) {
@@ -37,6 +43,6 @@ export const locationModalView = {
     onCancelClick(handler) {
         const el = document.getElementById('loc-modal-cancel');
         el.addEventListener('click', () => handler());
-        modal.querySelector('.modal-close').addEventListener('click', () => handler());
+        this.modal.querySelector('.modal-close').addEventListener('click', () => handler());
     }
 }

@@ -10,6 +10,8 @@ import { paginationController } from './paginationController.js';
 export const settingsController = {
     
     async init() {
+        settingsView.init();
+
         document.body.className = settingsModel.theme;
 
         settingsView.setLanguage(settingsModel.language);

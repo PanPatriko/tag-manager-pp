@@ -9,6 +9,7 @@ import { locationsController } from "./locationsController.js";
 export const locationModalController = {
 
     init() {
+        locationModalView.init();
         locationModalView.onBrowseClick(openFolderDialog);
         locationModalView.onCancelClick(closeModal);
         locationModalView.onOkClick(saveLocation);

@@ -1,24 +1,31 @@
-const sortByName = document.getElementById('sort-by-name');
-const sortByDate = document.getElementById('sort-by-date');
-const loadingBarContainer = document.getElementById('loading-bar-container');
-const loadingBar = document.getElementById('loading-bar');
-const panel = document.getElementById('files-panel');
-
 export const filesView = {
+    sortByName: null,
+    sortByDate: null,
+    loadingBarContainer: null,
+    loadingBar: null,
+    panel: null,
+
+    init() {
+        this.sortByName = document.getElementById('sort-by-name');
+        this.sortByDate = document.getElementById('sort-by-date');
+        this.loadingBarContainer = document.getElementById('loading-bar-container');
+        this.loadingBar = document.getElementById('loading-bar');
+        this.panel = document.getElementById('files-panel');
+    },
 
     updateSortByNameDirectionIndicator(sortOrder) {
         if (sortOrder === 'asc') {
-            sortByName.style.backgroundImage = "url('images/sort-down-az.png')"
+            this.sortByName.style.backgroundImage = "url('images/sort-down-az.png')"
         } else {
-            sortByName.style.backgroundImage = "url('images/sort-up-az.png')"
+            this.sortByName.style.backgroundImage = "url('images/sort-up-az.png')"
         }
     },
 
     updateSortByDateDirectionIndicator(sortOrder) {
         if (sortOrder === 'asc') {
-            sortByDate.style.backgroundImage = "url('images/sort-down-date.png')"
+            this.sortByDate.style.backgroundImage = "url('images/sort-down-date.png')"
         } else {
-            sortByDate.style.backgroundImage = "url('images/sort-up-date.png')"
+            this.sortByDate.style.backgroundImage = "url('images/sort-up-date.png')"
         }
     },
 
@@ -64,20 +71,20 @@ export const filesView = {
     },
 
     showLoadingBar() {
-        loadingBarContainer.classList.remove('hidden');
-        loadingBar.style.width = '0%';
+        this.loadingBarContainer.classList.remove('hidden');
+        this.loadingBar.style.width = '0%';
     },
 
     hideLoadingBar() {
-        loadingBarContainer.classList.add('hidden');
+        this.loadingBarContainer.classList.add('hidden');
     },
 
     updateLoadingBar(progress) {
-        loadingBar.style.width = `${progress}%`;
+        this.loadingBar.style.width = `${progress}%`;
     },
 
     clearPanel() {
-        panel.innerHTML = '';
+        this.panel.innerHTML = '';
     },
 
     createFileElement(file, options = {}) {
@@ -120,7 +127,7 @@ export const filesView = {
         containerWrapper.appendChild(container);
         containerWrapper.appendChild(span);
 
-        panel.appendChild(containerWrapper);
+        this.panel.appendChild(containerWrapper);
     },
 
     getClosestFileContainer(target) {
@@ -128,18 +135,18 @@ export const filesView = {
     },
 
     onSortClick(handler) {
-        sortByName.addEventListener('click', () => handler());
+        this.sortByName.addEventListener('click', () => handler());
     },
 
     onSortDateClick(handler) {
-        sortByDate.addEventListener('click', () => handler());
+        this.sortByDate.addEventListener('click', () => handler());
     },
     
     onPanelClick(handler) {
-        panel.addEventListener('click', (e) => handler(e));
+        this.panel.addEventListener('click', (e) => handler(e));
     },
 
     onPanelDblClick(handler) {
-        panel.addEventListener('dblclick', (e) => handler(e));
+        this.panel.addEventListener('dblclick', (e) => handler(e));
     },
 }

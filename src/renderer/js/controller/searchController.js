@@ -17,6 +17,9 @@ let isMouseOverSearchSuggestions = false;
 export const searchController = {
 
     async init() {
+
+        searchView.init();
+
         searchView.onSearchInput(() => {
             searchView.clearSuggestions();
 

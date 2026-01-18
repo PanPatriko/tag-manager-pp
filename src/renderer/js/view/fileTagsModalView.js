@@ -1,23 +1,30 @@
-const fileTagFormModal = document.getElementById('file-tag-form-modal');
-const addTagsButton = document.getElementById('add-tags-button');
-const removeTagsButton = document.getElementById('remove-tags-button');
-const searchInput = document.getElementById('file-tag-search');
-const tagsContainer = document.getElementById('modal-file-tags-container');
-
-const showChildTags = document.getElementById('show-child-tags');
-
 export const fileTagsModalView = {
+    fileTagFormModal: null,
+    addTagsButton: null,
+    removeTagsButton: null,
+    searchInput: null,
+    tagsContainer: null,
+    showChildTags: null,
+
+    init() {
+        this.fileTagFormModal = document.getElementById('file-tag-form-modal');
+        this.addTagsButton = document.getElementById('add-tags-button');
+        this.removeTagsButton = document.getElementById('remove-tags-button');
+        this.searchInput = document.getElementById('file-tag-search');
+        this.tagsContainer = document.getElementById('modal-file-tags-container');
+        this.showChildTags = document.getElementById('show-child-tags');
+    },
 
     getFileTagsTreeContainer() {
         return document.getElementById('modal-file-tags-tree');
     },
 
     getSearchValue() {
-        return searchInput.value.trim();
+        return this.searchInput.value.trim();
     },
 
     isShowChildTagsChecked() {
-        return showChildTags.checked;
+        return this.showChildTags.checked;
     },
 
     isTagClicked(target) {
@@ -25,24 +32,24 @@ export const fileTagsModalView = {
     },
 
     searchAutoFocus(target) {
-        if (target !== searchInput) {
-            searchInput.focus();
+        if (target !== this.searchInput) {
+            this.searchInput.focus();
         }
     },
 
     searchFocus() {
-        searchInput.focus();    
+        this.searchInput.focus();    
     },
 
     closeModal() { 
-        searchInput.value = '';
-        tagsContainer.innerHTML = "";
-        fileTagFormModal.classList.add('hidden');
+        this.searchInput.value = '';
+        this.tagsContainer.innerHTML = "";
+        this.fileTagFormModal.classList.add('hidden');
     },
 
     openModal() {   
-        fileTagFormModal.classList.remove('hidden');
-        searchInput.focus();
+        this.fileTagFormModal.classList.remove('hidden');
+        this.searchInput.focus();
     },
 
     addTag(tag) {
@@ -55,11 +62,11 @@ export const fileTagsModalView = {
         tagDiv.style.color = tag.textColor;
         tagDiv.style.backgroundColor = tag.color;
 
-        tagsContainer.appendChild(tagDiv);
+        this.tagsContainer.appendChild(tagDiv);
     },
 
     removeTag(tag) {
-        tagsContainer.removeChild(tag);
+        this.tagsContainer.removeChild(tag);
     },
 
     onCloseModalClick(handler) {
@@ -68,26 +75,26 @@ export const fileTagsModalView = {
     },
 
     onModalClick(handler) {
-        fileTagFormModal.addEventListener('click', (event) => handler(event));
+        this.fileTagFormModal.addEventListener('click', (event) => handler(event));
     },
 
     onAddTagsClick(handler) {
-        addTagsButton.addEventListener('click', () => handler());
+        this.addTagsButton.addEventListener('click', () => handler());
     },
 
     onRemoveTagsClick(handler) {
-        removeTagsButton.addEventListener('click', () => handler());
+        this.removeTagsButton.addEventListener('click', () => handler());
     },
 
     onSearchInput(handler) {
-        searchInput.addEventListener('input', () => handler());
+        this.searchInput.addEventListener('input', () => handler());
     },
 
     onShowChildTagsChange(handler) {
-        showChildTags.addEventListener('change', () => handler());
+        this.showChildTags.addEventListener('change', () => handler());
     },
 
     onTagsContainerClick(handler) {
-        tagsContainer.addEventListener('click', (event) => handler(event));
+        this.tagsContainer.addEventListener('click', (event) => handler(event));
     }
 }

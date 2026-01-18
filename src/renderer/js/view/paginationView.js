@@ -1,65 +1,74 @@
-const pagesSelect = document.getElementById('file-pages');
-const prevPageButton = document.getElementById('prev-page');
-const nextPageButton = document.getElementById('next-page');
-const parentDirButton = document.getElementById('parent-directory');
-
-const fileCount = document.getElementById('total-file-count');
-const selectedFileCount = document.getElementById('selected-file-count');
-const currentFiles = document.getElementById('current-files');
-const dirName = document.getElementById('dir-name');
-
 export const paginationView = {
-    
+
+    pagesSelect: null,
+    prevPageButton: null,
+    nextPageButton: null,
+    parentDirButton: null,
+    fileCount: null,
+    selectedFileCount: null,
+    currentFiles: null,
+    dirName: null,
+
+    init () {
+        this.pagesSelect = document.getElementById('file-pages');
+        this.prevPageButton = document.getElementById('prev-page');
+        this.nextPageButton = document.getElementById('next-page');
+        this.parentDirButton = document.getElementById('parent-directory');
+        this.fileCount = document.getElementById('total-file-count');
+        this.selectedFileCount = document.getElementById('selected-file-count');
+        this.currentFiles = document.getElementById('current-files');
+        this.dirName = document.getElementById('dir-name');
+    },
+
     setFileCount(text) {
-        fileCount.textContent = text;
+        this.fileCount.textContent = text;
     },
 
     setCurrentFilesRange(text) {
-        currentFiles.textContent = text;
+        this.currentFiles.textContent = text;
     },
 
     setSelectedFileCount(text) {
-        selectedFileCount.textContent = text;
+        this.selectedFileCount.textContent = text;
     },
 
     setDirectoryName(text) {
-        dirName.classList.remove('hidden');
-        dirName.textContent = text;
+        this.dirName.classList.remove('hidden');
+        this.dirName.textContent = text;
     },
 
     hideDirectoryName() {
-        dirName.classList.add('hidden');
+        this.dirName.classList.add('hidden');
     },
 
     disableParentDir(disable) {
-        parentDirButton.disabled = disable;
+        this.parentDirButton.disabled = disable;
     },
 
     renderPagesSelect(totalPages, currentPage) {
-        pagesSelect.innerHTML = "";
+        this.pagesSelect.innerHTML = "";
         for (let i = 1; i <= totalPages; i++) {
             const option = document.createElement("option");
             option.value = i;
             option.textContent = i;
-            pagesSelect.appendChild(option);
+            this.pagesSelect.appendChild(option);
         }
-        pagesSelect.value = currentPage;
+        this.pagesSelect.value = currentPage;
     },
 
     onPrevPageClick(handler) {
-        prevPageButton.addEventListener('click', () => handler());
+        this.prevPageButton.addEventListener('click', () => handler());
     },
 
     onNextPageClick(handler) {
-        nextPageButton.addEventListener('click', () => handler());
+        this.nextPageButton.addEventListener('click', () => handler());
     },
 
     onParentDirClick(handler) {
-        parentDirButton.addEventListener('click', () => handler());
+        this.parentDirButton.addEventListener('click', () => handler());
     },
 
     onPageSelectChange(handler) {
-        pagesSelect.addEventListener('change', (e) => handler(e));
+        this.pagesSelect.addEventListener('change', (e) => handler(e));
     }
-
 }

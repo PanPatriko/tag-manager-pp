@@ -65,7 +65,7 @@ async function saveLocation() {
     } else if (modalModel.modalMode === ModalMode.NEW) {
         await locationsModel.addLocation({ name, path });    
     } else {
-        console.error('Unknown modal mode:', modalModel.modalMode);
+        console.error('saveLocation: Unknown modal mode:', modalModel.modalMode);
     }
 
     closeModal();

@@ -84,7 +84,7 @@ async function saveTag() {
             await tagsModel.createTag(tagName, parentId, color, textColor);
         }
     } else {
-        console.error('Unknown modal mode:', modalModel.modalMode);
+        console.error('saveTag: Unknown modal mode:', modalModel.modalMode);
     }
 
     tagsController.refreshTagsContainer();

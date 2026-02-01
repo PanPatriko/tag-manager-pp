@@ -8,10 +8,9 @@ import { paginationView } from '../view/paginationView.js';
 import { historyController } from './historyController.js';
 import { paginationController  } from './paginationController.js';
 import { previewWindow } from "./contextMenuController.js";
-import { createFilePreview } from "./filePreviewController.js"
+import { filePreviewController } from "./filePreviewController.js"
 
 import { thumbnailDir } from "../utils.js"
-import { renderFileInfo } from "../rightSidebar/fileInfo.js";
 
 let lastSelectedIndex = null;
 
@@ -55,8 +54,8 @@ export const filesController = {
 
             filesModel.currentPreviewFile = current;
 
-            createFilePreview(current);
-            renderFileInfo(current);
+            filePreviewController.renderFilePreview(current);
+            filePreviewController.renderFileInfo(current);
 
             if (previewWindow && !previewWindow.closed) {
                 previewWindow.postMessage({ type: 'update-preview', file: current }, '*');
@@ -118,7 +117,7 @@ export const filesController = {
         const dirFiles = await window.api.getFilesInPath(dirPath);
 
         if (dirFiles.error) {
-            console.error(dirFiles.error);
+            console.error('displayDirectory: error', dirFiles.error);
             showPopup(dirFiles.error, 'error');
             return;
         }
@@ -226,8 +225,8 @@ function selectFile(file) {
         lastSelectedIndex = null;
         filesModel.currentPreviewFile = null;
         paginationController.updateSelectedFileCount();
-        createFilePreview(null);
-        renderFileInfo(null);
+        filePreviewController.renderFilePreview(null);
+        filePreviewController.renderFileInfo(null);
         return;
     }
 
@@ -244,8 +243,8 @@ function selectFile(file) {
 
     filesView.setContainerSelected(container, true);
     paginationController.updateSelectedFileCount();
-    createFilePreview(file);
-    renderFileInfo(file);
+    filePreviewController.renderFilePreview(file);
+    filePreviewController.renderFileInfo(file);
 
     if (previewWindow && !previewWindow.closed) {
         previewWindow.postMessage({ type: 'update-preview', file: file }, '*');
@@ -281,7 +280,7 @@ async function generateThumbnails(files) {
                     }
                     await window.api.generateThumbnail(filePath, thumbnailPath);
                 } catch (error) {
-                    console.error(error);
+                    console.error('generateThumbnails: error', error);
                 }
             }
         }

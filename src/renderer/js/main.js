@@ -1,4 +1,5 @@
 import { contextMenuController } from './controller/contextMenuController.js';
+import { filePreviewController } from './controller/filePreviewController.js';
 import { filesController } from './controller/filesController.js';
 import { fileTagsModalController } from './controller/fileTagsModalController.js';
 import { historyController } from './controller/historyController.js';
@@ -28,6 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Left sidebar
     await tagsController.init();
     await locationsController.init();
+
+    // Right sidebar
+    filePreviewController.init();
 
     // Modals
     tagsModalController.init();

@@ -13,8 +13,7 @@ import { fileTagsModalController  } from "./fileTagsModalController.js";
 import { locationsController } from "./locationsController.js";
 import { locationModalController } from "./locationModalController.js"
 import { paginationController } from "./paginationController.js";
-
-import { refreshFileInfo } from "../rightSidebar/fileInfo.js"
+import { filePreviewController } from "./filePreviewController.js";
 
 export let previewWindow = null; // TODO zabrać to stąd
 
@@ -111,14 +110,14 @@ export const contextMenuController = {
 
     async copyTags(id) {
         try {
-                const tags = await fileTagsModel.getFileTags(id);
-        if (tags.length > 0) {
-            tagsModel.copiedTags = tags;
-        } else {
-            showPopup(i18nModel.t('alert-file-no-tags'), 'warning');
-        }
-            } catch (error) {
-            console.error('Error fetching tags:', error);
+            const tags = await fileTagsModel.getFileTags(id);
+            if (tags.length > 0) {
+                tagsModel.copiedTags = tags;
+            } else {
+                showPopup(i18nModel.t('alert-file-no-tags'), 'warning');
+            }
+        } catch (error) {
+            console.error('copyTags: Error fetching tags:', error);
             showPopup(i18nModel.t('alert-fetching-tags'), 'warning');
         }
     },
@@ -150,12 +149,12 @@ export const contextMenuController = {
                 try {
                     await fileTagsModel.addFileTag(fileId, tag.id);
                 } catch (error) {
-                    console.error(error);
+                    console.error('pasteTags: error addFileTag',error);
                 }
             }
         }
 
-        await refreshFileInfo();
+        await filePreviewController.renderFileInfo(filesModel.currentPreviewFile);
     },
 
     async confirmDeleteFile() {
@@ -170,7 +169,7 @@ export const contextMenuController = {
                 filesView.removeIdFromContainer(file.id);
                 await filesModel.deleteFile(file.id);
             }
-            await refreshFileInfo();
+            await filePreviewController.renderFileInfo(filesModel.currentPreviewFile);
         }
     },
 
@@ -236,7 +235,7 @@ async function confirmDeleteFileTag(id) {
 
     if (result.isConfirmed) {
         await fileTagsModel.deleteFileTag(filesModel.currentPreviewFile.id, id);
-        refreshFileInfo();
+        await filePreviewController.renderFileInfo(filesModel.currentPreviewFile);
     }
 }
 

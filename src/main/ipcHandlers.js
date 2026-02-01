@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, formatDateYYYYMMDD } = require('./utils.js');
+const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, formatDateShort, formatDateLong, formatSize } = require('./utils.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
 const { getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
@@ -177,12 +177,25 @@ ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
 ipcMain.handle('files:getFileCreationDate', async (event, filePath) => {
   try {
     const stat = fs.statSync(filePath);
-    return formatDateYYYYMMDD(stat.birthtime);
+    return formatDateShort(stat.birthtime);
   } catch (error) {
     console.error(`Error getting file creation date for ${filePath}:`, error);
     return null;
   }
 }); 
+
+ipcMain.handle('files:getFileInfo', async (event, filePath) => {
+  try {
+    const stat = fs.statSync(filePath);
+    return {
+      size: formatSize(stat.size),
+      createdAt: formatDateLong(stat.birthtime),
+    };
+  } catch (error) {
+    console.error(`Error getting file info for ${filePath}:`, error);
+    return null;
+  }
+});
 
 ipcMain.handle('files:getDirectoryHierarchy', async (event, directoryPath) => {
   try {

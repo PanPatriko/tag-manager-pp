@@ -1,4 +1,4 @@
-import { createFilePreview } from './controller/filePreviewController.js';
+import { filePreviewController } from './controller/filePreviewController.js';
 
 // import { settingsModel } from './model/settingsModel.js';
 // import { settingsView } from './view/settingsView.js';
@@ -111,13 +111,13 @@ function getFileFromQuery() {
 // Initial preview (from query string)
 const file = getFileFromQuery();
 if (file) {
-    createFilePreview(file);
+    await filePreviewController.renderFilePreview(file);
 }
 
 // Listen for updates from the main window
 window.addEventListener('message', async (event) => {
     if (event.data && event.data.type === 'update-preview' && event.data.file) {
-        createFilePreview(event.data.file);
+        await filePreviewController.renderFilePreview(event.data.file);
     }
     if (event.data && event.data.type === 'update-lang' && event.data.language) {
         //i18nView.applyTranslations(event.data.language);

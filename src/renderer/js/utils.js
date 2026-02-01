@@ -1,31 +1,5 @@
 export const thumbnailDir = '.t'
 
-function hexToRgb(hex) {
-    hex = hex.replace(/^#/, '');
-    let bigint = parseInt(hex, 16);
-    let r = (bigint >> 16) & 255;
-    let g = (bigint >> 8) & 255;
-    let b = bigint & 255;
-    return { r, g, b };
-}
-
-function rgbToHex(r, g, b) {
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
-}
-
-function invertColor(hex) {
-    const { r, g, b } = hexToRgb(hex);
-    const invertedR = 255 - r;
-    const invertedG = 255 - g;
-    const invertedB = 255 - b;
-    return rgbToHex(invertedR, invertedG, invertedB);
-}
-
-export function setInvertedColor(span, color) {
-    const invertedColor = invertColor(color);
-    span.style.setProperty('--inverted-color', invertedColor);
-}
-
 export function highlightText(query, containerId, spanSelector) { 
     const container = document.getElementById(containerId);
     const spans = container.querySelectorAll(spanSelector);

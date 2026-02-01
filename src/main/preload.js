@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('api', {
     getFileById: (id) => ipcRenderer.invoke('dbfiles:get-file-by-id', id),
     getFileByPath: (path) => ipcRenderer.invoke('dbfiles:get-file-by-path', path),
     getFileCreationDate: (filePath) => ipcRenderer.invoke('files:getFileCreationDate', filePath),
+    getFileInfo: (filePath) => ipcRenderer.invoke('files:getFileInfo', filePath),
     createFile: (fileData) => ipcRenderer.invoke('dbfiles:create-file', fileData),
     searchFiles: (andTags, orTags, notTags) => ipcRenderer.invoke('dbfiles:search-files', andTags, orTags, notTags),
     updateFile: (fileId, newFileName, oldFilePath) => ipcRenderer.invoke('dbfiles:update-file', fileId, newFileName, oldFilePath),

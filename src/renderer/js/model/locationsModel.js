@@ -31,7 +31,7 @@ export const locationsModel = {
             const newLoc = await window.api.addLocation(locationData);
             locations.push(new Location(newLoc));
         } catch (error) {
-            console.error('Error during adding location', error);
+            console.error('addLocation: Error during adding location', error);
             showPopup(error, 'error');
         }
     },
@@ -44,7 +44,7 @@ export const locationsModel = {
                 locations[index] = new Location(locationData);
             }
         } catch (error) {
-            console.error('Error during updating location', error);
+            console.error('updateLocation: Error during updating location', error);
         }
     },
 
@@ -53,7 +53,7 @@ export const locationsModel = {
             await window.api.deleteLocation(id);
             locations = locations.filter(loc => loc.id !== id);
         } catch (error) {
-            console.error('Error during deleting location', error);
+            console.error('deleteLocation: Error during deleting location', error);
         }
     },
 
@@ -69,7 +69,7 @@ export const locationsModel = {
         try {
             return await window.api.getDirectoryHierarchy(directoryPath);
         } catch (error) {
-            console.error('Error during fetching directory hierarchy ' + directoryPath, error);
+            console.error('getDirectoryHierarchy: Error during fetching directory hierarchy ' + directoryPath, error);
             return null;
         }
     }

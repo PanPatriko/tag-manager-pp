@@ -1,0 +1,21 @@
+/* ========================================
+   BUTTON COMPONENT STYLES
+   ======================================== */
+
+.ico-bttn {
+    width: 3em;
+    height: 3em;
+    border-radius: 10px;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+}
+
+body.light-theme .ico-bttn.active {
+    border: 2px solid rgb(0, 128, 255);
+}
+
+body.dark-theme .ico-bttn.active {
+    border: 2px solid rgb(255, 128, 0);
+}

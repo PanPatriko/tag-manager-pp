@@ -1,0 +1,36 @@
+#settings-panel {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow-x: auto;
+}
+
+#settings-container {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#settings-container li {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+#settings-container li span {
+    flex: 1 1 50%;
+    text-align: left;
+    padding-right: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#settings-container li input,
+#settings-container li select {
+    flex: 1 1 50%;
+    max-width: 100px;
+    height: 20px;
+    border-radius: 4px;
+}

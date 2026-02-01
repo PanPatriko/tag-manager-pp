@@ -1,0 +1,26 @@
+/* ========================================
+   INPUT COMPONENT STYLES
+   ======================================== */
+
+.color-span {
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+body.light-theme .color-span {
+    background: linear-gradient(135deg, #dadada, #b9cee2);
+    color: var(--light-text);
+}
+
+body.dark-theme .color-span {
+    background: linear-gradient(135deg, #0f0f0f, #4d3e32);
+    color: var(--dark-text);
+}
+
+body.light-theme .color-span:hover {
+    border: 1px solid rgb(0, 128, 255) !important;
+}
+
+body.dark-theme .color-span:hover {
+    border: 1px solid rgb(255, 128, 0) !important;
+}

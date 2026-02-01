@@ -1,0 +1,13 @@
+.loc-path-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.loc-path-container input {
+    flex-grow: 1;
+}
+
+#loc-path-btn {
+    padding: 0 5px 0 5px;
+}

@@ -1,0 +1,111 @@
+:root {
+    /* ========================================
+       COLOR PALETTE
+       ======================================== */
+    
+    /* Light Theme */
+    --light-bg: #f0f0f0;
+    --light-text: black;
+    --light-bg-bttn: lightgray;
+    
+    /* Dark Theme */
+    --dark-bg: #222;
+    --dark-bg-bttn: #4e4e4e;
+    --dark-text: white;
+    --bg-bttn-hover: gray;
+    
+    /* Accent Colors */
+    --accent-light: rgb(0, 128, 255);
+    --accent-dark: rgb(255, 128, 0);
+    --accent-success: #27ae60;
+    --accent-error: #e74c3c;
+    --accent-info: #4caf50;
+    
+    /* Neutral Colors */
+    --neutral-border: rgb(128, 128, 128);
+    --neutral-divider: #ccc;
+    --neutral-loading-bg: #f3f3f3;
+    
+    /* ========================================
+       REUSABLE SPACING
+       ======================================== */
+    
+    --spacing-xs: 2px;
+    --spacing-sm: 5px;
+    --spacing-md: 10px;
+    --spacing-lg: 12.5px;
+    --spacing-xl: 1rem;
+    
+    /* ========================================
+       REUSABLE SIZES
+       ======================================== */
+    
+    --border-radius-sm: 5px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 15px;
+    
+    /* ========================================
+       TYPOGRAPHY
+       ======================================== */
+    
+    --font-family: Arial, sans-serif;
+    --font-size-base: 1rem;
+    --font-size-small: small;
+    --font-size-large: large;
+    
+    /* ========================================
+       TRANSITIONS
+       ======================================== */
+    
+    --transition-fast: 0.3s;
+    --transition-normal: 0.5s;
+    --transition-slow: 1s;
+    
+    /* ========================================
+       Z-INDEXES
+       ======================================== */
+    
+    --z-resize: 9;
+    --z-loading-bar: 900;
+    --z-modal: 1000;
+    --z-context-menu: 1000;
+    
+    /* ========================================
+       SHADOWS
+       ======================================== */
+    
+    /* Light Theme Shadows */
+    --shadow-light-sm: 0px 0px 5px -1px rgba(0, 0, 0, 0.4);
+    --shadow-light-md: 0px 0px 10px 5px rgba(0, 0, 0, 0.4);
+    --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.2);
+    
+    /* Dark Theme Shadows */
+    --shadow-dark-sm: 0px 0px 5px -1px rgba(255, 255, 255, 0.4);
+    --shadow-dark-md: 0px 0px 15px 5px rgba(255, 255, 255, 0.4);
+    
+    /* ========================================
+       MODAL STYLES
+       ======================================== */
+    
+    --modal-padding-top: 32px;
+    --modal-padding-sides: 24px;
+    --modal-padding-bottom: 24px;
+    --modal-border-radius: 8px;
+    --modal-min-width: 320px;
+    --modal-width: 25vw;
+    --modal-title-font-size: 1.5rem;
+    --modal-close-font-size: 2rem;
+    --modal-button-font-size: 2rem;
+    --modal-body-gap: 5px;
+    --modal-footer-gap: 10px;
+    --modal-footer-margin-top: 24px;
+    --modal-close-top: 16px;
+    --modal-close-right: 16px;
+    --modal-button-min-width: 80px;
+    
+    /* ========================================
+       BORDERS
+       ======================================== */
+    
+    --border: 1px solid var(--neutral-border);
+}

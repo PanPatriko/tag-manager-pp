@@ -1,0 +1,22 @@
+#right-sidebar-menu {
+    flex: 0 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+    border-bottom: var(--border);
+    overflow: auto;
+}
+
+#show-file-tags {
+    background-image: url('../../../images/tag.png');
+}
+
+#show-file-info {
+    background-image: url('../../../images/info.png');
+}
+
+#show-file-prev {
+    background-image: url('../../../images/preview.png');
+}

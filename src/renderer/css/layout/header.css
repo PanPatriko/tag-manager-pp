@@ -1,0 +1,24 @@
+header {
+    flex: 0 0 auto;
+    display: flex;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+    border-bottom: var(--border);
+    border-top: var(--border);
+}
+
+#toggle-tag-sidebar {
+    background-image: url('../../images/left-arrow.png');
+}
+
+#toggle-file-sidebar {
+    background-image: url('../../images/right-arrow.png');
+}
+
+#theme-toggle {
+    background-image: url('../../images/theme.png');
+}
+
+#open-settings-modal {
+    background-image: url('../../images/settings.png');
+}

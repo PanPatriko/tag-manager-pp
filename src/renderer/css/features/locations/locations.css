@@ -1,0 +1,73 @@
+.location-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    border-top: var(--border);
+}
+
+.loc-item {
+    border: 1px solid rgb(128, 128, 128);
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+body.light-theme .loc-item:hover {
+    background-color: lightgray;
+}
+
+body.dark-theme .loc-item:hover {
+    background-color: #4e4e4e;
+}
+
+body.light-theme .loc-active {
+    border: 1px solid rgb(0, 128, 255);
+}
+
+body.dark-theme .loc-active {
+    border: 1px solid orange;
+}
+
+#directory-container {
+    flex: 1 1 0;
+    list-style-type: square;
+    overflow-y: auto;
+}
+
+#directory-container ul {
+    margin-left: 5px;
+    padding-left: 5px;
+    list-style-type: square;
+}
+
+#directory-container li {
+    cursor: pointer;
+    word-wrap: break-word;
+    max-width: 250px;
+}
+
+#directory-container button {
+    background-color: transparent;
+    margin: 0 0 0 5px;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+}
+
+body.light-theme #directory-container span:hover,
+body.light-theme #directory-container button:hover {
+    color: var(--light-bg-bttn);
+}
+
+body.dark-theme #directory-container span:hover,
+body.dark-theme #directory-container button:hover {
+    color: var(--dark-bg-bttn);
+}
+
+#location-resize-handle {
+    height: 2px;
+    width: 100%;
+    cursor: row-resize;
+}

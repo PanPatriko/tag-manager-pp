@@ -1,0 +1,107 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal:not(.hidden) {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    border-radius: var(--modal-border-radius);
+    padding: var(--modal-padding-top) var(--modal-padding-sides) var(--modal-padding-bottom) var(--modal-padding-sides);
+    box-shadow: var(--shadow-modal);
+    position: relative;
+    min-width: var(--modal-min-width);
+    width: var(--modal-width);
+    margin: auto;
+}
+
+body.light-theme .modal-content {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.dark-theme .modal-content {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.modal-title {
+    margin-top: 0;
+    font-size: var(--modal-title-font-size);
+    font-weight: bold;
+}
+
+.modal-body {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--modal-body-gap);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--modal-footer-gap);
+    margin-top: var(--modal-footer-margin-top);
+}
+
+.modal-confirm,
+.modal-cancel {
+    min-width: var(--modal-button-min-width) !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: var(--modal-button-font-size) !important;
+    padding: 0 !important;
+}
+
+.modal-confirm {
+    color: var(--accent-success) !important;
+}
+
+.modal-cancel {
+    color: var(--accent-error) !important;
+}
+
+.modal-confirm:hover {
+    background: var(--accent-success, #27ae60)10 !important;
+}
+
+.modal-cancel:hover {
+    background: var(--accent-error, #e74c3c)10 !important;
+}
+
+.modal-close {
+    position: absolute;
+    top: var(--modal-close-top);
+    right: var(--modal-close-right);
+    font-size: var(--modal-close-font-size);
+    color: #888;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--accent-error);
+}

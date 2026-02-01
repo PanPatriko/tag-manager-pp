@@ -1,0 +1,47 @@
+/* Base - Variables & Foundations */
+@import 'base/variables.css';
+@import 'base/reset.css';
+@import 'base/elements.css';
+@import 'base/utils.css';
+@import 'base/scrollbar.css';
+
+/* Layout */
+@import 'layout/content.css';
+@import 'layout/header.css';
+@import 'layout/left-sidebar.css';
+@import 'layout/right-sidebar.css';
+
+/* Components */
+@import 'components/buttons.css';
+@import 'components/inputs.css';
+@import 'components/context-menu.css';
+@import 'components/swal2.css';
+
+/* Components - Modals */
+@import 'components/modals/modal.css';
+@import 'components/modals/tag-modal.css';
+@import 'components/modals/file-tag-modal.css';
+@import 'components/modals/location-modal.css';
+@import 'components/modals/settings-modal.css';
+
+/* Features - Files */
+@import 'features/files/files-panel.css';
+@import 'features/files/files-bar.css';
+
+/* Features - Search */
+@import 'features/search/search-bar.css';
+@import 'features/search/search-suggestions.css';
+@import 'features/search/search-tags.css';
+
+/* Features - Locations */
+@import 'features/locations/locations.css';
+@import 'features/locations/sidebar.css';
+
+/* Features - Tags */
+@import 'features/tags/tags-view.css';
+
+/* Features - File Preview */
+@import 'features/file-preview/menu.css';
+@import 'features/file-preview/file-info.css';
+@import 'features/file-preview/file-preview.css';
+@import 'features/file-preview/file-tags.css';

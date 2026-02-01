@@ -1,0 +1,86 @@
+/* ========================================
+   GLOBAL ELEMENT STYLES
+   ======================================== */
+
+button {
+    cursor: pointer;
+    border: var(--border);
+    transition: background-color 0.5s ease, transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+body.light-theme button {
+    background-color: var(--light-bg-bttn);
+    color: var(--light-text);
+}
+
+body.dark-theme button {
+    background-color: var(--dark-bg-bttn);
+    color: var(--dark-text);
+}
+
+body.light-theme button:hover {
+    background-color: var(--bg-bttn-hover);
+}
+
+body.dark-theme button:hover {
+    background-color: var(--bg-bttn-hover);
+}
+
+body button:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+span, label {
+    transition: 0.3s;
+}
+
+input {
+    border: var(--border);
+    transition: 0.5s;
+}
+
+body.light-theme input {
+    background: linear-gradient(135deg, #dadada, #b9cee2);
+    color: var(--light-text);
+}
+
+body.dark-theme input {
+    background: linear-gradient(135deg, #0f0f0f, #4d3e32);
+    color: var(--dark-text);
+}
+
+body.light-theme input:hover {
+    border: 1px solid rgb(0, 128, 255);
+}
+
+body.dark-theme input:hover {
+    border: 1px solid rgb(255, 128, 0);
+}
+
+body input:disabled {
+    background-color: #e0e0e0;
+    color: #616161;
+    border: 1px solid #c0c0c0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+body.light-theme select {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.dark-theme select {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}

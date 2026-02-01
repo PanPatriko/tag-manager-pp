@@ -1,0 +1,44 @@
+#tags-button {
+    background-image: url('../../../images/tag.png');
+}
+
+#location-button {
+    background-image: url('../../../images/directory.png');
+}
+
+#add-tag {
+    align-self: center;
+    background-image: url('../../../images/tag-add.png');
+}
+
+#add-location {
+    align-self: center;
+    background-image: url('../../../images/directory-add.png');
+}
+
+.left-sidebar-item {
+    overflow: hidden;
+}
+
+.left-sidebar-item.hidden {
+    display: none !important;
+}
+
+#tags-panel,
+#location-panel {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+    padding: 0.5rem 0;
+    gap: var(--spacing-xl);
+}
+
+#tags-container {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: 10px 0 10px 0;
+    border-top: var(--border);
+}

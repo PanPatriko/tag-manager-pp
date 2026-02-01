@@ -1,0 +1,40 @@
+/* ========================================
+   SWAL2 LIBRARY CUSTOMIZATION
+   ======================================== */
+
+body.light-theme .swal2-popup {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.dark-theme .swal2-popup {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.swal2-transparent-btn {
+    min-width: 80px !important;
+    background: transparent !important;
+    font-size: 2rem !important;
+    padding: 0 !important;
+}
+
+.swal2-actions {
+    gap: 25px;
+}
+
+.swal2-confirm-check {
+    color: var(--accent-success) !important;
+}
+
+.swal2-cancel-cross {
+    color: var(--accent-error) !important;
+}
+
+.swal2-confirm-check:hover {
+    background: var(--accent-success, #27ae60)10 !important;
+}
+
+.swal2-cancel-cross:hover {
+    background: var(--accent-error, #e74c3c)10 !important;
+}

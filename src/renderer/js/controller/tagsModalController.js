@@ -1,7 +1,7 @@
 import { i18nModel } from "../model/i18nModel.js";
+import { modalModel, ModalMode, TagModalState } from '../model/modalModel.js';
 import { settingsModel } from '../model/settingsModel.js';
 import { tagsModel } from '../model/tagsModel.js';
-import { modalModel, ModalMode, TagModalState } from '../model/modalModel.js';
 
 import { tagsModalView } from '../view/tagsModalView.js';
 import { tagsView } from '../view/tagsView.js';

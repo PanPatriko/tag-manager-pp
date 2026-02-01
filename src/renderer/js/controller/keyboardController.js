@@ -2,9 +2,9 @@ import { filesModel } from "../model/filesModel.js";
 
 import { modalView } from "../view/modalView.js";
 
-import { fileTagsModalController } from "./fileTagsModalController.js";
 import { contextMenuController } from "./contextMenuController.js";
 import { filesController } from "./filesController.js";
+import { fileTagsModalController } from "./fileTagsModalController.js";
 
 export const keyboardController = {
 

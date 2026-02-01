@@ -5,11 +5,11 @@ import { settingsModel } from '../model/settingsModel.js';
 import { filesView } from '../view/filesView.js';
 import { paginationView } from '../view/paginationView.js';
 
+import { filePreviewController } from "./filePreviewController.js"
 import { historyController } from './historyController.js';
 import { paginationController  } from './paginationController.js';
-import { previewWindow } from "./contextMenuController.js";
-import { filePreviewController } from "./filePreviewController.js"
 
+import { previewWindow } from "./contextMenuController.js"; // TODO later
 import { thumbnailDir } from "../utils.js"
 
 let lastSelectedIndex = null;

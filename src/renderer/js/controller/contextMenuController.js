@@ -1,19 +1,19 @@
-import { tagsModel } from "../model/tagsModel.js";
-import { fileTagsModel } from "../model/fileTagsModel.js";
-import { locationsModel } from '../model/locationsModel.js';
-import { i18nModel } from '../model/i18nModel.js';
 import { filesModel } from "../model/filesModel.js";
+import { fileTagsModel } from "../model/fileTagsModel.js";
+import { i18nModel } from '../model/i18nModel.js';
+import { locationsModel } from '../model/locationsModel.js';
+import { tagsModel } from "../model/tagsModel.js";
 
 import { contextMenuView } from '../view/contextMenuView.js';
 import { filesView } from "../view/filesView.js";
 
+import { filePreviewController } from "./filePreviewController.js";
+import { fileTagsModalController } from "./fileTagsModalController.js";
+import { locationModalController } from "./locationModalController.js"
+import { locationsController } from "./locationsController.js";
+import { paginationController } from "./paginationController.js";
 import { tagsController } from "./tagsController.js";
 import { tagsModalController } from "./tagsModalController.js";
-import { fileTagsModalController  } from "./fileTagsModalController.js";
-import { locationsController } from "./locationsController.js";
-import { locationModalController } from "./locationModalController.js"
-import { paginationController } from "./paginationController.js";
-import { filePreviewController } from "./filePreviewController.js";
 
 export let previewWindow = null; // TODO zabrać to stąd
 

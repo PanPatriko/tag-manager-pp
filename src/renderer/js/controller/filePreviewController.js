@@ -1,7 +1,7 @@
-import { settingsModel } from '../model/settingsModel.js';
-import { i18nModel } from '../model/i18nModel.js';
 import { filesModel } from '../model/filesModel.js';
 import { fileTagsModel } from '../model/fileTagsModel.js';
+import { i18nModel } from '../model/i18nModel.js';
+import { settingsModel } from '../model/settingsModel.js';
 import { tagsModel, TagType } from '../model/tagsModel.js';
 
 import { filePreviewView } from '../view/filePreviewView.js';

@@ -1,12 +1,12 @@
-import { i18nModel } from "../model/i18nModel.js";
-import { tagsModel } from "../model/tagsModel.js";
-import { fileTagsModel } from "../model/fileTagsModel.js";
-import { modalModel } from "../model/modalModel.js";
 import { filesModel } from "../model/filesModel.js";
+import { fileTagsModel } from "../model/fileTagsModel.js";
+import { i18nModel } from "../model/i18nModel.js";
+import { modalModel } from "../model/modalModel.js";
+import { tagsModel } from "../model/tagsModel.js";
 
-import { tagsView } from '../view/tagsView.js';
-import { fileTagsModalView } from "../view/fileTagsModalView.js";
 import { filesView } from "../view/filesView.js";
+import { fileTagsModalView } from "../view/fileTagsModalView.js";
+import { tagsView } from '../view/tagsView.js';
 
 import { filePreviewController } from "./filePreviewController.js";
 

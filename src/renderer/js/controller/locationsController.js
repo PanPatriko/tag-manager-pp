@@ -1,6 +1,6 @@
 
-import { locationsModel } from "../model/locationsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
+import { locationsModel } from "../model/locationsModel.js";
 
 import { locationsView } from "../view/locationsView.js";
 

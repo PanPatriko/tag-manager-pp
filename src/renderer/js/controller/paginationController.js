@@ -1,13 +1,13 @@
-import { i18nModel } from '../model/i18nModel.js';
-import { paginationModel } from '../model/paginationModel.js';
 import { filesModel } from '../model/filesModel.js';
-import { settingsModel } from '../model/settingsModel.js';
+import { i18nModel } from '../model/i18nModel.js';
 import { locationsModel } from '../model/locationsModel.js';
+import { paginationModel } from '../model/paginationModel.js';
+import { settingsModel } from '../model/settingsModel.js';
 
 import { paginationView } from '../view/paginationView.js';
 
-import { historyController } from './historyController.js';
 import { filesController } from "./filesController.js";
+import { historyController } from './historyController.js';
 
 import { formatString } from '../utils.js';
 

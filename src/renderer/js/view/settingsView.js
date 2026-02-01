@@ -1,8 +1,3 @@
-import { paginationModel } from '../model/paginationModel.js';
-
-import { paginationController } from "../controller/paginationController.js"
-import { filesController } from "../controller/filesController.js";
-
 export const settingsView = {
 
     settingsModal: null,
@@ -124,11 +119,5 @@ export const settingsView = {
         filesPanel.style.gap = `${gap}px`;
         filesPanel.style.padding = `${padding}px`;
         filesPanel.style.gridTemplateColumns = `repeat(auto-fill, ${value}px)`;
-    },
-
-    applyMaxFiles() {
-        paginationModel.setCurrentPage(1);
-        paginationController.updateFilePages();
-        filesController.displayFiles();
     },
 };

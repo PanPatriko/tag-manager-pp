@@ -1,11 +1,14 @@
 import { i18nModel } from '../model/i18nModel.js';
+import { paginationModel } from '../model/paginationModel.js';
 import { settingsModel } from '../model/settingsModel.js';
 
 import { i18nView } from '../view/i18nView.js';
 import { settingsView } from '../view/settingsView.js';
 
-import { previewWindow } from './contextMenuController.js';
+import { filesController } from './filesController.js';
 import { paginationController } from './paginationController.js';
+
+import { previewWindow } from './contextMenuController.js'; // TODO
 
 export const settingsController = {
     
@@ -23,7 +26,7 @@ export const settingsController = {
 
         const maxFiles = settingsModel.maxFilesPerPage;
         settingsView.setMaxFiles(maxFiles);
-        settingsView.applyMaxFiles(maxFiles);
+        applyMaxFiles();
 
         settingsView.setVidAutoplay(settingsModel.vidAutoplay);
         settingsView.setVidLoop(settingsModel.vidLoop);
@@ -59,7 +62,7 @@ export const settingsController = {
 
         settingsView.onMaxFilesChange((value) => {
             settingsModel.maxFilesPerPage = value;
-            settingsView.applyMaxFiles(value);
+            applyMaxFiles();
         });
 
         settingsView.onVidAutoplayChange((checked) => {
@@ -90,4 +93,10 @@ function previewWindowPostMessage(type, data) {
     if (previewWindow && !previewWindow.closed) {
         previewWindow.postMessage({ type, ...data }, '*');
     }
+}
+
+function applyMaxFiles() {
+    paginationModel.setCurrentPage(1);
+    paginationController.updateFilePages();
+    filesController.displayFiles();
 }

@@ -1,8 +1,8 @@
 
 import { layoutModel } from '../model/layoutModel.js';
 
-import { rightSidebarView } from '../view/rightSidebarView.js';
 import { layoutView } from '../view/layoutView.js';
+import { rightSidebarView } from '../view/rightSidebarView.js';
 
 export const rightSidebarController = {
 

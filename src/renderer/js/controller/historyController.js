@@ -1,11 +1,11 @@
-import { locationsModel } from "../model/locationsModel.js";
 import { historyModel } from "../model/historyModel.js";
+import { locationsModel } from "../model/locationsModel.js";
 
 import { historyView } from "../view/historyView.js";
 
-import { searchController } from "./searchController.js";
-import { locationsController } from "./locationsController.js";
 import { filesController } from "./filesController.js";
+import { locationsController } from "./locationsController.js";
+import { searchController } from "./searchController.js";
 
 export const historyController = {
 

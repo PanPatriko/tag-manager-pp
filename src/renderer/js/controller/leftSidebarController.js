@@ -1,8 +1,8 @@
-import { leftSidebarModel } from '../model/leftSidebarModel.js';
 import { layoutModel } from '../model/layoutModel.js';
+import { leftSidebarModel } from '../model/leftSidebarModel.js';
 
-import { leftSidebarView } from '../view/leftSidebarView.js';
 import { layoutView } from '../view/layoutView.js';
+import { leftSidebarView } from '../view/leftSidebarView.js';
 
 export const leftSidebarController = {
 

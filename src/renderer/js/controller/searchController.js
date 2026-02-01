@@ -1,14 +1,14 @@
-import { searchModel, TagOperation } from '../model/searchModel.js';
-import { locationsModel } from "../model/locationsModel.js"
-import { tagsModel } from '../model/tagsModel.js';
 import { i18nModel } from '../model/i18nModel.js';
+import { locationsModel } from "../model/locationsModel.js"
+import { searchModel, TagOperation } from '../model/searchModel.js';
+import { tagsModel } from '../model/tagsModel.js';
 
-import { tagsView } from '../view/tagsView.js';
-import { searchView } from '../view/searchView.js';
 import { paginationView } from '../view/paginationView.js';
+import { searchView } from '../view/searchView.js';
+import { tagsView } from '../view/tagsView.js';
 
-import { historyController } from './historyController.js';
 import { filesController } from "./filesController.js";
+import { historyController } from './historyController.js';
 
 import { highlightText } from "../utils.js";
 

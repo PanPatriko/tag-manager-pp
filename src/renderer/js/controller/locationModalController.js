@@ -1,6 +1,6 @@
 import { i18nModel } from "../model/i18nModel.js";
-import { modalModel, ModalMode, LocationModalState } from "../model/modalModel.js";
 import { locationsModel } from "../model/locationsModel.js";
+import { modalModel, ModalMode, LocationModalState } from "../model/modalModel.js";
 
 import { locationModalView } from "../view/locationModalView.js";
 

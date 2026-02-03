@@ -16,6 +16,10 @@ let fileExists = null;
 
 export const  filePreviewController = {
 
+    initPreviewTab() {
+        filePreviewView.initPreviewTab();
+    },
+
     init() {
         filePreviewView.init();
 

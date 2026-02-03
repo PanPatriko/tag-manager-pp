@@ -7,8 +7,7 @@ import { settingsView } from '../view/settingsView.js';
 
 import { filesController } from './filesController.js';
 import { paginationController } from './paginationController.js';
-
-import { previewWindow } from './contextMenuController.js'; // TODO
+import { previewTabController } from './previewTabController.js';
 
 export const settingsController = {
     
@@ -46,13 +45,13 @@ export const settingsController = {
             const newTheme = settingsModel.theme === 'light-theme' ? 'dark-theme' : 'light-theme';
             settingsModel.theme = newTheme;
             document.body.className = newTheme;
-            previewWindowPostMessage('update-theme', { theme: newTheme });
+            previewTabController.sendPostMessage('update-theme', { theme: newTheme });
         });
 
         settingsView.onLanguageChange(async (lang) => {
             settingsModel.language = lang;
             await setLanguage(lang);
-            previewWindowPostMessage('update-lang', { language: lang });
+            previewTabController.sendPostMessage('update-lang', { language: lang });
         });
 
         settingsView.onIconSizeChange((size) => {
@@ -87,12 +86,6 @@ async function setLanguage(locale) {
     await i18nModel.load(locale);
     i18nView.applyTranslations(i18nModel.translations);
     paginationController.updateFileCount();
-}
-
-function previewWindowPostMessage(type, data) {
-    if (previewWindow && !previewWindow.closed) {
-        previewWindow.postMessage({ type, ...data }, '*');
-    }
 }
 
 function applyMaxFiles() {

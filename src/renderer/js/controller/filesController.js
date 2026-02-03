@@ -8,8 +8,8 @@ import { paginationView } from '../view/paginationView.js';
 import { filePreviewController } from "./filePreviewController.js"
 import { historyController } from './historyController.js';
 import { paginationController  } from './paginationController.js';
+import { previewTabController } from './previewTabController.js';
 
-import { previewWindow } from "./contextMenuController.js"; // TODO later
 import { thumbnailDir } from "../utils.js"
 
 let lastSelectedIndex = null;
@@ -57,9 +57,7 @@ export const filesController = {
             filePreviewController.renderFilePreview(current);
             filePreviewController.renderFileInfo(current);
 
-            if (previewWindow && !previewWindow.closed) {
-                previewWindow.postMessage({ type: 'update-preview', file: current }, '*');
-            }
+            previewTabController.sendPostMessage('update-preview', { file: current });
         });
 
         filesView.onPanelDblClick((event) => {
@@ -246,9 +244,7 @@ function selectFile(file) {
     filePreviewController.renderFilePreview(file);
     filePreviewController.renderFileInfo(file);
 
-    if (previewWindow && !previewWindow.closed) {
-        previewWindow.postMessage({ type: 'update-preview', file: file }, '*');
-    }
+    previewTabController.sendPostMessage('update-preview', { file: file });
 
     const visible = filesModel.getCurrentPageFiles();
     lastSelectedIndex = visible.findIndex(f => (f.id != null ? f.id === file.id : f.path === file.path));

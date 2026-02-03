@@ -16,6 +16,10 @@ export const filePreviewView = {
     fileSizeInput: null,
     fileCreatedInput: null,
 
+    initPreviewTab() {
+        this.preview = document.getElementById('file-preview');
+    },
+
     init() {
         this.showInfo = document.getElementById('show-file-info');
         this.showTags = document.getElementById('show-file-tags');

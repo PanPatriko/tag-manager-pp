@@ -12,12 +12,44 @@ import { fileTagsModalController } from "./fileTagsModalController.js";
 import { locationModalController } from "./locationModalController.js"
 import { locationsController } from "./locationsController.js";
 import { paginationController } from "./paginationController.js";
+import { previewTabController } from "./previewTabController.js";
 import { tagsController } from "./tagsController.js";
 import { tagsModalController } from "./tagsModalController.js";
 
-export let previewWindow = null; // TODO zabrać to stąd
-
 export const contextMenuController = {
+
+    initPreviewTab() {
+        window.openFileLocation = this.openFileLocation;
+        window.openFileExt = this.openFileExt;
+
+        document.addEventListener('contextmenu', (event) => {
+            const target = event.target;
+            let items = [];
+
+            if (target.closest('.file-preview-image')) {
+                items = [
+                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(previewTabController.file.path) },
+                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(previewTabController.file.path) },
+                ];
+            }
+
+            if (target.closest('.file-preview-video')) {
+                const vid = document.querySelector('#file-preview > *');
+                items = [
+                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(previewTabController.file.path) },
+                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(previewTabController.file.path) },
+                    { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-repeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
+                    { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-show-controls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
+                ];
+            }
+
+            if (items.length > 0) {
+                event.preventDefault();
+                contextMenuView.showMenu(event.pageX, event.pageY, items);
+            }
+        });
+        document.addEventListener('click', contextMenuView.hideMenu); 
+    },
 
     init() {
 
@@ -183,17 +215,8 @@ export const contextMenuController = {
 
     openFileNewTab() {
         if (!filesModel.currentPreviewFile) return;
-
         const fileUrl = `preview.html?file=${encodeURIComponent(filesModel.currentPreviewFile.path)}`;
-
-        // Open or reuse the preview tab
-        if (previewWindow && !previewWindow.closed) {
-            previewWindow.focus();
-            // Send updated file info
-            previewWindow.postMessage({ type: 'update-preview', file: filesModel.currentPreviewFile }, '*');
-        } else {
-            previewWindow = window.open(fileUrl, 'filePreviewTab');
-        }
+        previewTabController.openTab(fileUrl, filesModel.currentPreviewFile);
     },
 }
 

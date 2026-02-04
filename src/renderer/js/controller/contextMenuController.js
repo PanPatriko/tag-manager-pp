@@ -215,8 +215,9 @@ export const contextMenuController = {
 
     openFileNewTab() {
         if (!filesModel.currentPreviewFile) return;
-        const fileUrl = `preview.html?file=${encodeURIComponent(filesModel.currentPreviewFile.path)}`;
-        previewTabController.openTab(fileUrl, filesModel.currentPreviewFile);
+
+        sessionStorage.setItem('previewFile', JSON.stringify(filesModel.currentPreviewFile));
+        previewTabController.openTab("preview.html", filesModel.currentPreviewFile);
     },
 }
 

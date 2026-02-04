@@ -14,25 +14,20 @@ export const previewTabController = {
 
         previewTabView.init();
         filePreviewController.initPreviewTab();
+        contextMenuController.initPreviewTab();
 
         previewTabView.setTheme(settingsModel.theme);
 
         await i18nModel.load(settingsModel.language);
         previewTabView.setPageTitle(i18nModel.t('title-file-preview') || 'File Preview');
 
-        contextMenuController.initPreviewTab();
-
         this.setupEventListeners();
         
-        const file = this.getFileFromQuery();
+        const file = this.getFileFromStorage();
         if (file) {
             await filePreviewController.renderFilePreview(file);
             this.file = file;
         }
-    },
-
-    getFile() {
-        return this.file;
     },
 
     setupEventListeners() {
@@ -69,18 +64,19 @@ export const previewTabController = {
         }
     },
 
-    getFileFromQuery() {
-        const params = new URLSearchParams(window.location.search);
-        const path = params.get('file');
-        return path ? { path } : null;
+    getFileFromStorage() {
+        const stored = sessionStorage.getItem('previewFile');
+        if (stored) {
+            return JSON.parse(stored);
+        }
     },
 
-    openTab(fileUrl, file) {
+    openTab(url, file) {
         if (this.previewWindow && !this.previewWindow.closed) {
             this.previewWindow.focus();
             this.previewWindow.postMessage({ type: 'update-preview', file }, '*');
         } else {
-            this.previewWindow = window.open(fileUrl, 'filePreviewTab');
+            this.previewWindow = window.open(url, 'filePreviewTab');
         }
     },
 

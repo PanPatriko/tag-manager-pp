@@ -128,11 +128,6 @@ export const filesModel = {
         };
     },
 
-    isFileSelected(fileId) {
-        const file = files.find(file => file.id == fileId);
-        return file?.selected === true;
-    },
-
     selectFileById(fileId, toggle = true) {
         const file = files.find(file => file.id == fileId);
         if (toggle) {
@@ -149,10 +144,6 @@ export const filesModel = {
         }
         file.selected = true;
         return file.selected;
-    },
-
-    selectAllFiles() {
-        files.forEach(file => file.selected = true);
     },
 
     selectCurrentPageFiles() {

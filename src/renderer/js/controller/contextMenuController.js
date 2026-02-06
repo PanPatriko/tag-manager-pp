@@ -98,17 +98,36 @@ export const contextMenuController = {
 
             const fileContainer = event.target.closest('.file-container');
             if (fileContainer) {
-                fileContainer.setAttribute('data-checked', true);
+
+                filesView.setContainerSelected(fileContainer, true);
+                const id = fileContainer.dataset.id;
+                const path = fileContainer.dataset.path;
+                let file;
+
+                if (id === 'null' || !id) {
+                    filesModel.selectFileByPath(path, false);
+                    file = filesModel.getFileByPath(path);
+                } else {
+                    filesModel.selectFileById(id, false);
+                    file = filesModel.getFileById(id);
+                }
+
+                filesModel.currentPreviewFile = file;
+
+                filePreviewController.renderFilePreview(file);
+                filePreviewController.renderFileInfo(file);
+
                 paginationController.updateSelectedFileCount();
-                const fileId = fileContainer.dataset.id;
-                const filePath = fileContainer.dataset.path;
+
+                previewTabController.sendPostMessage('update-preview', { file: file });
+
                 items = [
                     { type: 'button', label: i18nModel.t('cntx-menu-edit-file-tags'), onClick: () => addTagFile() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-copy-tags'), onClick: () => copyTags(fileId) },
+                    { type: 'button', label: i18nModel.t('cntx-menu-copy-tags'), onClick: () => copyTags(id) },
                     { type: 'button', label: i18nModel.t('cntx-menu-paste-tags'), onClick: () => pasteTags() },
                     { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(filePath) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(filePath) },
+                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(path) },
+                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(path) },
                     { type: 'button', label: i18nModel.t('cntx-menu-delete-file'), onClick: () => confirmDeleteFile() }
                 ];
             }

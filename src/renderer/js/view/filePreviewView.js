@@ -191,11 +191,11 @@ export const filePreviewView = {
     },
 
     hideFileNameSaveButton() {
-        this.fileNameSaveButton.hidden = true;
+        this.fileNameSaveButton.disabled = true;
     },
 
     showFileNameSaveButton() {
-        this.fileNameSaveButton.hidden = false;
+        this.fileNameSaveButton.disabled = false;
     },
 
     onResizeStart(handler) {
@@ -206,20 +206,8 @@ export const filePreviewView = {
         this.fileNameSaveButton.addEventListener('click', handler);
     },
 
-    onFileNameSaveMouseEnter(handler) {
-        this.fileNameSaveButton.addEventListener('mouseenter', handler);
-    },
-
-    onFileNameSaveMouseLeave(handler) {
-        this.fileNameSaveButton.addEventListener('mouseleave', handler);
-    },
-
-    onFileNameInputFocus(handler) {
-        this.fileNameInput.addEventListener('focus', handler);
-    },
-
-    onFileNameInputFocusOut(handler) {
-        this.fileNameInput.addEventListener('focusout', handler);
+    onFileNameInput(handler) {
+        this.fileNameInput.addEventListener('input', handler);
     },
 
     onShowInfoClick(handler) {

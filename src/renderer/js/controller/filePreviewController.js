@@ -11,7 +11,6 @@ import { filesController } from './filesController.js';
 
 let currentDetach = null;
 let isResizing = false;
-let isMouseOverSaveButton = false;
 let fileExists = null;
 
 export const  filePreviewController = {
@@ -30,26 +29,18 @@ export const  filePreviewController = {
             document.addEventListener('mouseup', onMouseUp);
         });
 
-        filePreviewView.onFileNameSaveMouseEnter(() => {
-            isMouseOverSaveButton = true;
-        });
-
-        filePreviewView.onFileNameSaveMouseLeave(() => {
-            isMouseOverSaveButton = false;
-        });
-
         filePreviewView.onFileNameSaveClick(() => {
             handleFileNameSave();
         });
 
-        filePreviewView.onFileNameInputFocus(() => {
+        filePreviewView.onFileNameInput(() => {
             if (!fileExists) return;
+            if (filePreviewView.getFileNameValue().trim() 
+                === filesModel.currentPreviewFile?.name) {
+                filePreviewView.hideFileNameSaveButton();
+                return;
+            }
             filePreviewView.showFileNameSaveButton();
-        });
-
-        filePreviewView.onFileNameInputFocusOut(() => {
-            if (isMouseOverSaveButton) return;
-            filePreviewView.hideFileNameSaveButton();        
         });
 
         filePreviewView.onShowInfoClick(() => {

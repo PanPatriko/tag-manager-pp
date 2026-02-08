@@ -81,18 +81,20 @@
         <aside id="right-sidebar">
             <div id="right-resize-handle" class="right-sidebar-item resize-handle"></div>
             <div id="right-sidebar-menu" class="right-sidebar-item">
+                
                 <button id="show-file-info" class="right-sidebar-item ico-bttn active"
                     data-i18n-title="title-file-info"></button>
                 <button id="show-file-tags" class="right-sidebar-item ico-bttn active"
                     data-i18n-title="title-file-tags"></button>
-                <button id="show-file-prev" class="right-sidebar-item ico-bttn active" data-i18n-title="title-file-preview"></button>
+                <button id="show-file-prev" class="right-sidebar-item ico-bttn active" 
+                    data-i18n-title="title-file-preview"></button>
             </div>
             <section id="file-info" class="right-sidebar-item">
                 <ul id="fileinfo-container">
                     <li>
                         <input id="file-id" readonly data-i18n-title="title-file-id"></input>
-                        <button id="file-name-save" class="ico-bttn" hidden></button>
-                        <input id="file-name" data-i18n-title="title-file-name"></input>  
+                        <button id="file-name-save" class="ico-bttn" data-i18n-title="save" disabled></button>
+                        <input id="file-name" data-i18n-title="title-file-name"></input>
                     </li>
                     <li>
                         <input id="file-size" readonly data-i18n-title="title-file-size"></input>

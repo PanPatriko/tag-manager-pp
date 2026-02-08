@@ -13,10 +13,17 @@ import { previewTabController } from './previewTabController.js';
 import { thumbnailDir } from "../utils.js"
 
 let lastSelectedIndex = null;
+let displayAbortController = null;
 
 const path = window.api.path;
 
-export const filesController = { 
+export const filesController = {
+    
+    abortDisplay() {
+        if (displayAbortController) {
+            displayAbortController.abort();
+        }
+    },
 
     init() {
         filesView.init();
@@ -112,6 +119,8 @@ export const filesController = {
     },
 
     async displayDirectory(dirPath) {
+        this.abortDisplay();
+        
         const dirFiles = await window.api.getFilesInPath(dirPath);
 
         if (dirFiles.error) {
@@ -135,21 +144,31 @@ export const filesController = {
         locationsModel.currentDirectory = dirPath;
         filesModel.files = dirFiles;
         await filesModel.sortFiles();
-        this.displayFiles();
+        await this.displayFiles();
     },
 
     async displayFiles() {
+        this.abortDisplay();
+        
+        displayAbortController = new AbortController();
+        const signal = displayAbortController.signal;
+
         lastSelectedIndex = null;
         filesModel.resetSelection();
         filesView.clearPanel();
 
-        const currentFiles = filesModel.getCurrentPageFiles();
         paginationController.updateFilePages();
         paginationController.updateFileCount();
 
-        await generateThumbnails(currentFiles);
+        const currentFiles = filesModel.getCurrentPageFiles();
+
+        await generateThumbnails(currentFiles, signal);
+
+        if (signal.aborted) return;
 
         for (const file of currentFiles) {
+            if (signal.aborted) return;
+            
             const { thumbnailSrc, fullSize, missing } = await resolveThumbnailForFile(file);
             const containerSize = settingsModel.iconSize;
 
@@ -259,10 +278,16 @@ async function getThumbnailPath(filePath) {
     return thumbnailPath;
 }
 
-async function generateThumbnails(files) {
+async function generateThumbnails(files, signal) {
     filesView.showLoadingBar();
 
     for (let i = 0; i < files.length; i++) {
+        if (signal.aborted) {
+            filesView.updateLoadingBar(0);
+            filesView.hideLoadingBar();
+            return;
+        }
+        
         const file = files[i];
         if (!file.isDirectory) {
             const filePath = file.path;

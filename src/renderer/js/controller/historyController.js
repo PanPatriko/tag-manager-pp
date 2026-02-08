@@ -14,17 +14,19 @@ export const historyController = {
 
         updateHistoryButtons();
 
-        historyView.onPreviousClick(() => {
+        historyView.onPreviousClick(async () => {
             const record = historyModel.goBack();
             if (record) {
-                updateFiles(record);
+                historyView.disablePreviousButton();
+                await updateFiles(record);
             }
         });
 
-        historyView.onNextClick(() => {
+        historyView.onNextClick(async () => {
             const record = historyModel.goForward();
             if (record) {
-                updateFiles(record);
+                historyView.disableNextButton();
+                await updateFiles(record);
             }
         });
     },
@@ -53,17 +55,17 @@ function updateHistoryButtons() {
     }
 }
 
-function updateFiles(record) {
-    if (record.type === 'directory') {
-        filesController.displayDirectory(record.path);
+async function updateFiles(record) {
+    if (record.type === 'directory') { 
         searchController.restoreSearchTags([], [], []);
         locationsController.restoreLocation(record)
+        await filesController.displayDirectory(record.path);
     } else if (record.type === 'search') {
         const andTags = [...record.andTags];
         const orTags = [...record.orTags];
         const notTags = [...record.notTags];
         searchController.restoreSearchTags(andTags, orTags, notTags);
-        searchController.searchFiles();
+        await searchController.searchFiles();
     }
     updateHistoryButtons();  
 }

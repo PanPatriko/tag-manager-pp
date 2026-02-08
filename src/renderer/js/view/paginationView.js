@@ -20,6 +20,17 @@ export const paginationView = {
         this.dirName = document.getElementById('dir-name');
     },
 
+    disableNextPageButton(disable) {
+        this.nextPageButton.disabled = disable;
+    },
+
+    disablePrevPageButton(disable) {
+        this.prevPageButton.disabled = disable;
+    },
+    disableParentDirButton(disable) {
+        this.parentDirButton.disabled = disable;
+    },
+
     setFileCount(text) {
         this.fileCount.textContent = text;
     },

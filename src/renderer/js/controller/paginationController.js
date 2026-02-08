@@ -16,33 +16,43 @@ export const paginationController = {
     init() {
         paginationView.init();
 
-        paginationView.onNextPageClick(() => {
+        paginationView.onNextPageClick(async () => {
+            filesController.abortDisplay();
             const currentPage = paginationModel.getCurrentPage();
             if (currentPage * settingsModel.maxFilesPerPage < filesModel.files.length) {
                 paginationModel.setCurrentPage(currentPage + 1);
-                filesController.displayFiles();
+                paginationView.disableNextPageButton(true);
+                await filesController.displayFiles();
+                paginationView.disableNextPageButton(false);
             }
         });
 
-        paginationView.onPrevPageClick(() => {
+        paginationView.onPrevPageClick(async () => {
+            filesController.abortDisplay();
             const currentPage = paginationModel.getCurrentPage();
             if (currentPage > 1) {
                 paginationModel.setCurrentPage(currentPage - 1);
-                filesController.displayFiles();
+                paginationView.disablePrevPageButton(true);
+                await filesController.displayFiles();
+                paginationView.disablePrevPageButton(false);
             }
         });
 
-        paginationView.onPageSelectChange((e) => {
+        paginationView.onPageSelectChange(async (e) => {
+            filesController.abortDisplay();
             paginationModel.setCurrentPage(parseInt(e.target.value, 10));
-            filesController.displayFiles();
+            await filesController.displayFiles();
         });
 
         paginationView.onParentDirClick(async () => {
+            filesController.abortDisplay();
             if (locationsModel.currentDirectory != locationsModel.root) {
                 try {
                     const parentLocation = await window.api.getDirectoryParent(locationsModel.currentDirectory);
                     historyController.pushToHistory({ type: 'directory', path: parentLocation });
-                    filesController.displayDirectory(parentLocation);
+                    paginationView.disableParentDirButton(true);
+                    await filesController.displayDirectory(parentLocation);
+                    paginationView.disableParentDirButton(false);
                 } catch (error) {
                     showPopup(error, 'error');
                 }
@@ -83,13 +93,12 @@ export const paginationController = {
 
     updateFilePages() {
         const totalPages = Math.ceil(filesModel.files.length / settingsModel.maxFilesPerPage);
-        const currentPage = paginationModel.getCurrentPage();
 
-        if (currentPage > totalPages) {
+        if (paginationModel.getCurrentPage() > totalPages) {
             paginationModel.setCurrentPage(1);
         }
 
-        paginationView.renderPagesSelect(totalPages, currentPage);
+        paginationView.renderPagesSelect(totalPages, paginationModel.getCurrentPage());
     }  
 }
 

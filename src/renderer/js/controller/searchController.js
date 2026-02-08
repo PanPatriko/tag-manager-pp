@@ -106,6 +106,7 @@ export const searchController = {
 
     async searchFiles() {
         searchView.disableSearch(true);
+        filesController.abortDisplay();
 
         locationsModel.currentDirectory = null;
 

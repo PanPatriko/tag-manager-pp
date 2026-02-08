@@ -55,6 +55,7 @@ async function onLocationClick(event) {
     const id = parseInt(target.dataset.id);
 
     if (locationsView.isLocationItem(target)) {
+        filesController.abortDisplay();
 
         const location = locationsModel.findLocationById(id);
 
@@ -84,6 +85,7 @@ async function onDirectoryClick(event) {
         locationsView.expandButtonClick(target, directoryHierarchy);
     }
     if (locationsView.isDirectorySpan(target)) { 
+        filesController.abortDisplay();
         const path = target.path;
         historyController.pushToHistory({ type: 'directory', path });
         filesController.displayDirectory(path);

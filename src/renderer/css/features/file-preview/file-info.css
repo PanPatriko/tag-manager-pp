@@ -11,7 +11,7 @@
 
 #fileinfo-container li {
     display: flex;
-    padding-top: 10px;
+    padding: 10px 5px 5px 5px;
     gap: 5px;
 }
 

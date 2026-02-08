@@ -75,6 +75,11 @@ body input:disabled {
     opacity: 0.6;
 }
 
+body input:read-only {
+    opacity: 0.6;
+    cursor: default;
+}
+
 body.light-theme select {
     background-color: var(--light-bg);
     color: var(--light-text);

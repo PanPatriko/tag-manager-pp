@@ -1,3 +1,5 @@
+import { inputAutoResize } from '../utils.js';
+
 export const paginationView = {
 
     pagesSelect: null,
@@ -32,20 +34,24 @@ export const paginationView = {
     },
 
     setFileCount(text) {
-        this.fileCount.textContent = text;
+        this.fileCount.value = text;
+        inputAutoResize(this.fileCount);
     },
 
     setCurrentFilesRange(text) {
-        this.currentFiles.textContent = text;
+        this.currentFiles.value = text;
+        inputAutoResize(this.currentFiles);
     },
 
     setSelectedFileCount(text) {
-        this.selectedFileCount.textContent = text;
+        this.selectedFileCount.value = text;
+        inputAutoResize(this.selectedFileCount);
     },
 
     setDirectoryName(text) {
         this.dirName.classList.remove('hidden');
-        this.dirName.textContent = text;
+        this.dirName.value = text;
+        inputAutoResize(this.dirName);
     },
 
     hideDirectoryName() {

@@ -78,7 +78,6 @@ export const paginationController = {
         }
 
         paginationView.setFileCount(text);
-        updateCurrentFilesLabel();
         this.updateSelectedFileCount();
     },
 
@@ -99,18 +98,18 @@ export const paginationController = {
         }
 
         paginationView.renderPagesSelect(totalPages, paginationModel.getCurrentPage());
-    }  
-}
+    },
 
-function updateCurrentFilesLabel() {
-    let { start, end } = filesModel.getCurrentPageRange();
-    if (filesModel.files.length > 0) {
-        start += 1;
+    updateCurrentFiles() {
+        let { start, end } = filesModel.getCurrentPageRange();
+        if (filesModel.files.length > 0) {
+            start += 1;
+        }
+        const text = formatString(i18nModel.t('content-current-files-range'), {
+            start: start || '0',
+            end: end || '0'
+        });
+
+        paginationView.setCurrentFilesRange(text);
     }
-    const text = formatString(i18nModel.t('content-current-files-range'), {
-        start: start || '0',
-        end: end || '0'
-    });
-
-    paginationView.setCurrentFilesRange(text);
 }

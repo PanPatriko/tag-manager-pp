@@ -161,6 +161,7 @@ export const filesController = {
         paginationController.updateFileCount();
 
         const currentFiles = filesModel.getCurrentPageFiles();
+        paginationController.updateCurrentFiles();
 
         await generateThumbnails(currentFiles, signal);
 

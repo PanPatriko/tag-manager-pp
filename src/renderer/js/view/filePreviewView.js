@@ -1,3 +1,5 @@
+import { inputAutoResize } from '../utils.js';
+
 export const filePreviewView = {
     showInfo: null,
     showTags: null,
@@ -100,9 +102,9 @@ export const filePreviewView = {
     },
 
     resizeFileInputs() {
-        autoResize(this.fileIdInput);
-        autoResize(this.fileSizeInput);
-        autoResize(this.fileCreatedInput);
+        inputAutoResize(this.fileIdInput);
+        inputAutoResize(this.fileSizeInput);
+        inputAutoResize(this.fileCreatedInput);
     },
 
     clearTags() {
@@ -222,7 +224,3 @@ export const filePreviewView = {
         this.showPreview.addEventListener('click', handler);
     }
 };
-
-function autoResize(input) {
-    input.style.width = (input.value.length + 2) + 'ch';
-}

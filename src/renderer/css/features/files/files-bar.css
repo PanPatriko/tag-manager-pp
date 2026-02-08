@@ -25,11 +25,13 @@
     color: var(--files-bar-info-color, #333);
 }
 
-#files-bar span {
+#files-bar input {
     padding: 5px;
     border: var(--border);
     border-radius: var(--border-radius-lg);
-    flex-shrink: 0;
+    width: 100%;
+    font-size: medium;
+    text-align: center;
 }
 
 #file-pages {

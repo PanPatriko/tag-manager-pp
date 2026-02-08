@@ -23,6 +23,10 @@ export function highlightText(query, containerId, spanSelector) {
     });
 }
 
+export function inputAutoResize(input) {
+    input.style.width = (input.value.length + 2) + 'ch';
+}
+
 export function formatString(template, values) {
     return template.replace(/{(\w+)}/g, (match, key) => values[key] || match);
 }

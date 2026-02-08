@@ -43,6 +43,7 @@ export const fileTagsModalView = {
 
     closeModal() { 
         this.searchInput.value = '';
+        this.searchInput.blur();
         this.tagsContainer.innerHTML = "";
         this.fileTagFormModal.classList.add('hidden');
     },

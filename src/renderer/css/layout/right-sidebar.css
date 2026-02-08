@@ -11,7 +11,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 5px;
+    width: 2px;
     cursor: col-resize;
     z-index: var(--z-resize);
 }

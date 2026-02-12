@@ -1,6 +1,7 @@
 import { i18nModel } from '../model/i18nModel.js';
 import { locationsModel } from "../model/locationsModel.js"
 import { searchModel, TagOperation } from '../model/searchModel.js';
+import { settingsModel } from '../model/settingsModel.js';
 import { tagsModel } from '../model/tagsModel.js';
 
 import { paginationView } from '../view/paginationView.js';
@@ -32,7 +33,7 @@ export const searchController = {
                     { operation: TagOperation.NOT, title: i18nModel.t(`title-${TagOperation.NOT.name}-button`) }
                 ];
 
-                const filteredTags = tagsModel.searchTags(query, 'startsWith');
+                const filteredTags = tagsModel.searchTags(query, settingsModel.searchBarMode);
                 filteredTags.forEach(tag => {
                     const tagHierarchyDiv = tagsView.renderTagHierarchyDiv(
                         tagsModel.buildSingleTagHierarchy(tag));

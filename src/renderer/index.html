@@ -13,7 +13,7 @@
     <header>
         <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
         <button id="theme-toggle" class="ico-bttn" data-i18n-title="title-theme"></button>
-        <button id="open-settings-modal" class="ico-bttn" data-i18n-title="title-settings"></button>
+        <button id="open-settings-modal" class="ico-bttn" data-i18n-title="settings"></button>
         <div id="search-container">
             <input type="text" id="search-input" data-i18n-placeholder="header-search-placeholder">
             <button id="search-button" class="ico-bttn" data-i18n-title="title-search"></button>
@@ -114,19 +114,22 @@
     <div id="settings-modal" class="modal hidden">
         <div class="modal-content">
             <span class="modal-close" id="close-settings-modal" data-i18n-title="close" tabindex="0">&times;</span>
-            <h2 class="modal-title" data-i18n="title-settings"></h2>
+            <h2 class="modal-title" data-i18n="settings"></h2>
             <div class="modal-body">
                 <ul id="settings-container">
                     <li>
-                        <span data-i18n="settings-lang"></span>
+                        <span data-i18n="settings.language"></span>
                         <select id="language-select">
-                            <option value="en" data-i18n="settings-lang-en"></option>
-                            <option value="pl" data-i18n="settings-lang-pl"></option>
+                            <option value="en" data-i18n="settings.language.en"></option>
+                            <option value="pl" data-i18n="settings.language.pl"></option>
                         </select>
                     </li>
                     <hr>
                     <li>
-                        <span data-i18n="settings-file-icon-size"></span>
+                        <span data-i18n="settings.files"></span>
+                    </li>
+                    <li>
+                        <span data-i18n="settings.files.iconSize"></span>
                         <select id="icon-size">
                             <option value="50">50px</option>
                             <option value="100">100px</option>
@@ -136,7 +139,7 @@
                         </select>
                     </li>
                     <li>
-                        <span data-i18n="settings-max-files-on-page"></span>
+                        <span data-i18n="settings.files.maxFiles"></span>
                         <select id="max-files">
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -147,22 +150,60 @@
                             <option value="500">500</option>
                         </select>
                     </li>
+                    <li>
+                        <span data-i18n="settings.files.thumbnailGeneration"></span>
+                        <input type="checkbox" id="thumb-gen">
+                    </li>
                     <hr>
                     <li>
-                        <span data-i18n="settings-vid-auto-play"></span>
+                        <span data-i18n="settings.search"></span>
+                    </li>
+                    <li>
+                        <span data-i18n="settings.search.searchBar"></span>
+                        <select id="search-bar-mode">
+                            <option value="1" data-i18n="settings.search.startsWith"></option>
+                            <option value="2" data-i18n="settings.search.contains"></option>
+                            <option value="3" data-i18n="settings.search.exact"></option>
+                        </select>
+                    </li>
+                    <li>
+                        <span data-i18n="settings.search.tagModal"></span>
+                        <select id="tag-modal-mode">
+                            <option value="1" data-i18n="settings.search.startsWith"></option>
+                            <option value="2" data-i18n="settings.search.contains"></option>
+                            <option value="3" data-i18n="settings.search.exact"></option>
+                        </select>
+                    </li>
+                    <li>
+                        <span data-i18n="settings.search.fileTagModal"></span>
+                        <select id="file-tag-modal-mode">
+                            <option value="1" data-i18n="settings.search.startsWith"></option>
+                            <option value="2" data-i18n="settings.search.contains"></option>
+                            <option value="3" data-i18n="settings.search.exact"></option>
+                        </select>
+                    </li>
+                    <hr>
+                    <li>
+                        <span data-i18n="settings.video"></span>
+                    </li>
+                    <li>
+                        <span data-i18n="settings.video.autoPlay"></span>
                         <input type="checkbox" id="vid-autoplay">
                     </li>                  
                     <li>
-                        <span data-i18n="settings-vid-loop"></span>
+                        <span data-i18n="settings.video.loop"></span>
                         <input type="checkbox" id="vid-loop">
                     </li>
                     <hr>
                     <li>
-                        <span data-i18n="settings-def-tag-bgcolor"></span>
+                        <span data-i18n="settings.tag"></span>
+                    </li>
+                    <li>
+                        <span data-i18n="settings.tag.bgColor"></span>
                         <input type="color" id="def-tag-bgcolor">
                     </li>
                     <li>
-                        <span data-i18n="settings-def-tag-textcolor"></span>
+                        <span data-i18n="settings.tag.textColor"></span>
                         <input type="color" id="def-tag-textcolor">
                     </li>
                 </ul>

@@ -2,6 +2,7 @@ import { filesModel } from "../model/filesModel.js";
 import { fileTagsModel } from "../model/fileTagsModel.js";
 import { i18nModel } from "../model/i18nModel.js";
 import { modalModel } from "../model/modalModel.js";
+import { settingsModel } from "../model/settingsModel.js";
 import { tagsModel } from "../model/tagsModel.js";
 
 import { filesView } from "../view/filesView.js";
@@ -125,7 +126,7 @@ function onTagClick(tag) {
 
 function tagsSearch() {
     const query = fileTagsModalView.getSearchValue();
-    const foundTags = tagsModel.searchTags(query, 'include');
+    const foundTags = tagsModel.searchTags(query, settingsModel.fileTagModalMode);
     let completeTags = tagsModel.addMissingParentTags(foundTags);
 
     if (fileTagsModalView.isShowChildTagsChecked()) { //

@@ -163,7 +163,9 @@ export const filesController = {
         const currentFiles = filesModel.getCurrentPageFiles();
         paginationController.updateCurrentFiles();
 
-        await generateThumbnails(currentFiles, signal);
+        if (settingsModel.thumbGen) {
+            await generateThumbnails(currentFiles, signal);
+        }
 
         if (signal.aborted) return;
 
@@ -327,7 +329,6 @@ async function resolveThumbnailForFile(file) {
     }
 
     // thumbnail missing -> generic icon
-    // TODO generate only if checked in settings
     if (!await window.api.fileExists(thumbnailPath)) {
         return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
     }

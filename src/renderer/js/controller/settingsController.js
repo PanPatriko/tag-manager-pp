@@ -25,7 +25,13 @@ export const settingsController = {
 
         const maxFiles = settingsModel.maxFilesPerPage;
         settingsView.setMaxFiles(maxFiles);
-        applyMaxFiles();
+        await applyMaxFiles();
+
+        settingsView.setThumGen(settingsModel.thumbGen);
+
+        settingsView.setSearchBarMode(settingsModel.searchBarMode);
+        settingsView.setTagModalMode(settingsModel.tagModalMode);
+        settingsView.setFileTagModalMode(settingsModel.fileTagModalMode);
 
         settingsView.setVidAutoplay(settingsModel.vidAutoplay);
         settingsView.setVidLoop(settingsModel.vidLoop);
@@ -59,9 +65,25 @@ export const settingsController = {
             settingsView.applyIconSize(size);
         });
 
-        settingsView.onMaxFilesChange((value) => {
+        settingsView.onMaxFilesChange(async (value) => {
             settingsModel.maxFilesPerPage = value;
-            applyMaxFiles();
+            await applyMaxFiles();
+        });
+
+        settingsView.onThumbGenChange((checked) => {
+            settingsModel.thumbGen = checked;
+        });
+
+        settingsView.onSearchBarModeChange((value) => {
+            settingsModel.searchBarMode = value;
+        });
+
+        settingsView.onTagModalModeChange((value) => {
+            settingsModel.tagModalMode = value;
+        });
+
+        settingsView.onFileTagModalModeChange((value) => {
+            settingsModel.fileTagModalMode = value;
         });
 
         settingsView.onVidAutoplayChange((checked) => {
@@ -88,8 +110,8 @@ async function setLanguage(locale) {
     paginationController.updateFileCount();
 }
 
-function applyMaxFiles() {
+async function applyMaxFiles() {
     paginationModel.setCurrentPage(1);
     paginationController.updateFilePages();
-    filesController.displayFiles();
+    await filesController.displayFiles();
 }

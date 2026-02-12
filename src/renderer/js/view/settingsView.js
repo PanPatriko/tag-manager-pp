@@ -4,6 +4,10 @@ export const settingsView = {
     languageSelect: null,
     iconSize: null,
     maxFiles: null,
+    thumbGenCheckbox: null,
+    searchBarModeSelect: null,
+    tagModalModeSelect: null,
+    fileTagModalModeSelect: null,
     videoAutoplayCheckbox: null,
     videoLoopCheckbox: null,
     defaultTagColor: null,
@@ -14,6 +18,10 @@ export const settingsView = {
         this.languageSelect = document.getElementById('language-select');
         this.iconSize = document.getElementById('icon-size');
         this.maxFiles = document.getElementById('max-files');
+        this.thumbGenCheckbox = document.getElementById('thumb-gen');
+        this.searchBarModeSelect = document.getElementById('search-bar-mode');
+        this.tagModalModeSelect = document.getElementById('tag-modal-mode');
+        this.fileTagModalModeSelect = document.getElementById('file-tag-modal-mode');
         this.videoAutoplayCheckbox = document.getElementById('vid-autoplay');
         this.videoLoopCheckbox = document.getElementById('vid-loop');
         this.defaultTagColor = document.getElementById('def-tag-bgcolor');
@@ -30,7 +38,23 @@ export const settingsView = {
 
     setMaxFiles(value) {
         this.maxFiles.value = value;
-    },    
+    },
+    
+    setThumGen(value) {
+        this.thumbGenCheckbox.checked = value;
+    },
+
+    setSearchBarMode(value) {
+        this.searchBarModeSelect.value = value;
+    },
+
+    setTagModalMode(value) {
+        this.tagModalModeSelect.value = value;
+    },
+
+    setFileTagModalMode(value) {
+        this.fileTagModalModeSelect.value = value;
+    },
 
     setVidAutoplay(value) { 
         this.videoAutoplayCheckbox.checked = value;
@@ -81,6 +105,22 @@ export const settingsView = {
 
     onMaxFilesChange(handler) {
         this.maxFiles.addEventListener('change', (e) => handler(e.target.value));
+    },
+
+    onThumbGenChange(handler) {
+        this.thumbGenCheckbox.addEventListener('change', (e) => handler(e.target.checked));
+    },
+
+    onSearchBarModeChange(handler) {
+        this.searchBarModeSelect.addEventListener('change', (e) => handler(e.target.value));
+    },
+
+    onTagModalModeChange(handler) {
+        this.tagModalModeSelect.addEventListener('change', (e) => handler(e.target.value));
+    },
+
+    onFileTagModalModeChange(handler) {
+        this.fileTagModalModeSelect.addEventListener('change', (e) => handler(e.target.value));
     },
 
     onVidAutoplayChange(handler) {

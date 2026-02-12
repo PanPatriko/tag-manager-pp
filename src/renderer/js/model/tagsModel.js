@@ -61,12 +61,15 @@ export const tagsModel = {
 
     searchTags(query, mode) {
         const lowerCaseQuery = query.toLowerCase();
-        if (mode === 'include') {
-            return tags.filter(tag => tag.name.toLowerCase().includes(lowerCaseQuery));
-        } else if (mode === 'startsWith') {
+        if (mode === '1') {
             return tags.filter(tag => tag.name.toLowerCase().startsWith(lowerCaseQuery));
-        } else if (mode === 'exact') {
+        } else if (mode === '2') {
+            return tags.filter(tag => tag.name.toLowerCase().includes(lowerCaseQuery));
+        } else if (mode === '3') {
             return tags.filter(tag => tag.name.toLowerCase() === lowerCaseQuery);
+        } else {
+            console.warn(`Unknown search mode: ${mode}`);
+            return [];
         }
     },
     

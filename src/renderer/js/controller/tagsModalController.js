@@ -104,7 +104,7 @@ function handleParentTagSelection(tag, hierarchy) {
 }
 
 function searchParentTag(query) {
-    const matchingTags = tagsModel.searchTags(query, 'startsWith');
+    const matchingTags = tagsModel.searchTags(query, settingsModel.tagModalMode);
     tagsModalView.clearParentSuggestions();
 
     if (matchingTags.length === 0) {

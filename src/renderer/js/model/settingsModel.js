@@ -11,6 +11,18 @@ export const settingsModel = {
     get maxFilesPerPage() { return parseInt(localStorage.getItem('maxFilesPerPage'), 10) || 50; },
     set maxFilesPerPage(val) { localStorage.setItem('maxFilesPerPage', val); },
 
+    get thumbGen() { return localStorage.getItem('thumbGen') === 'true'; },
+    set thumbGen(val) { localStorage.setItem('thumbGen', val); },
+
+    get searchBarMode() { return localStorage.getItem('searchBarMode') || '1'; },
+    set searchBarMode(val) { localStorage.setItem('searchBarMode', val); },
+
+    get tagModalMode() { return localStorage.getItem('tagModalMode') || '2'; },
+    set tagModalMode(val) { localStorage.setItem('tagModalMode', val); },
+
+    get fileTagModalMode() { return localStorage.getItem('fileTagModalMode') || '2'; },
+    set fileTagModalMode(val) { localStorage.setItem('fileTagModalMode', val); },
+
     get vidAutoplay() { return localStorage.getItem('vidAutoplay') === 'true'; },
     set vidAutoplay(val) { localStorage.setItem('vidAutoplay', val); },
 

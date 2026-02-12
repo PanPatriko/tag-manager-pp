@@ -72,6 +72,7 @@ export const  filePreviewController = {
                 if (fileInfo) {
                     file.size = fileInfo.size;
                     file.createdAt = fileInfo.createdAt;
+                    console.log(fileInfo.hash); // TODO use hash in next features
                 }
             }).catch((err) => {
                 console.error('renderFileInfo: getFileInfo error', err);

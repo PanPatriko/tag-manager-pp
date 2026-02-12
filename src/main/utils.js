@@ -1,6 +1,8 @@
-const sharp = require('sharp');
+const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
-const fs = require('fs').promises;
+const fs = require('fs')
+const fsp = require('fs').promises;
+const sharp = require('sharp');
 const path = require('path');
 
 const MAX_FOLDERS = 1000;
@@ -14,7 +16,7 @@ async function getDirectoryHierarchyRecursive(directoryPath) {
             throw new Error(`Directory hierarchy is too large. Limit is ${MAX_FOLDERS} folders.`);
         }
         folderCount++;
-        const items = await fs.readdir(dirPath, { withFileTypes: true });
+        const items = await fsp.readdir(dirPath, { withFileTypes: true });
         const children = await Promise.all(
             items
                 .filter(item => item.isDirectory())
@@ -34,7 +36,7 @@ async function getDirectoryHierarchyRecursive(directoryPath) {
 
 //Non-recursive: returns root and only first-level children
 async function getDirectoryHierarchy(directoryPath) {
-    const items = await fs.readdir(directoryPath, { withFileTypes: true });
+    const items = await fsp.readdir(directoryPath, { withFileTypes: true });
     const children = items
         .filter(item => item.isDirectory())
         .map(item => ({
@@ -80,7 +82,7 @@ async function getVideoDimensions(filePath) {
 
 async function generateThumbnail(filePath, thumbnailPath) {
     try {
-        await fs.access(filePath);
+        await fsp.access(filePath);
     } catch (err) {
         console.warn(`generateThumbnail: File does not exist: ${filePath}`);
         return;
@@ -130,6 +132,17 @@ async function generateThumbnail(filePath, thumbnailPath) {
     }
 }
 
+async function getFileHash(filePath, algorithm = 'sha256') {
+    return new Promise((resolve, reject) => {
+        const hash = crypto.createHash(algorithm);
+        const stream = fs.createReadStream(filePath);
+
+        stream.on('data', (chunk) => hash.update(chunk));
+        stream.on('end', () => resolve(hash.digest('hex')));
+        stream.on('error', reject);
+    });
+}
+
 function formatSize(bytes) {
     if (bytes === 0) return '0 B';
     const k = 1024; 
@@ -155,4 +168,13 @@ function formatDateLong(date) {
     return `${y}.${m}.${d} ${hh}:${mm}:${ss}`;
 }
 
-module.exports = { getDirectoryHierarchy, getDirectoryParent, generateThumbnail, formatDateShort, formatDateLong, formatSize, getDirectoryHierarchyRecursive };
+module.exports = { 
+    getDirectoryHierarchy, 
+    getDirectoryHierarchyRecursive,
+    getDirectoryParent,
+    getFileHash, 
+    generateThumbnail, 
+    formatDateShort, 
+    formatDateLong, 
+    formatSize, 
+};

@@ -84,8 +84,8 @@ export const filePreviewView = {
     },
 
     setFileInfo(file) {
-        this.fileNameInput.value = file.name || "";
-        this.filePathInput.value = file.path || "";
+        this.fileNameInput.value = file.name || '';
+        this.filePathInput.value = file.path || '';
         this.fileIdInput.value = file.id || '';
         this.fileSizeInput.value = file.size || '';
         this.fileCreatedInput.value = file.createdAt || '';

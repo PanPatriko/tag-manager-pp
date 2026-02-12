@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, formatDateShort, formatDateLong, formatSize } = require('./utils.js');
+const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, getFileHash, formatDateShort, formatDateLong, formatSize } = require('./utils.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
 const { getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
@@ -186,10 +186,16 @@ ipcMain.handle('files:getFileCreationDate', async (event, filePath) => {
 
 ipcMain.handle('files:getFileInfo', async (event, filePath) => {
   try {
+    if (!fs.existsSync(filePath)) {
+      console.warn(`File does not exist: ${filePath}`);
+      return null;
+    }
     const stat = fs.statSync(filePath);
+    const hash = await getFileHash(filePath);
     return {
       size: formatSize(stat.size),
       createdAt: formatDateLong(stat.birthtime),
+      hash: hash
     };
   } catch (error) {
     console.error(`Error getting file info for ${filePath}:`, error);

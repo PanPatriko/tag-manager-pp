@@ -1,4 +1,5 @@
 
+import { filesModel } from "../model/filesModel.js";
 import { i18nModel } from "../model/i18nModel.js";
 import { locationsModel } from "../model/locationsModel.js";
 
@@ -7,6 +8,8 @@ import { locationsView } from "../view/locationsView.js";
 import { filesController } from "./filesController.js";
 import { historyController } from "./historyController.js"
 import { locationModalController } from "./locationModalController.js";
+
+import { formatString } from '../utils.js';
 
 let startY = 0;
 let startHeight = 0;
@@ -30,6 +33,8 @@ export const locationsController = {
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
         });
+
+        locationsView.onFindFilesClick(() => onFindFilesClick());
     },
 
     async refreshLocations() {
@@ -91,6 +96,55 @@ async function onDirectoryClick(event) {
         filesController.displayDirectory(path);
     } 
 }
+
+async function onFindFilesClick() {
+
+    if (filesModel.files.length === 0) {
+        showPopup(i18nModel.t('no-files-to-check'), 'info');
+        return;
+    }
+
+    const missingFiles = (
+        await Promise.all(
+            filesModel.files.map(async (file) => {
+                const exists = await window.api.fileExists(file.path);
+                return exists ? null : file;
+            })
+        )
+    ).filter(Boolean);
+
+    if (missingFiles.length === 0) {
+        showPopup(i18nModel.t('no-missing-files'), 'info');
+        return;
+    }
+
+    const path = await window.api.openFolderDialog();
+
+    if (!path) {
+        return;
+    }
+
+    locationsView.showLoadingBar();
+
+    const missingHashes = missingFiles.map(f => f.hash);
+    await window.api.locateMissingByHash(missingHashes, path);
+
+    const unsubscribe = window.api.on('scan:progress', (data) => {
+        console.log('Progress:', data.progress, data.scanned, data.total);
+        locationsView.updateLoadingBar(data.progress);
+    });
+
+    window.api.on('scan:complete', (data) => {
+        console.log('Scan done!', data.found, data.totalMissing);
+        locationsView.hideLoadingBar();
+        const text = formatString(i18nModel.t('find-files-complete'), {
+            found: data.found,
+            totalMissing: data.totalMissing
+        });
+        showPopup(text, 'success');
+        unsubscribe();
+    });
+};
 
 function onMouseMove(e) {
     const dy = e.clientY - startY;

@@ -70,10 +70,9 @@ async function addTags() {
 
     for (const file of selectedFiles) {
         let fileId = file.id;
-        let filePath = file.path;
 
         if (fileId === 'null' || !fileId) {
-            const createdFile = await filesModel.createFile(filePath);
+            const createdFile = await filesModel.createFile(file);
             filesView.addIdToContainer(createdFile);
             fileId = createdFile.id;
         }

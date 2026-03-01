@@ -8,8 +8,8 @@ export const filesView = {
     init() {
         this.sortByName = document.getElementById('sort-by-name');
         this.sortByDate = document.getElementById('sort-by-date');
-        this.loadingBarContainer = document.getElementById('loading-bar-container');
-        this.loadingBar = document.getElementById('loading-bar');
+        this.loadingBarContainer = document.getElementById('thumbs-loading-bar-container');
+        this.loadingBar = document.getElementById('thumbs-loading-bar');
         this.panel = document.getElementById('files-panel');
     },
 

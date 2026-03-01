@@ -1,4 +1,6 @@
 const db = require('../database.js');
+const fs = require('fs');
+const { getFileHash } = require('../utils.js');
 const { getAllChildTags } = require('./tags.js')
 
 async function getFiles() {
@@ -37,12 +39,55 @@ async function getFileByPath(path) {
     });
 }
 
+async function getFileByHash(hash) {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT * FROM files WHERE hash = ?', [hash], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row);
+            }
+        });
+    });
+}
+
+async function findCandidates(fileSize, mtimeMs) {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM files WHERE size = ? AND last_modified = ? LIMIT 2', [fileSize, mtimeMs], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
+async function findMissingCandidates(fileSize, mtimeMs, missingHashes) {
+    return new Promise((resolve, reject) => {
+        db.all(`
+              SELECT id, path, size, last_modified
+              FROM files
+              WHERE hash IN (${missingHashes.map(() => '?').join(',')})
+              AND size = ? AND last_modified = ?
+            `, [...missingHashes, fileSize, mtimeMs], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
 async function createFile(fileData) {
-    const { name, path} = fileData;
+    const { name, path, isDirectory} = fileData;
+    const stat = fs.statSync(path);
+    const hash = isDirectory ? null : await getFileHash(path);
     return new Promise((resolve, reject) => {
         db.run(
-            'INSERT INTO files (name, path) VALUES (?, ?)',
-            [name, path],
+            'INSERT INTO files (name, path, hash, size, last_modified, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+            [name, path, hash, stat.size, Math.floor(stat.mtimeMs), Math.floor(stat.birthtimeMs)],
             function (err) {
                 if (err) {
                     reject(err);
@@ -170,4 +215,4 @@ async function searchFiles(andTags, orTags, notTags) {
     }
 }
 
-module.exports = {getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile}
+module.exports = { getFiles, getFileById, getFileByPath, getFileByHash, findCandidates, findMissingCandidates, searchFiles, createFile, updateFile, deleteFile}

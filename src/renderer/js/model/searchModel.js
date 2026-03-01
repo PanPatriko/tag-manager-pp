@@ -16,7 +16,6 @@ export const searchModel = {
         const files = await window.api.searchFiles(andTags, orTags, notTags);
         filesModel.files = files;
         await filesModel.sortFiles();
-        return files;
     },
 
     createHistoryRecord() {

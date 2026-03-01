@@ -36,8 +36,15 @@
                 <button id="add-tag" class="ico-bttn" data-i18n-title="tag-add"></button>
                 <div id="tags-container" class="tags-view"></div>
             </div>
-            <div id="location-panel" class="left-sidebar-item">         
-                <button id="add-location" class="ico-bttn" data-i18n-title="loc-add"></button>
+            <div id="location-panel" class="left-sidebar-item">
+                <div id="find-files-loading-bar-container" class="hidden loading-bar-container">
+                    <div id="find-files-loading-bar" class="loading-bar"></div>
+                    <section id="find-files-loading-bar-text" data-i18n="find-files=text"></section>
+                </div>
+                <div id="location-menu">
+                    <button id="add-location" class="ico-bttn" data-i18n-title="loc-add"></button>
+                    <button id="find-files" class="ico-bttn" data-i18n-title="find-files"></button>
+                </div>         
                 <div id="location-container" class="location-view"></div>
                 <div id="location-resize-handle" class="resize-handle"></div>
                 <div id="directory-container"></div>
@@ -70,9 +77,9 @@
                     <input id="selected-file-count" readonly></input>
                 </div>
             </section>
-            <div id="loading-bar-container" class="hidden">
-                <div id="loading-bar"></div>
-                <section id="loading-bar-text" data-i18n="generate-thumbnails"></section>
+            <div id="thumbs-loading-bar-container" class="hidden loading-bar-container">
+                <div id="thumbs-loading-bar" class="loading-bar"></div>
+                <section id="thumbs-loading-bar-text" data-i18n="generate-thumbnails"></section>
             </div>
             <section id="files-panel">
             </section>

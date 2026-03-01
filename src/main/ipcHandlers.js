@@ -3,9 +3,9 @@ const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, getFileHash, formatDateShort, formatDateLong, formatSize } = require('./utils.js');
+const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, walkDirectory, getFileHash } = require('./utils.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
-const { getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
+const { getFiles, getFileById, getFileByPath, getFileByHash, findCandidates, findMissingCandidates, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
 const { getLocations, createLocation, updateLocation, deleteLocation } = require('./db/locations.js');
 
@@ -157,49 +157,220 @@ ipcMain.handle('dialog:show-dialog', async (event, options) => {
 
 ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
   try {
-    const files = await fs.promises.readdir(directoryPath, { withFileTypes: true });
-    return files
-      .filter(file => !(file.isDirectory() && file.name === '.t') && file.name !== 'desktop.ini' && file.name !== 'Thumbs.db')
-      .map(file => {
-        const filePath = path.join(directoryPath, file.name);
-        return {
-          name: file.name,
-          path: filePath,
-          isDirectory: file.isDirectory(),
-        };
+    const dirFiles = await fs.promises.readdir(directoryPath, { withFileTypes: true });
+
+    const dirFilesWithData = await Promise.all(
+      dirFiles
+        .filter(file => {
+          // Skip system/junk files & directories named '.t'
+          if (file.isDirectory() && file.name === '.t') return false;
+          if (file.name === 'desktop.ini' || file.name === 'Thumbs.db') return false;
+          return true;
+        })
+        .map(async (entry) => {
+          const fullPath = path.join(directoryPath, entry.name);
+
+          try {
+            // Step 1: Very cheap – get only metadata (no content read)
+            const stat = await fs.promises.stat(fullPath);
+
+            const fileSize = stat.size;
+            const mtimeMs = Math.floor(stat.mtimeMs);
+            const birthtimeMs = stat.birthtimeMs && !isNaN(stat.birthtimeMs)
+              ? Math.floor(stat.birthtimeMs)
+              : null;
+
+            // Handle if directory
+            if (entry.isDirectory()) {
+              const dbFile = await getFileByPath(fullPath);
+
+              if (dbFile) {
+                return {
+                  name: entry.name,
+                  path: fullPath,
+                  isDirectory: true,
+                  id: dbFile.id,
+                  size: fileSize,
+                  hash: null, // no hash for directory
+                  created_at: birthtimeMs,
+                  last_modified: mtimeMs,
+                  fromCache: true,
+                };
+              }
+
+              return {
+                name: entry.name,
+                path: fullPath,
+                isDirectory: true,
+                id: null,
+                size: fileSize,
+                hash: null,  // no hash for directory
+                created_at: birthtimeMs,
+                last_modified: mtimeMs,
+                fromCache: true,
+              };
+            }
+
+            // Step 2: Fast DB query using size + mtime (needs good index)
+            const candidates = await findCandidates(fileSize, mtimeMs);
+
+            if (candidates.length === 1) {
+              // High-confidence match (same size + same modification time)
+              const dbFile = candidates[0];
+
+              return {
+                name: entry.name,
+                path: fullPath,
+                isDirectory: entry.isDirectory(),
+                id: dbFile.id,
+                size: fileSize,
+                hash: dbFile.hash,  // already known
+                created_at: birthtimeMs,
+                last_modified: mtimeMs,
+                fromCache: true,
+              };
+            }
+
+            // Step 3: No unique match or multiple → fallback to full hash
+            // (this happens rarely after the first scan)
+            // TODO To avoid calculating hash every time, create table seen_files with cached data
+            const hash = await getFileHash(fullPath);
+            const dbFile = await getFileByHash(hash);
+
+            if (dbFile) {
+
+              return {
+                name: entry.name,
+                path: fullPath,
+                isDirectory: entry.isDirectory(),
+                id: dbFile.id,
+                size: fileSize,
+                hash: hash,
+                created_at: birthtimeMs,
+                last_modified: mtimeMs,
+                fromCache: true,
+              };
+            }
+
+            // Step 4: Completely new file
+            return {
+              name: entry.name,
+              path: fullPath,
+              isDirectory: entry.isDirectory(),
+              id: null,
+              size: fileSize,
+              hash: hash,
+              created_at: birthtimeMs,
+              last_modified: mtimeMs,
+              fromCache: false,
+            };
+
+          } catch (err) {
+            console.warn(`Cannot process ${fullPath}:`, err.message);
+            return {
+              name: entry.name,
+              path: fullPath,
+              isDirectory: entry.isDirectory(),
+              id: null,
+              size: null,
+              hash: null,
+              created_at: null,
+              last_modified: null,
+            };
+          };       
+        })
+    );
+
+    return dirFilesWithData;
+
+  } catch (err) {
+    console.error(`Error reading directory ${directoryPath}:`, err);
+    return { error: 'Unable to read directory', message: err.message };
+  }
+});
+
+ipcMain.handle('files:locateMissingByHash', async (event, missingHashes, scanPath) => {
+  if (!missingHashes || missingHashes.length === 0) {
+    return { success: false, message: 'No missing files to locate' };
+  }
+
+  event.sender.send('scan:progress', { message: `Scanning ${scanPath}...`, progress: 0 });
+
+  try {
+    // Step 2: Get all file paths in directory
+    const filePaths = await walkDirectory(scanPath);
+    const totalFiles = filePaths.length;
+    let scanned = 0;
+    let found = 0;
+    const updates = [];
+
+    // Step 3: Process in batches (parallel for speed, but limit concurrency)
+    const BATCH_SIZE = 20;  // Adjust based on CPU
+    for (let i = 0; i < filePaths.length; i += BATCH_SIZE) {
+      const batch = filePaths.slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.allSettled(
+        batch.map(async (filePath) => {
+          try {
+            const stat = await fs.promises.stat(filePath);
+            if (stat.isDirectory()) return null;
+
+            // Quick filter: Check if size + mtime matches any missing (from DB query)
+            const candidates = await findMissingCandidates(stat.size, Math.floor(stat.mtimeMs), missingHashes);
+
+            if (candidates.length === 1) {
+              // High-confidence match → update path without hashing
+              const { id } = candidates[0];
+              await updateFile({name: path.basename(filePath), path: filePath, id })
+              return { id, oldPath: candidates[0].path, newPath: filePath, matchedBy: 'metadata' };
+            }
+
+            // Fallback: Compute hash
+            const hash = await getFileHash(filePath);
+            if (missingHashes.includes(hash)) {
+              // Get the file ID by hash
+              const dbFile = await getFileByHash(hash);
+              if (dbFile) {
+                await updateFile({ name: path.basename(filePath), path: filePath, id: dbFile.id })
+                return { id: dbFile.id, oldPath: null, newPath: filePath, matchedBy: 'hash' };
+              }
+            }
+            return null;
+          } catch (err) {
+            console.warn(`Error processing ${filePath}:`, err.message);
+            return null;
+          }
+        })
+      );
+
+      // Collect successes
+      batchResults.forEach(result => {
+        if (result.status === 'fulfilled' && result.value) {
+          found++;
+          updates.push(result.value);
+        }
       });
-  } catch (error) {
-    console.error(`Error reading directory ${directoryPath}:`, error);
-    return { error: 'Unable to read directory' };
-  }
-}); 
 
-ipcMain.handle('files:getFileCreationDate', async (event, filePath) => {
-  try {
-    const stat = fs.statSync(filePath);
-    return formatDateShort(stat.birthtime);
-  } catch (error) {
-    console.error(`Error getting file creation date for ${filePath}:`, error);
-    return null;
-  }
-}); 
+      scanned += batch.length;
+      const progress = Math.round((scanned / totalFiles) * 100);
+      event.sender.send('scan:progress', { progress, scanned, total: totalFiles, found });
 
-ipcMain.handle('files:getFileInfo', async (event, filePath) => {
-  try {
-    if (!fs.existsSync(filePath)) {
-      console.warn(`File does not exist: ${filePath}`);
-      return null;
+      // Small delay between batches to avoid overwhelming I/O
+      if (i + BATCH_SIZE < filePaths.length) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
     }
-    const stat = fs.statSync(filePath);
-    const hash = await getFileHash(filePath);
+
+    event.sender.send('scan:complete', { found, totalMissing: missingHashes.length, updates });
+
     return {
-      size: formatSize(stat.size),
-      createdAt: formatDateLong(stat.birthtime),
-      hash: hash
+      success: true,
+      message: `Located ${found} out of ${missingHashes.length} missing files`,
+      updates,
     };
-  } catch (error) {
-    console.error(`Error getting file info for ${filePath}:`, error);
-    return null;
+
+  } catch (err) {
+    console.error('Scan error:', err);
+    return { success: false, message: err.message };
   }
 });
 
@@ -222,7 +393,12 @@ ipcMain.handle('files:getDirectoryParent', async (event, directoryPath) => {
 });
 
 ipcMain.handle('files:fileExists', async (event, filePath) => {
-  return fs.existsSync(filePath);
+  try {
+    await fs.promises.access(filePath);  // defaults to F_OK
+    return true;
+  } catch {
+    return false;
+  }
 });
 
 ipcMain.handle('files:create-directory', async (event, dirPath) => {

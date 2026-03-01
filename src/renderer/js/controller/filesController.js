@@ -46,7 +46,7 @@ export const filesController = {
             this.displayFiles();
         });
 
-        filesView.onPanelClick((event) => {
+        filesView.onPanelClick(async (event) => {
             const container = filesView.getClosestFileContainer(event.target);
             if (!container) return;
 
@@ -55,14 +55,13 @@ export const filesController = {
                 return;
             }
 
-            const id = container.dataset.id;
             const path = container.dataset.path;
-            const current = (id && id !== 'null') ? filesModel.getFileById(id) : filesModel.getFileByPath(path);
+            const current = filesModel.getFileByPath(path);
 
             filesModel.currentPreviewFile = current;
-
-            filePreviewController.renderFilePreview(current);
-            filePreviewController.renderFileInfo(current);
+   
+            await filePreviewController.renderFileInfo(current);
+            await filePreviewController.renderFilePreview(current);
 
             previewTabController.sendPostMessage('update-preview', { file: current });
         });
@@ -90,7 +89,7 @@ export const filesController = {
         paginationController.updateSelectedFileCount();
     },
 
-    selectNextFile() {
+    async selectNextFile() {
         const visible = filesModel.getCurrentPageFiles();
         if (visible.length === 0) return;
 
@@ -101,10 +100,10 @@ export const filesController = {
         }
 
         const fileToSelect = visible[lastSelectedIndex];
-        selectFile(fileToSelect);
+        await selectFile(fileToSelect);
     },
 
-    selectPreviousFile() {
+    async selectPreviousFile() {
         const visible = filesModel.getCurrentPageFiles();
         if (visible.length === 0) return;
 
@@ -115,7 +114,7 @@ export const filesController = {
         }
 
         const fileToSelect = visible[lastSelectedIndex];
-        selectFile(fileToSelect);
+        await selectFile(fileToSelect);
     },
 
     async displayDirectory(dirPath) {
@@ -127,15 +126,6 @@ export const filesController = {
             console.error('displayDirectory: error', dirFiles.error);
             showPopup(dirFiles.error, 'error');
             return;
-        }
-
-        for (const file of dirFiles) {
-            const foundFile = await window.api.getFileByPath(file.path);
-            if (foundFile) {
-                file.id = foundFile.id;
-            } else {
-                file.id = null;
-            }
         }
 
         paginationView.disableParentDir(locationsModel.root === dirPath);
@@ -193,29 +183,13 @@ function toggleSelection(container, isCtrlPressed, isShiftPressed) {
         const start = Math.min(lastSelectedIndex, currentIndex);
         const end = Math.max(lastSelectedIndex, currentIndex);
         for (let i = start; i <= end; i++) {
-            const id = fileContainers[i].dataset.id;
             const path = fileContainers[i].dataset.path;
-            let isChecked;
-
-            if (id != 'null') {
-                isChecked = filesModel.selectFileById(id, false);
-            } else {
-                isChecked = filesModel.selectFileByPath(path, false);
-            }
-
+            const isChecked = filesModel.selectFileByPath(path, false);
             filesView.setContainerSelected(fileContainers[i], isChecked);
         }
     } else if (isCtrlPressed) {
-        const id = container.dataset.id;
         const path = container.dataset.path;
-        let isChecked;
-
-        if (id != 'null') {
-            isChecked = filesModel.selectFileById(id);
-        } else {
-            isChecked = filesModel.selectFileByPath(path);
-        }
-
+        const isChecked = filesModel.selectFileByPath(path);
         filesView.setContainerSelected(container, isChecked);
     } else {
         filesModel.resetSelection();
@@ -224,12 +198,7 @@ function toggleSelection(container, isCtrlPressed, isShiftPressed) {
         const id = container.dataset.id;
         const path = container.dataset.path;
 
-        if (id != 'null') {
-            filesModel.selectFileById(id, false);
-        } else {
-            filesModel.selectFileByPath(path, false);
-        }
-
+        filesModel.selectFileByPath(path, false);
         filesView.setContainerSelected(container, true);
     }
 
@@ -237,39 +206,24 @@ function toggleSelection(container, isCtrlPressed, isShiftPressed) {
     paginationController.updateSelectedFileCount();
 }
 
-function selectFile(file) {
+async function selectFile(file) {
     filesModel.resetSelection();
     filesView.resetSelection();
 
-    if (!file) {
-        lastSelectedIndex = null;
-        filesModel.currentPreviewFile = null;
-        paginationController.updateSelectedFileCount();
-        filePreviewController.renderFilePreview(null);
-        filePreviewController.renderFileInfo(null);
-        return;
-    }
-
-    let container;
-    if (file.id != null) {
-        filesModel.selectFileById(file.id, false);
-        container = filesView.findFileContainerById(file.id);
-    } else {
-        filesModel.selectFileByPath(file.path, false);
-        container = filesView.findFileContainerByPath(file.path);
-    }
+    filesModel.selectFileByPath(file.path, false);
+    const container = filesView.findFileContainerByPath(file.path); 
 
     filesModel.currentPreviewFile = file;
 
     filesView.setContainerSelected(container, true);
     paginationController.updateSelectedFileCount();
-    filePreviewController.renderFilePreview(file);
-    filePreviewController.renderFileInfo(file);
+    await filePreviewController.renderFileInfo(file);
+    await filePreviewController.renderFilePreview(file);
 
     previewTabController.sendPostMessage('update-preview', { file: file });
 
     const visible = filesModel.getCurrentPageFiles();
-    lastSelectedIndex = visible.findIndex(f => (f.id != null ? f.id === file.id : f.path === file.path));
+    lastSelectedIndex = visible.findIndex(f => f.path === file.path);
 }
 
 async function getThumbnailPath(filePath) {

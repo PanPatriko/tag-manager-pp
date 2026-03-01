@@ -116,5 +116,9 @@
     "next": "Dalej",
     "back": "Wstecz",
     "close": "Zamknij",
-    "generate-thumbnails": "Generowanie miniatur..."
+    "generate-thumbnails": "Generowanie miniatur...",
+    "find-files": "Odnajdź brakujące pliki w wybranej lokalizacji",
+    "find-files-complete": "Skan zakończony! Znaleziono {found} brakujących plików z {totalMissing}",
+    "no-files-to-check": "Brak plików do sprawdzenia",
+    "no-missing-files": "Nie znaleziono brakujących plików"
 }

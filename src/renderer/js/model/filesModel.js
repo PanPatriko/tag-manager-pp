@@ -1,6 +1,8 @@
 import { paginationModel } from "./paginationModel.js";
 import { settingsModel } from "./settingsModel.js";
 
+const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+
 let files = [];
 let currentPreviewFile = null;
 let sortByNameOrder = 'asc';
@@ -17,54 +19,6 @@ function toggleSelectFile(file) {
     return file.selected;
 }
 
-function sortFilesByName() {
-    if (files.length < 2) return;
-
-    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-    files = files.sort((a, b) => {
-        if (a.isDirectory && !b.isDirectory) {
-            return -1;
-        }
-        if (!a.isDirectory && b.isDirectory) {
-            return 1;
-        }
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-        return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
-    });
-}
-
-async function sortFilesByDate() {
-    if (files.length < 2) return;
-
-    // fetch missing createdDate values in parallel
-    await Promise.all(files.map(async (f) => {
-        if (!f.createdDate) {
-            try {
-                // adjust call to your renderer API surface (window.api.getFileCreationDate or window.api.invoke)
-                const cd = await window.api.getFileCreationDate(f.path);
-                f.createdDate = cd || null; // keep as "yyyyMMdd" string or null
-            } catch (e) {
-                f.createdDate = null;
-            }
-        }
-        // normalize numeric value for comparison
-        f.__createdNum = f.createdDate ? Number(f.createdDate) : 0;
-    }));
-
-    // synchronous comparator using numeric yyyyMMdd (or timestamp)
-    files = files.sort((a, b) => {
-        if (a.isDirectory && !b.isDirectory) return -1;
-        if (!a.isDirectory && b.isDirectory) return 1;
-        const da = a.__createdNum;
-        const db = b.__createdNum;
-        return sortByDateOrder === 'asc' ? da - db : db - da;
-    });
-
-    // cleanup temporary fields
-    files.forEach(f => delete f.__createdNum);
-}
-
 export const filesModel = { 
     get files() { return files;},
     set files(newFiles) { files = newFiles; },
@@ -73,12 +27,14 @@ export const filesModel = {
     get sortByNameOrder() { return sortByNameOrder; },
     get sortByDateOrder() { return sortByDateOrder; },
 
-    async createFile(filePath) {
-        const fileName = filePath.split('\\').pop();
-        const newFile = await window.api.createFile({ name: fileName, path: filePath });
-        const file = files.find(file => file.path === filePath);
+    async createFile(fileData) {
+        const newFile = await window.api.createFile({ name: fileData.name, path: fileData.path, isDirectory: fileData.isDirectory });
+        const file = files.find(file => file.path === newFile.path);
         if (file) {
             file.id = newFile.id;
+        }
+        if (file.path === currentPreviewFile.path) {
+            currentPreviewFile.id = newFile.id;
         }
         return file;
     },
@@ -175,10 +131,23 @@ export const filesModel = {
     },
 
     async sortFiles() {
-        if (sortBy === 'name') {
-            sortFilesByName();
-        } else if (sortBy === 'date') {
-            await sortFilesByDate();
-        }
+        if (files.length < 2) return;
+
+        files = files.sort((a, b) => {
+            if (a.isDirectory && !b.isDirectory) { return -1; }
+            if (!a.isDirectory && b.isDirectory) { return 1; }
+
+            const nameA = a.name.toLowerCase();
+            const nameB = b.name.toLowerCase();
+
+            if (sortBy === 'name') {
+                return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
+            } else if (sortBy === 'date') {
+                if (a.created_at !== b.created_at) {
+                    return sortByDateOrder === 'asc' ? a.created_at - b.created_at : b.created_at - a.created_at;
+                }
+                return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
+            }
+        });
     },
 }

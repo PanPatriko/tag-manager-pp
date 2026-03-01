@@ -116,5 +116,9 @@
     "next": "Next",
     "back": "Back",
     "close": "Close",
-    "generate-thumbnails": "Generating thumbnails..."
+    "generate-thumbnails": "Generating thumbnails...",
+    "find-files": "Find missing files in choosen location",
+    "find-files-complete": "Scan complete! Found {found} missing files out of {totalMissing}",
+    "no-files-to-check": "No files to check",
+    "no-missing-files": "No missing files found"
 }

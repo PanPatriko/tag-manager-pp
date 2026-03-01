@@ -67,18 +67,6 @@ export const  filePreviewController = {
             return;
         }
 
-        if (!file.size || !file.createdAt) {
-            await window.api.getFileInfo(file.path).then((fileInfo) => {
-                if (fileInfo) {
-                    file.size = fileInfo.size;
-                    file.createdAt = fileInfo.createdAt;
-                    console.log(fileInfo.hash); // TODO use hash in next features
-                }
-            }).catch((err) => {
-                console.error('renderFileInfo: getFileInfo error', err);
-            });
-        }
-
         filePreviewView.setFileInfo(file);
 
         try {
@@ -258,13 +246,8 @@ async function handleFileNameSave() {
         filePreviewView.hideFileNameSaveButton();
 
         // update in-memory filesModel entry if present
-        let fileEntry = null;
-        if (fileId != null) {
-            fileEntry = filesModel.getFileById(fileId);
-        } else {
-            // match by original path/name to be safer
-            fileEntry = filesModel.getFileByPath(oldFilePath);
-        }
+        const fileEntry = filesModel.getFileByPath(oldFilePath);
+        
         if (fileEntry) {
             fileEntry.name = newFileName;
             fileEntry.path = newPath;

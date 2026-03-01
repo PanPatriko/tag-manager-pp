@@ -30,6 +30,16 @@ body.dark-theme .loc-active {
     border: 1px solid orange;
 }
 
+#location-menu {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xl);
+    overflow: auto;
+}
+
 #directory-container {
     flex: 1 1 0;
     list-style-type: square;

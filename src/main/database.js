@@ -26,9 +26,13 @@ const db = new sqlite3.Database(dbPath, (err) => {
                     )`);
 
                 db.run(`CREATE TABLE files (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        path TEXT NOT NULL UNIQUE,
-                        name TEXT NOT NULL
+                        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+                        hash    TEXT UNIQUE,
+                        path    TEXT,
+                        name    TEXT NOT NULL,
+                        size    INTEGER,
+                        last_modified INTEGER,
+                        created_at INTEGER
                     )`);
 
                 db.run(`CREATE TABLE file_tags (

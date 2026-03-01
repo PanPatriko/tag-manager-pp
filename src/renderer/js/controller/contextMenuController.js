@@ -69,7 +69,7 @@ export const contextMenuController = {
         window.editLocation = editLocation;
         window.confirmDeleteLocation = confirmDeleteLocation;
 
-        document.addEventListener('contextmenu', (event) => {
+        document.addEventListener('contextmenu', async (event) => {
             const target = event.target;
             const id = parseInt(target.dataset.id);
             let items = [];
@@ -101,21 +101,13 @@ export const contextMenuController = {
 
                 filesView.setContainerSelected(fileContainer, true);
                 const id = fileContainer.dataset.id;
-                const path = fileContainer.dataset.path;
-                let file;
-
-                if (id === 'null' || !id) {
-                    filesModel.selectFileByPath(path, false);
-                    file = filesModel.getFileByPath(path);
-                } else {
-                    filesModel.selectFileById(id, false);
-                    file = filesModel.getFileById(id);
-                }
+                const path = fileContainer.dataset.path
+                const file = filesModel.getFileByPath(path);
 
                 filesModel.currentPreviewFile = file;
 
-                filePreviewController.renderFilePreview(file);
-                filePreviewController.renderFileInfo(file);
+                await filePreviewController.renderFileInfo(file);
+                await filePreviewController.renderFilePreview(file);
 
                 paginationController.updateSelectedFileCount();
 
@@ -188,10 +180,9 @@ export const contextMenuController = {
 
         for (const file of selectedFiles) {
             let fileId = file.id;
-            let filePath = file.path;
 
             if (fileId === 'null' || !fileId) {
-                const createdFile = await filesModel.createFile(filePath);
+                const createdFile = await filesModel.createFile(file);
                 filesView.addIdToContainer(createdFile);
                 fileId = createdFile.id;
             }

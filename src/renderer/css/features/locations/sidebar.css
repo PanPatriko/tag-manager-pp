@@ -16,6 +16,10 @@
     background-image: url('../../../images/directory-add.png');
 }
 
+#find-files {
+    background-image: url('../../../images/find_missing.png');
+}
+
 .left-sidebar-item {
     overflow: hidden;
 }

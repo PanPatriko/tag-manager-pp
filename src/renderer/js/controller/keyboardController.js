@@ -38,27 +38,27 @@ export const keyboardController = {
             }
         });
 
-        window.addEventListener('message', (event) => {
+        window.addEventListener('message', async (event) => {
             if (event.data && event.data.type === 'preview-arrow') {
                 if (event.data.key === 'ArrowLeft') {
-                    filesController.selectPreviousFile();
+                    await filesController.selectPreviousFile();
                 } else if (event.data.key === 'ArrowRight') {
-                    filesController.selectNextFile();
+                    await filesController.selectNextFile();
                 }
             }
         });
 
-        document.addEventListener('keyup', function (e) {
+        document.addEventListener('keyup', async function (e) {
             if (modalView.isAnyModalOpen()) {
                 return;
             }
 
             if (!isTextInputFocused()) {
                 if (e.key === 'ArrowRight') {
-                    filesController.selectNextFile();
+                    await filesController.selectNextFile();
                 }
                 if (e.key === 'ArrowLeft') {
-                    filesController.selectPreviousFile();
+                    await filesController.selectPreviousFile();
                 }
             }
         });

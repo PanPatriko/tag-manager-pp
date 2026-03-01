@@ -66,6 +66,27 @@ async function getDirectoryParent(directoryPath) {
     }
 }
 
+async function walkDirectory(dirPath, maxDepth = 10) {
+    const results = [];
+    async function recurse(currentPath, depth = 0) {
+        if (depth > maxDepth) return;
+        try {
+            const entries = await fsp.readdir(currentPath, { withFileTypes: true });
+            for (const entry of entries) {
+                if (entry.isDirectory() && entry.name !== '.t') {  // Skip system dirs
+                    await recurse(path.join(currentPath, entry.name), depth + 1);
+                } else if (entry.isFile()) {
+                    results.push(path.join(currentPath, entry.name));
+                }
+            }
+        } catch (err) {
+            console.warn(`Cannot read ${currentPath}:`, err.message);
+        }
+    }
+    await recurse(dirPath);
+    return results;
+}
+
 async function getVideoDimensions(filePath) {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(filePath, (err, metadata) => {
@@ -143,38 +164,11 @@ async function getFileHash(filePath, algorithm = 'sha256') {
     });
 }
 
-function formatSize(bytes) {
-    if (bytes === 0) return '0 B';
-    const k = 1024; 
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function formatDateShort(date) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}${m}${d}`;
-}
-
-function formatDateLong(date) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    const hh = String(date.getHours()).padStart(2, '0');
-    const mm = String(date.getMinutes()).padStart(2, '0');
-    const ss = String(date.getSeconds()).padStart(2, '0');
-    return `${y}.${m}.${d} ${hh}:${mm}:${ss}`;
-}
-
 module.exports = { 
     getDirectoryHierarchy, 
     getDirectoryHierarchyRecursive,
     getDirectoryParent,
+    walkDirectory,
     getFileHash, 
     generateThumbnail, 
-    formatDateShort, 
-    formatDateLong, 
-    formatSize, 
 };

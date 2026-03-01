@@ -7,11 +7,30 @@ export const locationsView = {
     locationPanel: null,
     locationContainer: null,
     directoryContainer: null,
+    findFilesBtn: null,
+    loadingBarContainer: null,
+    loadingBar: null,
 
     init() {
         this.locationPanel = document.getElementById('location-panel');
         this.locationContainer = document.getElementById('location-container');
         this.directoryContainer = document.getElementById('directory-container');
+        this.findFilesBtn = document.getElementById('find-files');
+        this.loadingBarContainer = document.getElementById('find-files-loading-bar-container');
+        this.loadingBar = document.getElementById('find-files-loading-bar');
+    },
+
+    showLoadingBar() {
+        this.loadingBarContainer.classList.remove('hidden');
+        this.loadingBar.style.width = '0%';
+    },
+
+    hideLoadingBar() {
+        this.loadingBarContainer.classList.add('hidden');
+    },
+
+    updateLoadingBar(progress) {
+        this.loadingBar.style.width = `${progress}%`;
     },
 
     getLocationPanelHeight() {
@@ -151,6 +170,10 @@ export const locationsView = {
 
     onDirectoryContainerClick(handler) {
         this.directoryContainer.addEventListener('click', (e) => handler(e));
+    },
+
+    onFindFilesClick(handler) {
+        this.findFilesBtn.addEventListener('click', () => handler());
     },
 
     onResizeHandleMouseDown(handler) {

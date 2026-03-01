@@ -13,8 +13,6 @@ contextBridge.exposeInMainWorld('api', {
     getFiles: () => ipcRenderer.invoke('dbfiles:get-files'),
     getFileById: (id) => ipcRenderer.invoke('dbfiles:get-file-by-id', id),
     getFileByPath: (path) => ipcRenderer.invoke('dbfiles:get-file-by-path', path),
-    getFileCreationDate: (filePath) => ipcRenderer.invoke('files:getFileCreationDate', filePath),
-    getFileInfo: (filePath) => ipcRenderer.invoke('files:getFileInfo', filePath),
     createFile: (fileData) => ipcRenderer.invoke('dbfiles:create-file', fileData),
     searchFiles: (andTags, orTags, notTags) => ipcRenderer.invoke('dbfiles:search-files', andTags, orTags, notTags),
     updateFile: (fileId, newFileName, oldFilePath) => ipcRenderer.invoke('dbfiles:update-file', fileId, newFileName, oldFilePath),
@@ -47,8 +45,27 @@ contextBridge.exposeInMainWorld('api', {
 
     fileExists: (path) => ipcRenderer.invoke('files:fileExists', path),
     getFilesInPath: (path) => ipcRenderer.invoke('files:getFilesInPath', path),
+    locateMissingByHash: (hashes, path) => ipcRenderer.invoke('files:locateMissingByHash', hashes, path),
     createDirectory: (path) => ipcRenderer.invoke('files:create-directory', path),
     getDirectoryHierarchy: (path) => ipcRenderer.invoke('files:getDirectoryHierarchy', path),
     getDirectoryParent: (path) => ipcRenderer.invoke('files:getDirectoryParent', path),
-    generateThumbnail: (filePath, thumbnailPath) => ipcRenderer.invoke('files:generateThumbnail', filePath, thumbnailPath)
+    generateThumbnail: (filePath, thumbnailPath) => ipcRenderer.invoke('files:generateThumbnail', filePath, thumbnailPath),
+    on: (channel, callback) => {
+        // Optional: whitelist allowed channels for security
+        const validChannels = ['scan:progress', 'scan:complete'];
+
+        if (validChannels.includes(channel)) {
+            // Deliberately strip event object to prevent exposure of Electron internals
+            const subscription = (event, ...args) => callback(...args);
+            ipcRenderer.on(channel, subscription);
+
+            // Return unsubscribe function
+            return () => {
+                ipcRenderer.removeListener(channel, subscription);
+                console.log(`Unsubscribed from ${channel}`);
+            };
+        }
+        console.warn(`Channel ${channel} not allowed`);
+        return () => { };
+    },
 });

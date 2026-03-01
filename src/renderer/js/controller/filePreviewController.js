@@ -22,18 +22,12 @@ export const  filePreviewController = {
     init() {
         filePreviewView.init();
 
-        filePreviewView.onResizeStart(() => {
-            isResizing = true;
-            filePreviewView.setBodyCursor('ew-resize');
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
-
         filePreviewView.onFileNameSaveClick(() => {
             handleFileNameSave();
         });
 
         filePreviewView.onFileNameInput(() => {
+            filePreviewView.resizeFileNameInput();
             if (!fileExists) return;
             if (filePreviewView.getFileNameValue().trim() 
                 === filesModel.currentPreviewFile?.name) {
@@ -41,18 +35,6 @@ export const  filePreviewController = {
                 return;
             }
             filePreviewView.showFileNameSaveButton();
-        });
-
-        filePreviewView.onShowInfoClick(() => {
-            filePreviewView.toggleFileInfoSection();
-        });
-
-        filePreviewView.onShowTagsClick(() => {
-            filePreviewView.toggleFileTagsSection();
-        });
-
-        filePreviewView.onShowPreviewClick(() => {
-            filePreviewView.toggleFilePreviewSection();
         });
     },
 

@@ -11,8 +11,15 @@
 
 #fileinfo-container li {
     display: flex;
-    padding: 10px 5px 5px 5px;
-    gap: 5px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+#fileinfo-container span {
+    flex: 0 0 auto;
+    width: 90px;
+    margin-left: 5px;
+    font-weight: bold;
 }
 
 #fileinfo-container input {
@@ -21,13 +28,10 @@
     border-radius: 15px;
     padding: 5px;
     font-size: medium;
-}
-
-#file-id, #file-size, #file-creation-date {
     text-align: center;
 }
 
 #file-name-save {
-    height: auto;
+    margin-right: 5px;
     background-image: url('../../../images/save-disk.png');
 }

@@ -30,7 +30,9 @@
                 <button id="location-button" class="menu-element ico-bttn" data-panel="location-panel"
                     data-i18n-title="title-locations"></button>
                 <button id="tags-button" class="menu-element ico-bttn" data-panel="tags-panel"
-                    data-i18n-title="title-tags"></button>                
+                    data-i18n-title="title-tags"></button>    
+                <button id="file-tags-button" class="menu-element ico-bttn" data-panel="file-tags-panel"
+                    data-i18n-title="title-file-info"></button>
             </div>
             <div id="tags-panel" class="left-sidebar-item">
                 <button id="add-tag" class="ico-bttn" data-i18n-title="tag-add"></button>
@@ -48,6 +50,34 @@
                 <div id="location-container" class="location-view"></div>
                 <div id="location-resize-handle" class="resize-handle"></div>
                 <div id="directory-container"></div>
+            </div>
+            <div id="file-tags-panel" class="left-sidebar-item">
+                <section id="file-info">
+                    <ul id="fileinfo-container">
+                        <li>
+                            <span readonly data-i18n="title-file-name"></span>
+                            <button id="file-name-save" class="ico-bttn" data-i18n-title="save" disabled></button>
+                            <input id="file-name" data-i18n-title="title-file-name"></input>
+                        </li>
+                        <li>
+                            <span readonly data-i18n="title-file-path"></span>
+                            <input id="file-path" readonly data-i18n-title="title-file-path"></input>
+                        </li>
+                        <li>
+                            <span readonly data-i18n="title-file-id"></span>
+                            <input id="file-id" readonly data-i18n-title="title-file-id"></input>
+                        </li>
+                        <li>
+                            <span readonly data-i18n="title-file-size"></span>
+                            <input id="file-size" readonly data-i18n-title="title-file-size"></input>
+                        </li>
+                        <li>
+                            <span readonly data-i18n="title-file-creation-date"></span>
+                            <input id="file-creation-date" readonly data-i18n-title="title-file-creation-date"></input>
+                        </li>
+                    </ul>
+                </section>
+                <div id="file-tags-container" class="tags-view"></div>
             </div>
         </aside>
 
@@ -87,32 +117,7 @@
         
         <aside id="right-sidebar">
             <div id="right-resize-handle" class="right-sidebar-item resize-handle"></div>
-            <div id="right-sidebar-menu" class="right-sidebar-item">
-                
-                <button id="show-file-info" class="right-sidebar-item ico-bttn active"
-                    data-i18n-title="title-file-info"></button>
-                <button id="show-file-tags" class="right-sidebar-item ico-bttn active"
-                    data-i18n-title="title-file-tags"></button>
-                <button id="show-file-prev" class="right-sidebar-item ico-bttn active" 
-                    data-i18n-title="title-file-preview"></button>
-            </div>
-            <section id="file-info" class="right-sidebar-item">
-                <ul id="fileinfo-container">
-                    <li>
-                        <input id="file-id" readonly data-i18n-title="title-file-id"></input>
-                        <button id="file-name-save" class="ico-bttn" data-i18n-title="save" disabled></button>
-                        <input id="file-name" data-i18n-title="title-file-name"></input>
-                    </li>
-                    <li>
-                        <input id="file-size" readonly data-i18n-title="title-file-size"></input>
-                        <input id="file-creation-date" readonly data-i18n-title="title-file-creation-date"></input>
-                        <input id="file-path" readonly data-i18n-title="title-file-path"></input>
-                    </li>
-                </ul>
-            </section>
             <section id="file-container" class="right-sidebar-item">
-                <div id="file-tags-container" class="tags-view"></div>
-                <div id="file-container-resize-handle" class="resize-handle"></div>
                 <div id="file-preview"></div>
             </section>
         </aside>

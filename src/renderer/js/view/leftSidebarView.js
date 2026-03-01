@@ -24,7 +24,14 @@ export const leftSidebarView = {
         document.getElementById('left-sidebar-menu').classList.remove('hidden');
         this.resizeHandle.classList.remove('hidden');
 
-        this.setActiveButton(panelId === 'location-panel' ? 'location-button' : 'tags-button');
+        if (panelId === 'location-panel') {
+            this.setActiveButton('location-button');
+        } else if (panelId === 'tags-panel') {
+            this.setActiveButton('tags-button');
+        } else if (panelId === 'file-tags-panel') {
+            this.setActiveButton('file-tags-button');
+        }
+
     },
 
     getMenuElements() {

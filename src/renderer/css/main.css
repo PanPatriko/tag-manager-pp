@@ -41,7 +41,6 @@
 @import 'features/tags/tags-view.css';
 
 /* Features - File Preview */
-@import 'features/file-preview/menu.css';
 @import 'features/file-preview/file-info.css';
 @import 'features/file-preview/file-preview.css';
 @import 'features/file-preview/file-tags.css';

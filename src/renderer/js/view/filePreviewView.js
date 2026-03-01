@@ -1,15 +1,9 @@
 import { inputAutoResize, formatSize, formatBirthtime } from '../utils.js';
 
 export const filePreviewView = {
-    showInfo: null,
-    showTags: null,
-    showPreview: null,
-
     info: null,
     preview: null,
     fileTagsTree: null,
-
-    resizeHandle: null,
 
     fileNameInput: null,
     fileNameSaveButton: null,
@@ -23,15 +17,10 @@ export const filePreviewView = {
     },
 
     init() {
-        this.showInfo = document.getElementById('show-file-info');
-        this.showTags = document.getElementById('show-file-tags');
-        this.showPreview = document.getElementById('show-file-prev');
 
         this.info = document.getElementById('file-info');
         this.preview = document.getElementById('file-preview');
         this.fileTagsTree = document.getElementById('file-tags-container');
-
-        this.resizeHandle = document.getElementById('file-container-resize-handle');
 
         this.fileNameInput = document.getElementById('file-name');
         this.fileNameSaveButton = document.getElementById('file-name-save');
@@ -47,40 +36,6 @@ export const filePreviewView = {
 
     setFilePathValue(path) {
         this.filePathInput.value = path;
-    },
-
-    toggleFileInfoSection() {
-        this.info.classList.toggle('hidden');
-        this.showInfo.classList.toggle('active');
-    },
-
-    toggleFileTagsSection() {
-        this.fileTagsTree.classList.toggle('hidden');
-        this.showTags.classList.toggle('active');
-        this.updateResizeHandle();
-    },
-
-    toggleFilePreviewSection() {
-        this.preview.classList.toggle('hidden');
-        this.showPreview.classList.toggle('active');
-        if (preview.classList.contains('hidden')) {
-            this.fileTagsTree.style.width = '100%';
-            const videos = document.querySelectorAll('.file-preview-video');
-            videos.forEach(video => {
-                video.pause();
-            });
-        } else {
-            this.fileTagsTree.style.width = '250px';
-        }
-        this.updateResizeHandle();
-    },
-
-    updateResizeHandle() {
-        if (this.preview.classList.contains('hidden') && this.fileTagsTree.classList.contains('hidden')) {
-            this.resizeHandle.classList.add('hidden');
-        } else {
-            this.resizeHandle.classList.remove('hidden');
-        }
     },
 
     setFileInfo(file) {
@@ -105,6 +60,12 @@ export const filePreviewView = {
         inputAutoResize(this.fileIdInput);
         inputAutoResize(this.fileSizeInput);
         inputAutoResize(this.fileCreatedInput);
+        inputAutoResize(this.filePathInput);
+        inputAutoResize(this.fileNameInput);
+    },
+
+    resizeFileNameInput() {
+        inputAutoResize(this.fileNameInput);
     },
 
     clearTags() {
@@ -200,10 +161,6 @@ export const filePreviewView = {
         this.fileNameSaveButton.disabled = false;
     },
 
-    onResizeStart(handler) {
-        this.resizeHandle.addEventListener('mousedown', handler);
-    },
-
     onFileNameSaveClick(handler) {
         this.fileNameSaveButton.addEventListener('click', handler);
     },
@@ -211,16 +168,4 @@ export const filePreviewView = {
     onFileNameInput(handler) {
         this.fileNameInput.addEventListener('input', handler);
     },
-
-    onShowInfoClick(handler) {
-        this.showInfo.addEventListener('click', handler);
-    },
-
-    onShowTagsClick(handler) {
-        this.showTags.addEventListener('click', handler);
-    },
-
-    onShowPreviewClick(handler) {
-        this.showPreview.addEventListener('click', handler);
-    }
 };

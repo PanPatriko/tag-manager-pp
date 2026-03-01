@@ -1,3 +1,7 @@
+#file-tags-button {
+    background-image: url('../../../images/preview.png');
+}
+
 #tags-button {
     background-image: url('../../../images/tag.png');
 }
@@ -28,6 +32,7 @@
     display: none !important;
 }
 
+#file-tags-panel,
 #tags-panel,
 #location-panel {
     display: flex;

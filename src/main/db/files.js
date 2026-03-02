@@ -1,7 +1,7 @@
 const db = require('../database.js');
 const fs = require('fs');
 const { getFileHash } = require('../utils.js');
-const { getAllChildTags } = require('./tags.js')
+const { getAllChildTags } = require('./tags.js');
 
 async function getFiles() {
     return new Promise((resolve, reject) => {
@@ -84,6 +84,14 @@ async function createFile(fileData) {
     const { name, path, isDirectory} = fileData;
     const stat = fs.statSync(path);
     const hash = isDirectory ? null : await getFileHash(path);
+
+    if (hash) {
+        const existing = await getFileByHash(hash);
+        if (existing) {
+            return existing;
+        }
+    }
+
     return new Promise((resolve, reject) => {
         db.run(
             'INSERT INTO files (name, path, hash, size, last_modified, created_at) VALUES (?, ?, ?, ?, ?, ?)',

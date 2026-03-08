@@ -32,7 +32,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
                         name    TEXT NOT NULL,
                         size    INTEGER,
                         last_modified INTEGER,
-                        created_at INTEGER
+                        created_at INTEGER,
+                        is_directory INTEGER
                     )`);
 
                 db.run(`CREATE TABLE file_tags (

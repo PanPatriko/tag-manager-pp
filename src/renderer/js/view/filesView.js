@@ -71,8 +71,8 @@ export const filesView = {
     },
 
     showLoadingBar() {
-        this.loadingBarContainer.classList.remove('hidden');
         this.loadingBar.style.width = '0%';
+        this.loadingBarContainer.classList.remove('hidden'); 
     },
 
     hideLoadingBar() {

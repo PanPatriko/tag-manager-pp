@@ -14,6 +14,9 @@ export const searchModel = {
 
     async searchFiles() {
         const files = await window.api.searchFiles(andTags, orTags, notTags);
+        for (const file of files) {
+            file.isDirectory = file.is_directory === 1; // Convert to boolean
+        }
         filesModel.files = files;
         await filesModel.sortFiles();
     },

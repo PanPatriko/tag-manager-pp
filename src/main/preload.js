@@ -16,7 +16,6 @@ contextBridge.exposeInMainWorld('api', {
     createFile: (fileData) => ipcRenderer.invoke('dbfiles:create-file', fileData),
     searchFiles: (andTags, orTags, notTags) => ipcRenderer.invoke('dbfiles:search-files', andTags, orTags, notTags),
     updateFile: (fileId, newFileName, oldFilePath) => ipcRenderer.invoke('dbfiles:update-file', fileId, newFileName, oldFilePath),
-    updateFileNotDB: (newFileName, oldFilePath) => ipcRenderer.invoke('dbfiles:update-file-not-db', newFileName, oldFilePath),
     deleteFileById: (id) => ipcRenderer.invoke('dbfiles:delete-file', id),
 
     // filetags.js
@@ -46,10 +45,9 @@ contextBridge.exposeInMainWorld('api', {
     fileExists: (path) => ipcRenderer.invoke('files:fileExists', path),
     getFilesInPath: (path) => ipcRenderer.invoke('files:getFilesInPath', path),
     locateMissingByHash: (hashes, path) => ipcRenderer.invoke('files:locateMissingByHash', hashes, path),
-    createDirectory: (path) => ipcRenderer.invoke('files:create-directory', path),
     getDirectoryHierarchy: (path) => ipcRenderer.invoke('files:getDirectoryHierarchy', path),
     getDirectoryParent: (path) => ipcRenderer.invoke('files:getDirectoryParent', path),
-    generateThumbnail: (filePath, thumbnailPath) => ipcRenderer.invoke('files:generateThumbnail', filePath, thumbnailPath),
+    generateThumbnail: (file) => ipcRenderer.invoke('files:generateThumbnail', file),
     on: (channel, callback) => {
         // Optional: whitelist allowed channels for security
         const validChannels = ['scan:progress', 'scan:complete'];

@@ -1,9 +1,9 @@
 const { ipcMain, shell, dialog } = require('electron');
-const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const { generateThumbnail, getDirectoryHierarchy, getDirectoryParent, walkDirectory, getFileHash } = require('./utils.js');
+const { getDirectoryHierarchy, getDirectoryParent, walkDirectory, getFileHash } = require('./utils/files.js');
+const { generateOrGetThumbnail } = require('./utils/thumbnail.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
 const { getFiles, getFileById, getFileByPath, getFileByHash, findCandidates, findMissingCandidates, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
@@ -59,18 +59,9 @@ ipcMain.handle('dbfiles:update-file', async (event, fileId, newFileName, oldFile
   const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
   try {
     await fs.promises.rename(oldFilePath, newFilePath);
-    await updateFile({ name: newFileName, path: newFilePath, id: fileId })
-    return { success: true, newFilePath };
-  } catch (error) {
-    console.error('Error updating file name:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('dbfiles:update-file-not-db', async (event, newFileName, oldFilePath) => {
-  const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
-  try {
-    await fs.promises.rename(oldFilePath, newFilePath);
+    if (fileId != null) {
+      await updateFile({ name: newFileName, path: newFilePath, id: fileId })
+    }
     return { success: true, newFilePath };
   } catch (error) {
     console.error('Error updating file name:', error);
@@ -162,14 +153,12 @@ ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
     const dirFilesWithData = await Promise.all(
       dirFiles
         .filter(file => {
-          // Skip system/junk files & directories named '.t'
-          if (file.isDirectory() && file.name === '.t') return false;
+          // Skip system/junk files
           if (file.name === 'desktop.ini' || file.name === 'Thumbs.db') return false;
           return true;
         })
         .map(async (entry) => {
           const fullPath = path.join(directoryPath, entry.name);
-
           try {
             // Step 1: Very cheap – get only metadata (no content read)
             const stat = await fs.promises.stat(fullPath);
@@ -180,44 +169,13 @@ ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
               ? Math.floor(stat.birthtimeMs)
               : null;
 
-            // Handle if directory
-            if (entry.isDirectory()) {
-              const dbFile = await getFileByPath(fullPath);
-
-              if (dbFile) {
-                return {
-                  name: entry.name,
-                  path: fullPath,
-                  isDirectory: true,
-                  id: dbFile.id,
-                  size: fileSize,
-                  hash: null, // no hash for directory
-                  created_at: birthtimeMs,
-                  last_modified: mtimeMs,
-                  fromCache: true,
-                };
-              }
-
-              return {
-                name: entry.name,
-                path: fullPath,
-                isDirectory: true,
-                id: null,
-                size: fileSize,
-                hash: null,  // no hash for directory
-                created_at: birthtimeMs,
-                last_modified: mtimeMs,
-                fromCache: true,
-              };
-            }
-
-            // Step 2: Fast DB query using size + mtime (needs good index)
+            // Step 1: Fast DB query using size + mtime (needs good index)
             const candidates = await findCandidates(fileSize, mtimeMs);
 
             if (candidates.length === 1) {
               // High-confidence match (same size + same modification time)
               const dbFile = candidates[0];
-
+              //console.log(`Step 1 Quick match for ${fullPath} → DB file ID ${dbFile.id}`);
               return {
                 name: entry.name,
                 path: fullPath,
@@ -231,35 +189,33 @@ ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
               };
             }
 
-            // Step 3: No unique match or multiple → fallback to full hash
-            // (this happens rarely after the first scan)
-            // TODO To avoid calculating hash every time, create table seen_files with cached data
-            const hash = await getFileHash(fullPath);
-            const dbFile = await getFileByHash(hash);
+            // Step 2: No unique match or multiple → fallback to full path query (still no hashing)
+            const dbFile = await getFileByPath(fullPath);
 
             if (dbFile) {
-
+              //console.log(`Step 2 Find file by path ${fullPath} → DB file ID ${dbFile.id}`);
               return {
                 name: entry.name,
                 path: fullPath,
                 isDirectory: entry.isDirectory(),
                 id: dbFile.id,
                 size: fileSize,
-                hash: hash,
+                hash: dbFile.hash, // already known
                 created_at: birthtimeMs,
                 last_modified: mtimeMs,
                 fromCache: true,
               };
             }
 
-            // Step 4: Completely new file
+            // Step 3: Completely new file
+            //console.log(`Step 3 FIle not found in DB → treating as new file: ${fullPath}`);
             return {
               name: entry.name,
               path: fullPath,
               isDirectory: entry.isDirectory(),
               id: null,
               size: fileSize,
-              hash: hash,
+              hash: null, // no hash, and we don't want to compute it here (too slow)
               created_at: birthtimeMs,
               last_modified: mtimeMs,
               fromCache: false,
@@ -401,27 +357,9 @@ ipcMain.handle('files:fileExists', async (event, filePath) => {
   }
 });
 
-ipcMain.handle('files:create-directory', async (event, dirPath) => {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-    // Set dir as hidden
-    exec(`attrib +h "${dirPath}"`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error setting hidden attribute: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-    });
-  }
-});
-
-ipcMain.handle('files:generateThumbnail', async (event, filePath, thumbnailPath) => {
+ipcMain.handle('files:generateThumbnail', async (event, file) => {
   try {
-    return await generateThumbnail(filePath, thumbnailPath);
+    return await generateOrGetThumbnail(file);
   } catch (error) {
     console.error(error);
     return null;

@@ -10,10 +10,9 @@ import { historyController } from './historyController.js';
 import { paginationController  } from './paginationController.js';
 import { previewTabController } from './previewTabController.js';
 
-import { thumbnailDir } from "../utils.js"
-
 let lastSelectedIndex = null;
 let displayAbortController = null;
+let thumbnailCache = new Map();
 
 const path = window.api.path;
 
@@ -153,14 +152,14 @@ export const filesController = {
         const currentFiles = filesModel.getCurrentPageFiles();
         paginationController.updateCurrentFiles();
 
-        if (settingsModel.thumbGen) {
-            await generateThumbnails(currentFiles, signal);
-        }
-
         if (signal.aborted) return;
 
+        filesView.showLoadingBar();
         for (const file of currentFiles) {
-            if (signal.aborted) return;
+            if (signal.aborted) {
+                filesView.hideLoadingBar();
+                return;
+            }
             
             const { thumbnailSrc, fullSize, missing } = await resolveThumbnailForFile(file);
             const containerSize = settingsModel.iconSize;
@@ -171,7 +170,10 @@ export const filesController = {
                 missing,
                 containerSize
             });
+            const progress = ((currentFiles.indexOf(file) + 1) / currentFiles.length) * 100;
+            filesView.updateLoadingBar(progress);
         };
+        filesView.hideLoadingBar();
     },
 }
 
@@ -226,67 +228,41 @@ async function selectFile(file) {
     lastSelectedIndex = visible.findIndex(f => f.path === file.path);
 }
 
-async function getThumbnailPath(filePath) {
-    const dir = await path.dirname(filePath);
-    const ext = await path.extname(filePath);
-    const base = await path.basename(filePath, ext);
-    const thumbnailDirPath = await path.join(dir, thumbnailDir);
-    const thumbnailPath = await path.join(thumbnailDirPath, `${base}${ext}.jpg`);
-    return thumbnailPath;
-}
-
-async function generateThumbnails(files, signal) {
-    filesView.showLoadingBar();
-
-    for (let i = 0; i < files.length; i++) {
-        if (signal.aborted) {
-            filesView.updateLoadingBar(0);
-            filesView.hideLoadingBar();
-            return;
-        }
-        
-        const file = files[i];
-        if (!file.isDirectory) {
-            const filePath = file.path;
-            const thumbnailPath = await getThumbnailPath(filePath);
-
-            if (!await window.api.fileExists(thumbnailPath)) {
-                try {
-                    const thumbnailDir = await path.dirname(thumbnailPath);
-                    if (!await window.api.fileExists(thumbnailDir)) {
-                        await window.api.createDirectory(thumbnailDir);
-                    }
-                    await window.api.generateThumbnail(filePath, thumbnailPath);
-                } catch (error) {
-                    console.error('generateThumbnails: error', error);
-                }
-            }
-        }
-        const progress = ((i + 1) / files.length) * 100;
-        filesView.updateLoadingBar(progress);
-    }
-    filesView.hideLoadingBar();
-}
-
 async function resolveThumbnailForFile(file) {
+
     // directory
     if (file.isDirectory) {
         return { thumbnailSrc: 'images/folder-256.png', fullSize: false, missing: false };
     }
 
     const filePath = file.path;
-    const thumbnailPath = await getThumbnailPath(filePath);
 
     // file missing
     if (!await window.api.fileExists(filePath)) {
         return { thumbnailSrc: 'images/cross.png', fullSize: false, missing: true };
     }
 
-    // thumbnail missing -> generic icon
-    if (!await window.api.fileExists(thumbnailPath)) {
+    // If we have a cached thumbnail path, use it
+    if (thumbnailCache && thumbnailCache.has(filePath)) {
+        const cached = thumbnailCache.get(filePath);
+        if (cached) return { thumbnailSrc: cached, fullSize: true, missing: false };
         return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
     }
 
-    // thumbnail exists
-    return { thumbnailSrc: thumbnailPath, fullSize: true, missing: false };
+    // If thumbnail generation is enabled, try to generate (main will return path if successful) and save to cache
+    if (settingsModel.thumbGen) {
+        try {
+            const genPath = await window.api.generateThumbnail(file);
+            if (genPath) {
+                thumbnailCache.set(filePath, genPath);
+                return { thumbnailSrc: genPath, fullSize: true, missing: false };
+            }
+        } catch (err) {
+            console.error('resolveThumbnailForFile (generate): error', err);
+        }
+    }
+
+
+    // No thumbnail available
+    return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
 }

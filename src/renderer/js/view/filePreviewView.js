@@ -11,6 +11,7 @@ export const filePreviewView = {
     fileIdInput: null,
     fileSizeInput: null,
     fileCreatedInput: null,
+    fileModifiedInput: null,
 
     initPreviewTab() {
         this.preview = document.getElementById('file-preview');
@@ -28,6 +29,7 @@ export const filePreviewView = {
         this.fileIdInput = document.getElementById('file-id');
         this.fileSizeInput = document.getElementById('file-size');
         this.fileCreatedInput = document.getElementById('file-creation-date');
+        this.fileModifiedInput = document.getElementById('file-modified-date');
     },
 
     getFileNameValue() {
@@ -44,6 +46,7 @@ export const filePreviewView = {
         this.fileIdInput.value = file.id || '';
         this.fileSizeInput.value = formatSize(file.size) || '';
         this.fileCreatedInput.value = formatBirthtime(file.created_at) || '';
+        this.fileModifiedInput.value = formatBirthtime(file.last_modified) || '';
         this.resizeFileInputs();
     },
 
@@ -53,6 +56,7 @@ export const filePreviewView = {
         this.fileIdInput.value = '';
         this.fileSizeInput.value = '';
         this.fileCreatedInput.value = '';
+        this.fileModifiedInput.value = '';
         this.resizeFileInputs();
     },
 
@@ -60,6 +64,7 @@ export const filePreviewView = {
         inputAutoResize(this.fileIdInput);
         inputAutoResize(this.fileSizeInput);
         inputAutoResize(this.fileCreatedInput);
+        inputAutoResize(this.fileModifiedInput);
         inputAutoResize(this.filePathInput);
         inputAutoResize(this.fileNameInput);
     },

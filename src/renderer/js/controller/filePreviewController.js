@@ -212,9 +212,7 @@ async function handleFileNameSave() {
 
     try {
         // choose API once
-        const result = (fileId != null)
-            ? await window.api.updateFile(fileId, newFileName, oldFilePath)
-            : await window.api.updateFileNotDB(newFileName, oldFilePath);
+        const result = await window.api.updateFile(fileId, newFileName, oldFilePath)
 
         if (!result || !result.success) {
             const errMsg = result?.error ?? 'Unknown';

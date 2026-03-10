@@ -32,6 +32,7 @@ async function fileExistsAndGetInfo(filepath) {
         const size = stats.size;
         const lastModified = Math.floor(stats.mtimeMs);
         const createdAt = Math.floor(stats.birthtime);
+        const isDirectory = stats.isDirectory();
 
         let hash = null;
         // Only compute hash if file is not extremely large (you can adjust or remove limit)
@@ -42,7 +43,7 @@ async function fileExistsAndGetInfo(filepath) {
             hash = 'skipped-large-file'; // or leave null, your choice
         }
 
-        return { size, createdAt, lastModified, hash };
+        return { size, createdAt, lastModified, hash, isDirectory };
     } catch (err) {
         if (err.code === 'ENOENT') return null;
         throw err;
@@ -71,7 +72,8 @@ async function fileExistsAndGetInfo(filepath) {
             { name: 'hash', type: 'TEXT' },
             { name: 'size', type: 'INTEGER' },
             { name: 'last_modified', type: 'INTEGER' },
-            { name: 'created_at', type: 'INTEGER' }
+            { name: 'created_at', type: 'INTEGER' },
+            { name: 'is_directory', type: 'INTEGER' }
         ];
 
         for (const col of columnsToAdd) {
@@ -129,9 +131,9 @@ async function fileExistsAndGetInfo(filepath) {
                     await new Promise(resolve => {
                         db.run(
                             `UPDATE files
-               SET hash = ?, size = ?, last_modified = ?, created_at = ?
+               SET hash = ?, size = ?, last_modified = ?, created_at = ?, is_directory = ?
                WHERE id = ?`,
-                            [info.hash, info.size, info.lastModified, info.createdAt , row.id],
+                            [info.hash, info.size, info.lastModified, info.createdAt, info.isDirectory, row.id],
                             function (err) {
                                 if (err) console.error(`Update failed for ${row.path}:`, err);
                                 else updated++;

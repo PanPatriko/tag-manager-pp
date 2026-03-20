@@ -3,10 +3,3 @@
     flex-direction: column;
     width: 60%;
 }
-
-#thumbs-loading-bar-text {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: var(--font-size-large);
-}

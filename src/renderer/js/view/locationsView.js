@@ -8,7 +8,6 @@ export const locationsView = {
     locationContainer: null,
     directoryContainer: null,
     findFilesBtn: null,
-    loadingBarContainer: null,
     loadingBar: null,
 
     init() {
@@ -16,21 +15,20 @@ export const locationsView = {
         this.locationContainer = document.getElementById('location-container');
         this.directoryContainer = document.getElementById('directory-container');
         this.findFilesBtn = document.getElementById('find-files');
-        this.loadingBarContainer = document.getElementById('find-files-loading-bar-container');
         this.loadingBar = document.getElementById('find-files-loading-bar');
     },
 
     showLoadingBar() {
-        this.loadingBarContainer.classList.remove('hidden');
-        this.loadingBar.style.width = '0%';
+        this.loadingBar.value = 0;
+        this.loadingBar.classList.remove('hidden');
     },
 
     hideLoadingBar() {
-        this.loadingBarContainer.classList.add('hidden');
+        this.loadingBar.classList.add('hidden');
     },
 
     updateLoadingBar(progress) {
-        this.loadingBar.style.width = `${progress}%`;
+        this.loadingBar.value = progress;
     },
 
     getLocationPanelHeight() {

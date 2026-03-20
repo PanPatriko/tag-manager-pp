@@ -1,14 +1,12 @@
 export const filesView = {
     sortByName: null,
     sortByDate: null,
-    loadingBarContainer: null,
     loadingBar: null,
     panel: null,
 
     init() {
         this.sortByName = document.getElementById('sort-by-name');
         this.sortByDate = document.getElementById('sort-by-date');
-        this.loadingBarContainer = document.getElementById('thumbs-loading-bar-container');
         this.loadingBar = document.getElementById('thumbs-loading-bar');
         this.panel = document.getElementById('files-panel');
     },
@@ -71,16 +69,16 @@ export const filesView = {
     },
 
     showLoadingBar() {
-        this.loadingBar.style.width = '0%';
-        this.loadingBarContainer.classList.remove('hidden'); 
+        this.loadingBar.value = 0;
+        this.loadingBar.classList.remove('hidden');
     },
 
     hideLoadingBar() {
-        this.loadingBarContainer.classList.add('hidden');
+        this.loadingBar.classList.add('hidden');
     },
 
     updateLoadingBar(progress) {
-        this.loadingBar.style.width = `${progress}%`;
+        this.loadingBar.value = progress;
     },
 
     clearPanel() {

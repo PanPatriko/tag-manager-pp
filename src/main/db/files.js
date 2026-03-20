@@ -1,11 +1,22 @@
 const db = require('../database.js');
 const fs = require('fs');
-const { getFileHash } = require('../utils/files.js');
 const { getAllChildTags } = require('./tags.js');
 
 async function getFiles() {
     return new Promise((resolve, reject) => {
         db.all('SELECT * FROM files ORDER BY LOWER(name) ASC', (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
+async function getAllFilesInDirectory(directoryPath) {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM files WHERE path LIKE ? ORDER BY LOWER(name) ASC', [directoryPath + '%'], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -39,9 +50,9 @@ async function getFileByPath(path) {
     });
 }
 
-async function getFileByHash(hash) {
+async function getFileByFingerprint(fingerprint) {
     return new Promise((resolve, reject) => {
-        db.get('SELECT * FROM files WHERE hash = ?', [hash], (err, row) => {
+        db.get('SELECT * FROM files WHERE fingerprint = ?', [fingerprint], (err, row) => {
             if (err) {
                 reject(err);
             } else {
@@ -51,26 +62,13 @@ async function getFileByHash(hash) {
     });
 }
 
-async function findCandidates(fileSize, mtimeMs) {
-    return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM files WHERE size = ? AND last_modified = ? LIMIT 2', [fileSize, mtimeMs], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
-    });
-}
-
-async function findMissingCandidates(fileSize, mtimeMs, missingHashes) {
+async function findMissingFiles(missingFingerprints) {
     return new Promise((resolve, reject) => {
         db.all(`
-              SELECT id, path, size, last_modified
+              SELECT *
               FROM files
-              WHERE hash IN (${missingHashes.map(() => '?').join(',')})
-              AND size = ? AND last_modified = ?
-            `, [...missingHashes, fileSize, mtimeMs], (err, rows) => {
+              WHERE fingerprint IN (${missingFingerprints.map(() => '?').join(',')})
+            `, [...missingFingerprints], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -82,11 +80,13 @@ async function findMissingCandidates(fileSize, mtimeMs, missingHashes) {
 
 async function createFile(fileData) {
     const { name, path, isDirectory} = fileData;
+    const { getFastFileFingerprint } = await import('../utils/files.js');
     const stat = fs.statSync(path);
-    const hash = isDirectory ? null : await getFileHash(path);
 
-    if (hash) {
-        const existing = await getFileByHash(hash);
+    const fingerprint = isDirectory ? null : await getFastFileFingerprint(path, stat);
+
+    if (fingerprint) {
+        const existing = await getFileByFingerprint(fingerprint);
         if (existing) {
             return existing;
         }
@@ -94,8 +94,8 @@ async function createFile(fileData) {
 
     return new Promise((resolve, reject) => {
         db.run(
-            'INSERT INTO files (name, path, hash, size, last_modified, created_at, is_directory) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [name, path, hash, stat.size, Math.floor(stat.mtimeMs), Math.floor(stat.birthtimeMs), isDirectory ? 1 : 0],
+            'INSERT INTO files (name, path, fingerprint, size, last_modified, created_at, is_directory) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [name, path, fingerprint, stat.size, Math.floor(stat.mtimeMs), Math.floor(stat.birthtimeMs), isDirectory ? 1 : 0],
             function (err) {
                 if (err) {
                     reject(err);
@@ -223,4 +223,4 @@ async function searchFiles(andTags, orTags, notTags) {
     }
 }
 
-module.exports = { getFiles, getFileById, getFileByPath, getFileByHash, findCandidates, findMissingCandidates, searchFiles, createFile, updateFile, deleteFile}
+module.exports = { getFiles, getAllFilesInDirectory, getFileById, getFileByPath, getFileByFingerprint, findMissingFiles, searchFiles, createFile, updateFile, deleteFile}

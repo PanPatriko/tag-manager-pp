@@ -4,7 +4,7 @@ const sharp = require('sharp');
 const path = require('path');
 
 const { app } = require('electron');
-const { getFileHash } = require('./files.js');
+const { getFastFileFingerprint } = require('./files.js');
 
 const THUMBNAIL_DIR = path.join(app.getPath('userData'), 'thumbnails');
 
@@ -26,17 +26,17 @@ async function getVideoDimensions(filePath) {
     });
 }
 
-async function generateOrGetThumbnail(file) {
+async function getThumbnailKey(file) {
+    if (file?.fingerprint) {
+        return file.fingerprint;
+    }
+
+    return getFastFileFingerprint(file.path);
+}
+
+async function generateOrGetThumbnail(file, generateIfMissing = true) {
     await ensureThumbnailDir();
     const filePath = file.path;
-    
-    // 1. Early exit if source file doesn't exist
-    try {
-        await fsp.access(filePath);
-    } catch (err) {
-        console.warn(`Thumbnail: source file missing → ${filePath}`);
-        return null;
-    }
 
     const extension = path.extname(filePath).slice(1).toLowerCase();
 
@@ -49,22 +49,18 @@ async function generateOrGetThumbnail(file) {
         return null;
     }
 
-    // 2. Compute content hash (this becomes the filename base)
-    let hash;
+    // Use the DB fingerprint when available; otherwise compute one on demand.
+    let thumbnailKey;
     try {
-        if (file && file.hash) {
-            hash = file.hash;
-        } else {
-            hash = await getFileHash(filePath);
-        }
+        thumbnailKey = await getThumbnailKey(file);
     } catch (err) {
-        console.error(`Cannot compute hash for ${filePath}`, err);
+        console.error(`Cannot compute thumbnail key for ${filePath}`, err);
         return null;
     }
 
     // Decide output format – jpeg is most compatible; webp is smaller/faster
     const thumbExt = 'webp';           // ← or 'webp' if you want smaller files
-    const thumbFilename = `${hash}.${thumbExt}`;
+    const thumbFilename = `${thumbnailKey}.${thumbExt}`;
     const thumbnailPath = path.join(THUMBNAIL_DIR, thumbFilename);
 
     // 3. Already exists → just return path (fast path!)
@@ -73,6 +69,10 @@ async function generateOrGetThumbnail(file) {
         return thumbnailPath;
     } catch {
         // doesn't exist → we need to generate it
+    }
+
+    if (!generateIfMissing) {
+        return null;
     }
 
     // ────────────────────────────────────────────────
@@ -113,7 +113,7 @@ async function generateOrGetThumbnail(file) {
                 ffmpeg(filePath)
                     .screenshots({
                         timestamps: ['0'],          // first frame; can be ['5%'] or '00:00:03'
-                        filename: thumbFilename,    // ← important: use hash-based name
+                        filename: thumbFilename,
                         folder: THUMBNAIL_DIR,      // ← central folder
                         size
                     })

@@ -13,8 +13,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
     } else {
         console.log("Connected to SQLite database");
 
-        if (!dbExists) {
-            db.serialize(() => {
+        db.serialize(() => {
+            if (!dbExists) {
                 db.run(`CREATE TABLE "tags" (
                         "id"	INTEGER,
                         "name"	TEXT NOT NULL,
@@ -27,7 +27,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
                 db.run(`CREATE TABLE files (
                         id      INTEGER PRIMARY KEY AUTOINCREMENT,
-                        hash    TEXT UNIQUE,
+                        fingerprint TEXT,
                         path    TEXT,
                         name    TEXT NOT NULL,
                         size    INTEGER,
@@ -51,8 +51,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
                 )`);
 
                 console.log("Tables created");
-            });
-        }
+            }
+        });
     }
 });
 

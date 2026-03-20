@@ -118,6 +118,17 @@ export const filesController = {
 
     async displayDirectory(dirPath) {
         this.abortDisplay();
+
+        filesView.showLoadingBar();
+
+        const unsubscribe = window.api.on('getFiles:progress', async (data) => {
+            filesView.updateLoadingBar(data.progress);
+        });
+    
+        window.api.on('getFiles:complete', (data) => {
+            unsubscribe();
+            filesView.hideLoadingBar();
+        });
         
         const dirFiles = await window.api.getFilesInPath(dirPath);
 
@@ -170,7 +181,7 @@ export const filesController = {
                 missing,
                 containerSize
             });
-            const progress = ((currentFiles.indexOf(file) + 1) / currentFiles.length) * 100;
+            const progress = Math.round(((currentFiles.indexOf(file) + 1) / currentFiles.length) * 100);
             filesView.updateLoadingBar(progress);
         };
         filesView.hideLoadingBar();
@@ -250,17 +261,16 @@ async function resolveThumbnailForFile(file) {
     }
 
     // If thumbnail generation is enabled, try to generate (main will return path if successful) and save to cache
-    if (settingsModel.thumbGen) {
-        try {
-            const genPath = await window.api.generateThumbnail(file);
-            if (genPath) {
-                thumbnailCache.set(filePath, genPath);
-                return { thumbnailSrc: genPath, fullSize: true, missing: false };
-            }
-        } catch (err) {
-            console.error('resolveThumbnailForFile (generate): error', err);
+
+    try {
+        const genPath = await window.api.generateThumbnail(file, settingsModel.thumbGen);
+        if (genPath) {
+            thumbnailCache.set(filePath, genPath);
+            return { thumbnailSrc: genPath, fullSize: true, missing: false };
         }
-    }
+    } catch (err) {
+        console.error('resolveThumbnailForFile (generate): error', err);
+    }    
 
 
     // No thumbnail available

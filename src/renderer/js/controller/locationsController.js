@@ -126,8 +126,15 @@ async function onFindFilesClick() {
 
     locationsView.showLoadingBar();
 
-    const missingHashes = missingFiles.map(f => f.hash);
-    await window.api.locateMissingByHash(missingHashes, path);
+    const missingFingerprints = missingFiles
+        .map(f => f.fingerprint)
+        .filter(Boolean);
+
+    if (missingFingerprints.length === 0) {
+        showPopup(i18nModel.t('no-files-to-check'), 'info');
+        locationsView.hideLoadingBar();
+        return;
+    }
 
     const unsubscribe = window.api.on('scan:progress', (data) => {
         console.log('Progress:', data.progress, data.scanned, data.total);
@@ -144,6 +151,8 @@ async function onFindFilesClick() {
         showPopup(text, 'success');
         unsubscribe();
     });
+
+    await window.api.locateMissingByFingerprint(missingFingerprints, path);
 };
 
 function onMouseMove(e) {

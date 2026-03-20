@@ -44,13 +44,13 @@ contextBridge.exposeInMainWorld('api', {
 
     fileExists: (path) => ipcRenderer.invoke('files:fileExists', path),
     getFilesInPath: (path) => ipcRenderer.invoke('files:getFilesInPath', path),
-    locateMissingByHash: (hashes, path) => ipcRenderer.invoke('files:locateMissingByHash', hashes, path),
+    locateMissingByFingerprint: (fingerprints, path) => ipcRenderer.invoke('files:locateMissingByFingerprint', fingerprints, path),
     getDirectoryHierarchy: (path) => ipcRenderer.invoke('files:getDirectoryHierarchy', path),
     getDirectoryParent: (path) => ipcRenderer.invoke('files:getDirectoryParent', path),
-    generateThumbnail: (file) => ipcRenderer.invoke('files:generateThumbnail', file),
+    generateThumbnail: (file, generateIfMissing) => ipcRenderer.invoke('files:generateThumbnail', file, generateIfMissing),
     on: (channel, callback) => {
         // Optional: whitelist allowed channels for security
-        const validChannels = ['scan:progress', 'scan:complete'];
+        const validChannels = ['scan:progress', 'scan:complete', 'getFiles:progress', 'getFiles:complete'];
 
         if (validChannels.includes(channel)) {
             // Deliberately strip event object to prevent exposure of Electron internals

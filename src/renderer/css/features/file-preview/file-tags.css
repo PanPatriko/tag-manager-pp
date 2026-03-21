@@ -7,7 +7,6 @@
 }
 
 #file-tags-container {
-    width: 250px;
     flex-shrink: 0;
     min-width: 0;
     overflow: auto;

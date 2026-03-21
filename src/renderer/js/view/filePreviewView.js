@@ -99,8 +99,8 @@ export const filePreviewView = {
         const video = document.createElement('video');
         video.src = file.path;
         video.controls = true;
-        video.autoplay = settings.vidAutoplay;
-        video.loop = settings.vidLoop;
+        video.autoplay = settings.autoplay;
+        video.loop = settings.loop;
         video.className = 'file-preview-video';
         this._prepareElement(video);
         this.preview.appendChild(video);

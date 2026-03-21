@@ -5,6 +5,7 @@ import { settingsModel } from '../model/settingsModel.js';
 import { tagsModel, TagType } from '../model/tagsModel.js';
 
 import { filePreviewView } from '../view/filePreviewView.js';
+import { rightSidebarView } from '../view/rightSidebarView.js';
 import { tagsView, TagClass } from '../view/tagsView.js';
 
 import { filesController } from './filesController.js';
@@ -105,7 +106,20 @@ export const  filePreviewController = {
             if (imgRegex.test(file.path)) {
                 el = filePreviewView.renderImage(file);
             } else if (vidRegex.test(file.path)) {
-                el = filePreviewView.renderVideo(file, settingsModel);
+
+                let isHidden = false;
+                try {
+                    isHidden = !!(rightSidebarView && rightSidebarView.isSidebarHidden && rightSidebarView.isSidebarHidden());
+                } catch (e) {
+                    isHidden = false;
+                }
+
+                const settings = {
+                    autoplay: isHidden ? false : settingsModel.vidAutoplay,
+                    loop: settingsModel.vidLoop,
+                };
+                el = filePreviewView.renderVideo(file, settings);
+
             } else {
                 filePreviewView.setError('file-prev-format-error', i18nModel.t('file-prev-format-error'));
                 return;
@@ -182,24 +196,6 @@ function attachInteractions(element) {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
     };
-}
-
-function onMouseMove(e) {
-    if (!isResizing) return;
-
-    const containerRect = filePreviewView.getTagsTreeParentRect();
-    let newWidth = e.clientX - containerRect.left;
-    filePreviewView.setTagsTreeWidth(newWidth);
-}
-
-function onMouseUp() {
-    if (!isResizing) return;
-
-    isResizing = false;
-    filePreviewView.setBodyCursor('');
-
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
 }
 
 async function handleFileNameSave() {

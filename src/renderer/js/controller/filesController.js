@@ -225,11 +225,12 @@ async function selectFile(file) {
 
     filesModel.selectFileByPath(file.path, false);
     const container = filesView.findFileContainerByPath(file.path); 
+    filesView.setContainerSelected(container, true);
+    
+    paginationController.updateSelectedFileCount();
 
     filesModel.currentPreviewFile = file;
 
-    filesView.setContainerSelected(container, true);
-    paginationController.updateSelectedFileCount();
     await filePreviewController.renderFileInfo(file);
     await filePreviewController.renderFilePreview(file);
 

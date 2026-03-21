@@ -17,8 +17,12 @@ export const rightSidebarView = {
         this.fileTagsSection = document.getElementById('file-container');
     },
 
+    isSidebarHidden() {
+        return this.rightSidebar.classList.contains("hidden");
+    },
+
     showPanel() {
-        const isHidden = this.rightSidebar.classList.contains("hidden");
+        const isHidden = this.isSidebarHidden();
         this.setToggleButtonIcon(isHidden);
 
         if (isHidden) {

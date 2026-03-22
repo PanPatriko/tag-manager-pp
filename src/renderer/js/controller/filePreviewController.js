@@ -107,11 +107,16 @@ export const  filePreviewController = {
                 el = filePreviewView.renderImage(file);
             } else if (vidRegex.test(file.path)) {
 
+                // Determine whether we're in the preview window (no right sidebar)
+                // or the main window.
+                const pathname = (window.location && window.location.pathname) ? window.location.pathname.toLowerCase() : '';
+                const isPreviewWindow = pathname.endsWith('preview.html');
+
                 let isHidden = false;
-                try {
-                    isHidden = !!(rightSidebarView && rightSidebarView.isSidebarHidden && rightSidebarView.isSidebarHidden());
-                } catch (e) {
+                if (isPreviewWindow) {
                     isHidden = false;
+                } else {
+                    isHidden = rightSidebarView.isSidebarHidden();
                 }
 
                 const settings = {

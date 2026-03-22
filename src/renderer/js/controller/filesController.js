@@ -197,12 +197,12 @@ function toggleSelection(container, isCtrlPressed, isShiftPressed) {
         const end = Math.max(lastSelectedIndex, currentIndex);
         for (let i = start; i <= end; i++) {
             const path = fileContainers[i].dataset.path;
-            const isChecked = filesModel.selectFileByPath(path, false);
-            filesView.setContainerSelected(fileContainers[i], isChecked);
+            filesModel.selectFileByPath(path);
+            filesView.setContainerSelected(fileContainers[i], true);
         }
     } else if (isCtrlPressed) {
         const path = container.dataset.path;
-        const isChecked = filesModel.selectFileByPath(path);
+        const isChecked = filesModel.toggleSelectFileByPath(path);
         filesView.setContainerSelected(container, isChecked);
     } else {
         filesModel.resetSelection();
@@ -211,7 +211,7 @@ function toggleSelection(container, isCtrlPressed, isShiftPressed) {
         const id = container.dataset.id;
         const path = container.dataset.path;
 
-        filesModel.selectFileByPath(path, false);
+        filesModel.selectFileByPath(path);
         filesView.setContainerSelected(container, true);
     }
 
@@ -223,7 +223,7 @@ async function selectFile(file) {
     filesModel.resetSelection();
     filesView.resetSelection();
 
-    filesModel.selectFileByPath(file.path, false);
+    filesModel.selectFileByPath(file.path);
     const container = filesView.findFileContainerByPath(file.path); 
     filesView.setContainerSelected(container, true);
     

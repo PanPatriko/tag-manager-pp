@@ -100,14 +100,17 @@ export const contextMenuController = {
             if (fileContainer) {
 
                 filesView.setContainerSelected(fileContainer, true);
-                const id = fileContainer.dataset.id;
                 const path = fileContainer.dataset.path
                 const file = filesModel.getFileByPath(path);
 
-                filesModel.currentPreviewFile = file;
+                filesModel.selectFileByPath(path);
 
-                await filePreviewController.renderFileInfo(file);
-                await filePreviewController.renderFilePreview(file);
+                if (filesModel.currentPreviewFile != file) {
+                    filesModel.currentPreviewFile = file;
+
+                    await filePreviewController.renderFileInfo(file);
+                    await filePreviewController.renderFilePreview(file);
+                }
 
                 paginationController.updateSelectedFileCount();
 

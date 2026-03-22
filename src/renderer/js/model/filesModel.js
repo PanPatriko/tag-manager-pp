@@ -84,22 +84,15 @@ export const filesModel = {
         };
     },
 
-    selectFileById(fileId, toggle = true) {
-        const file = files.find(file => file.id == fileId);
-        if (toggle) {
-            return toggleSelectFile(file);
-        }
+    selectFileByPath(filePath) {
+        const file = files.find(file => file.path == filePath);
         file.selected = true;
         return file.selected;
     },
 
-    selectFileByPath(filePath, toggle = true) {
+    toggleSelectFileByPath(filePath) {
         const file = files.find(file => file.path == filePath);
-        if (toggle) {
-            return toggleSelectFile(file);
-        }
-        file.selected = true;
-        return file.selected;
+        return toggleSelectFile(file);
     },
 
     selectCurrentPageFiles() {

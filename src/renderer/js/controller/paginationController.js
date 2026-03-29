@@ -66,13 +66,13 @@ export const paginationController = {
         let text = '';
 
         if (directories > 0) {
-            text = formatString(i18nModel.t('content-files-and-directories-count'), {
+            text = formatString(i18nModel.t('content.filesAndDirs'), {
                 count: files || '0',
                 folders: directories,
                 total: total
             });
         } else {
-            text = formatString(i18nModel.t('content-files-count'), {
+            text = formatString(i18nModel.t('content.files'), {
                 count: files || '0'
             });
         }
@@ -84,7 +84,7 @@ export const paginationController = {
     updateSelectedFileCount() {
         const selectedCount = filesModel.getSelectedFiles().length;
 
-        const text = formatString(i18nModel.t('content-selected-files-count'), {
+        const text = formatString(i18nModel.t('content.selecteFiles'), {
             selectedCount: selectedCount || '0'
         });
         paginationView.setSelectedFileCount(text);
@@ -105,7 +105,7 @@ export const paginationController = {
         if (filesModel.files.length > 0) {
             start += 1;
         }
-        const text = formatString(i18nModel.t('content-current-files-range'), {
+        const text = formatString(i18nModel.t('content.range'), {
             start: start || '0',
             end: end || '0'
         });

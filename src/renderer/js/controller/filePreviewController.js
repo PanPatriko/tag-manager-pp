@@ -91,7 +91,7 @@ export const  filePreviewController = {
         }
 
         if (!await window.api.fileExists(file.path)) {
-            filePreviewView.setError('content-deleted-file', i18nModel.t('content-deleted-file'));
+            filePreviewView.setError('fileInfo.deleted', i18nModel.t('fileInfo.deleted'));
             fileExists = false;
             return;
         }
@@ -126,7 +126,7 @@ export const  filePreviewController = {
                 el = filePreviewView.renderVideo(file, settings);
 
             } else {
-                filePreviewView.setError('file-prev-format-error', i18nModel.t('file-prev-format-error'));
+                filePreviewView.setError('fileInfo.formatErr', i18nModel.t('fileInfo.formatErr'));
                 return;
             }
 
@@ -134,7 +134,7 @@ export const  filePreviewController = {
             currentDetach = attachInteractions(el);
         } catch (err) {
             console.error('renderFilePreview error', err);
-            filePreviewView.setError('file-prev-format-error', i18nModel.t('file-prev-format-error'));
+            filePreviewView.setError('fileInfo.formatErr', i18nModel.t('fileInfo.formatErr'));
         }
     }
 };
@@ -217,7 +217,7 @@ async function handleFileNameSave() {
 
         if (!result || !result.success) {
             const errMsg = result?.error ?? 'Unknown';
-            showPopup(i18nModel.t('file-prev-name-save-error') + errMsg, 'error');
+            showPopup(i18nModel.t('alert.changeFileNameErr') + errMsg, 'error');
             return;
         }
 
@@ -237,6 +237,6 @@ async function handleFileNameSave() {
         // refresh preview info and file list UI
         filesController.displayFiles();
     } catch (err) {
-        showPopup(i18nModel.t('file-prev-name-save-error') + err, 'error');
+        showPopup(i18nModel.t('alert.changeFileNameErr') + err, 'error');
     }
 }

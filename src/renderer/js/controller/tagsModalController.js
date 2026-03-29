@@ -69,7 +69,7 @@ async function saveTag() {
     const tagNames = tagName.trim().split(',').map(tag => tag.trim());
 
     if (tagNames.length === 0 || tagNames[0] === '') {
-        showPopup(i18nModel.t('tag-alert-empty-name'), 'warning');
+        showPopup(i18nModel.t('alert.emptyTagName'), 'warning');
         return;
     }
 
@@ -93,7 +93,7 @@ async function saveTag() {
 
 function handleParentTagSelection(tag, hierarchy) {
     if (tagsModel.isDescendantTag(modalModel.tagToEdit, tag)) {
-        showPopup(i18nModel.t('tag-alert-not-allowed-parent-tag'), 'warning');
+        showPopup(i18nModel.t('alert.notAllowedParentTag'), 'warning');
         return;
     }
 
@@ -132,7 +132,7 @@ function openTagModal({ mode, tag = null, parentTag = null }) {
     if (mode === ModalMode.NEW) {
         modalModel.selectedParentTag = parentTag;
 
-        title = i18nModel.t('tag-add');
+        title = i18nModel.t('modal.tag.add');
         if(parentTag) {
             tagHierarchy = tagsModel.buildSingleTagHierarchy(parentTag);
             tagColor = parentTag.color;
@@ -150,7 +150,7 @@ function openTagModal({ mode, tag = null, parentTag = null }) {
         const parent = tagsModel.findTagById(tag.parentId);
         modalModel.selectedParentTag = parent;
 
-        title = i18nModel.t('tag-edit');
+        title = i18nModel.t('modal.tag.edit');
         tagName = tag.name;
         tagColor = tag.color;
         tagTextColor = tag.textColor;

@@ -65,7 +65,7 @@ async function onLocationClick(event) {
         const location = locationsModel.findLocationById(id);
 
         if (!await window.api.fileExists(location.path)) {
-            showPopup(i18nModel.t('dir-read-error'), 'error');
+            showPopup(i18nModel.t('alert.dirReadErr'), 'error');
             return;
         }
 
@@ -100,7 +100,7 @@ async function onDirectoryClick(event) {
 async function onFindFilesClick() {
 
     if (filesModel.files.length === 0) {
-        showPopup(i18nModel.t('no-files-to-check'), 'info');
+        showPopup(i18nModel.t('alert.noFilesToCheck'), 'info');
         return;
     }
 
@@ -114,7 +114,7 @@ async function onFindFilesClick() {
     ).filter(Boolean);
 
     if (missingFiles.length === 0) {
-        showPopup(i18nModel.t('no-missing-files'), 'info');
+        showPopup(i18nModel.t('alert.noMissingFiles'), 'info');
         return;
     }
 
@@ -131,7 +131,7 @@ async function onFindFilesClick() {
         .filter(Boolean);
 
     if (missingFingerprints.length === 0) {
-        showPopup(i18nModel.t('no-files-to-check'), 'info');
+        showPopup(i18nModel.t('alert.noFilesToCheck'), 'info');
         locationsView.hideLoadingBar();
         return;
     }
@@ -144,7 +144,7 @@ async function onFindFilesClick() {
     window.api.on('scan:complete', (data) => {
         console.log('Scan done!', data.found, data.totalMissing);
         locationsView.hideLoadingBar();
-        const text = formatString(i18nModel.t('find-files-complete'), {
+        const text = formatString(i18nModel.t('alert.findFilesComplete'), {
             found: data.found,
             totalMissing: data.totalMissing
         });

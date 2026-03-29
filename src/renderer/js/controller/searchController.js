@@ -28,9 +28,9 @@ export const searchController = {
             if (query.length > 0) {
 
                 const buttonData = [
-                    { operation: TagOperation.AND, title: i18nModel.t(`title-${TagOperation.AND.name}-button`) },
-                    { operation: TagOperation.OR, title: i18nModel.t(`title-${TagOperation.OR.name}-button`) },
-                    { operation: TagOperation.NOT, title: i18nModel.t(`title-${TagOperation.NOT.name}-button`) }
+                    { operation: TagOperation.AND, title: i18nModel.t(`header.${TagOperation.AND.name}Btn`) },
+                    { operation: TagOperation.OR, title: i18nModel.t(`header.${TagOperation.OR.name}Btn`) },
+                    { operation: TagOperation.NOT, title: i18nModel.t(`header.${TagOperation.NOT.name}Btn`) }
                 ];
 
                 const filteredTags = tagsModel.searchTags(query, settingsModel.searchBarMode);

@@ -19,7 +19,7 @@ export const previewTabController = {
         previewTabView.setTheme(settingsModel.theme);
 
         await i18nModel.load(settingsModel.language);
-        previewTabView.setPageTitle(i18nModel.t('title-file-preview') || 'File Preview');
+        previewTabView.setPageTitle(i18nModel.t('previewTab.title') || 'File Preview');
 
         this.setupEventListeners();
         
@@ -56,7 +56,7 @@ export const previewTabController = {
 
         if (type === 'update-lang' && language) {
             await i18nModel.load(language);
-            previewTabView.setPageTitle(i18nModel.t('title-file-preview') || 'File Preview');
+            previewTabView.setPageTitle(i18nModel.t('previewTab.title') || 'File Preview');
         }
 
         if (type === 'update-theme' && theme) {

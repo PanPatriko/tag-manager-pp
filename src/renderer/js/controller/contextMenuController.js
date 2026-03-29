@@ -28,18 +28,18 @@ export const contextMenuController = {
 
             if (target.closest('.file-preview-image')) {
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(previewTabController.file.path) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(previewTabController.file.path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openExt'), onClick: () => openFileExt(previewTabController.file.path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openFileLocation'), onClick: () => openFileLocation(previewTabController.file.path) },
                 ];
             }
 
             if (target.closest('.file-preview-video')) {
                 const vid = document.querySelector('#file-preview > *');
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(previewTabController.file.path) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(previewTabController.file.path) },
-                    { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-repeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
-                    { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-show-controls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
+                    { type: 'button', label: i18nModel.t('contextMenu.openExt'), onClick: () => openFileExt(previewTabController.file.path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openFileLocation'), onClick: () => openFileLocation(previewTabController.file.path) },
+                    { type: 'checkbox', label: i18nModel.t('contextMenu.vidRepeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
+                    { type: 'checkbox', label: i18nModel.t('contextMenu.vidShowControls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
                 ];
             }
 
@@ -76,23 +76,23 @@ export const contextMenuController = {
 
             if (target.closest('.tag-item')) {
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-edit-tag'), onClick: () => editTag(id) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-add-child-tag'), onClick: () => addChildTag(id) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-del-tag'), onClick: () => confirmDeleteTag(id) }
+                    { type: 'button', label: i18nModel.t('contextMenu.addChildTag'), onClick: () => addChildTag(id) },
+                    { type: 'button', label: i18nModel.t('contextMenu.edit'), onClick: () => editTag(id) },
+                    { type: 'button', label: i18nModel.t('contextMenu.delete'), onClick: () => confirmDeleteTag(id) }
                 ];
             }
 
             if (target.closest('.file-tag-item')) {
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-edit-tag'), onClick: () => editTag(id) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-del-file-tag'), onClick: () => confirmDeleteFileTag(id) }
+                    { type: 'button', label: i18nModel.t('contextMenu.edit'), onClick: () => editTag(id) },
+                    { type: 'button', label: i18nModel.t('contextMenu.delete'), onClick: () => confirmDeleteFileTag(id) }
                 ];
             }
 
             if (target.closest('.loc-item')) {
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-edit-loc'), onClick: () => editLocation(id) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-del-loc'), onClick: () => confirmDeleteLocation(id) }
+                    { type: 'button', label: i18nModel.t('contextMenu.edit'), onClick: () => editLocation(id) },
+                    { type: 'button', label: i18nModel.t('contextMenu.delete'), onClick: () => confirmDeleteLocation(id) }
                 ];
             }
 
@@ -117,32 +117,32 @@ export const contextMenuController = {
                 previewTabController.sendPostMessage('update-preview', { file: file });
 
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-edit-file-tags'), onClick: () => addTagFile() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-copy-tags'), onClick: () => copyTags(id) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-paste-tags'), onClick: () => pasteTags() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(path) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(path) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-delete-file'), onClick: () => confirmDeleteFile() }
+                    { type: 'button', label: i18nModel.t('contextMenu.editFileTags'), onClick: () => addTagFile() },
+                    { type: 'button', label: i18nModel.t('contextMenu.copyTags'), onClick: () => copyTags(id) },
+                    { type: 'button', label: i18nModel.t('contextMenu.pasteTags'), onClick: () => pasteTags() },
+                    { type: 'button', label: i18nModel.t('contextMenu.openNewTab'), onClick: () => openFileNewTab() },
+                    { type: 'button', label: i18nModel.t('contextMenu.openExt'), onClick: () => openFileExt(path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openFileLocation'), onClick: () => openFileLocation(path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.deleteFileDB'), onClick: () => confirmDeleteFile() }
                 ];
             }
 
             if (target.closest('.file-preview-image')) {
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(filesModel.currentPreviewFile.path) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(filesModel.currentPreviewFile.path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openNewTab'), onClick: () => openFileNewTab() },
+                    { type: 'button', label: i18nModel.t('contextMenu.openExt'), onClick: () => openFileExt(filesModel.currentPreviewFile.path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openFileLocation'), onClick: () => openFileLocation(filesModel.currentPreviewFile.path) },
                 ];
             }
 
             if (target.closest('.file-preview-video')) {
                 const vid = document.querySelector('#file-preview > *');
                 items = [
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-tab'), onClick: () => openFileNewTab() },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-ext'), onClick: () => openFileExt(filesModel.currentPreviewFile.path) },
-                    { type: 'button', label: i18nModel.t('cntx-menu-open-file-explorer'), onClick: () => openFileLocation(filesModel.currentPreviewFile.path) },
-                    { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-repeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
-                    { type: 'checkbox', label: i18nModel.t('cntx-menu-vid-show-controls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
+                    { type: 'button', label: i18nModel.t('contextMenu.openNewTab'), onClick: () => openFileNewTab() },
+                    { type: 'button', label: i18nModel.t('contextMenu.openExt'), onClick: () => openFileExt(filesModel.currentPreviewFile.path) },
+                    { type: 'button', label: i18nModel.t('contextMenu.openFileLocation'), onClick: () => openFileLocation(filesModel.currentPreviewFile.path) },
+                    { type: 'checkbox', label: i18nModel.t('contextMenu.vidRepeat'), checked: vid.loop, onchange: repeatCheckboxOnChange },
+                    { type: 'checkbox', label: i18nModel.t('contextMenu.vidShowControls'), checked: vid.controls, onchange: controlsCheckboxOnChange }
                 ];
             }
 
@@ -160,11 +160,11 @@ export const contextMenuController = {
             if (tags.length > 0) {
                 tagsModel.copiedTags = tags;
             } else {
-                showPopup(i18nModel.t('alert-file-no-tags'), 'warning');
+                showPopup(i18nModel.t('alert.noFileTags'), 'warning');
             }
         } catch (error) {
             console.error('copyTags: Error fetching tags:', error);
-            showPopup(i18nModel.t('alert-fetching-tags'), 'warning');
+            showPopup(i18nModel.t('alert.fetchingTagsErr'), 'warning');
         }
     },
 
@@ -172,12 +172,12 @@ export const contextMenuController = {
         const selectedFiles = filesModel.getSelectedFiles();
 
         if (selectedFiles.length === 0) {
-            showPopup(i18nModel.t('alert-no-files-selected'), 'warning');
+            showPopup(i18nModel.t('alert.noFilesSelected'), 'warning');
             return;
         }
 
         if (tagsModel.copiedTags === null || tagsModel.copiedTags.length === 0) {
-            showPopup(i18nModel.t('alert-no-copied-tags'), 'warning');
+            showPopup(i18nModel.t('alert.noCopiedTags'), 'warning');
             return;
         }
 
@@ -203,7 +203,7 @@ export const contextMenuController = {
     },
 
     async confirmDeleteFile() {
-        const result = await showPopup(i18nModel.t('confirm-del-file'),
+        const result = await showPopup(i18nModel.t('alert.confirm.deleteFile'),
             'question', true);
 
         if (result.isConfirmed) {
@@ -253,7 +253,7 @@ async function addChildTag(id) {
 }
 
 async function confirmDeleteTag(id) {
-    const result = await showPopup(i18nModel.t('confirm-del-tag'),
+    const result = await showPopup(i18nModel.t('alert.confirm.deleteTag'),
         'question', true);
 
     if (result.isConfirmed) {
@@ -267,7 +267,7 @@ async function addTagFile() {
 }
 
 async function confirmDeleteFileTag(id) {
-    const result = await showPopup(i18nModel.t('confirm-del-tag'),
+    const result = await showPopup(i18nModel.t('alert.confirm.deleteTag'),
         'question', true);
 
     if (result.isConfirmed) {
@@ -286,7 +286,7 @@ async function editLocation(id) {
 }
 
 async function confirmDeleteLocation(id) {
-    const result = await showPopup(i18nModel.t('confirm-del-loc'),
+    const result = await showPopup(i18nModel.t('alert.confirm.deleteLoc'),
         'question', true);
 
     if (result.isConfirmed) {

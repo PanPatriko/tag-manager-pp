@@ -21,12 +21,12 @@ export const locationModalController = {
 
         if (location == null) {
             modalModel.modalMode = ModalMode.NEW;
-            title = i18nModel.t('loc-add');
+            title = i18nModel.t('modal.loc.add');
             name = '';
             path = '';
         } else {
             modalModel.modalMode = ModalMode.EDIT;
-            title = i18nModel.t('loc-edit');
+            title = i18nModel.t('modal.loc.edit');
             name = location.name;
             path = location.path;
         }
@@ -46,17 +46,17 @@ async function saveLocation() {
     const path = locationModalView.getPathValue();
 
     if (name == null || name === '') {
-        showPopup(i18nModel.t('loc-alert-empty-name'), 'warning')
+        showPopup(i18nModel.t('alert.emptyLocName'), 'warning')
         return;
     }
 
     if (path == null || path === '') {
-        showPopup(i18nModel.t('loc-alert-empty-path'), 'warning')
+        showPopup(i18nModel.t('alert.emptyLocPath'), 'warning')
         return;
     }
 
     if (modalModel.modalMode === ModalMode.NEW && locationsModel.findLocationByPath(path)) {
-        showPopup(i18nModel.t('loc-alert-duplicate-path'), 'warning')
+        showPopup(i18nModel.t('alert.DuplicateLocPath'), 'warning')
         return;
     }
     

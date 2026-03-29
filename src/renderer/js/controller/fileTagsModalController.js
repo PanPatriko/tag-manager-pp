@@ -64,7 +64,7 @@ async function addTags() {
     const selectedFiles = filesModel.getSelectedFiles();
 
     if (modalModel.isTagIdsEmpty()) {
-        showPopup(i18nModel.t('alert-no-tags-selected'), 'warning');
+        showPopup(i18nModel.t('alert.noTagsSelected'), 'warning');
         return;
     }
 
@@ -94,7 +94,7 @@ async function removeTags() {
     const selectedFiles = filesModel.getSelectedFiles();
 
     if (modalModel.isTagIdsEmpty()) {
-        showPopup(i18nModel.t('alert-no-tags-selected'), 'warning');
+        showPopup(i18nModel.t('alert.noTagsSelected'), 'warning');
         return;
     }
 

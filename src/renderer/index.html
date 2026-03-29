@@ -11,16 +11,16 @@
 <body>
 
     <header>
-        <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
-        <button id="theme-toggle" class="ico-bttn" data-i18n-title="title-theme"></button>
+        <button id="toggle-tag-sidebar" class="ico-bttn" data-i18n-title="header.sidebar"></button>
+        <button id="theme-toggle" class="ico-bttn" data-i18n-title="header.theme"></button>
         <button id="open-settings-modal" class="ico-bttn" data-i18n-title="settings"></button>
         <div id="search-container">
-            <input type="text" id="search-input" data-i18n-placeholder="header-search-placeholder">
-            <button id="search-button" class="ico-bttn" data-i18n-title="title-search"></button>
+            <input type="text" id="search-input" data-i18n-placeholder="header.searchPlaceholder">
+            <button id="search-button" class="ico-bttn" data-i18n-title="common.search"></button>
             <ul id="search-suggestions" class="suggestions-container"></ul>
         </div>
         <div id="search-tags-container"></div>
-        <button id="toggle-file-sidebar" class="ico-bttn" data-i18n-title="title-sidebar"></button>
+        <button id="toggle-file-sidebar" class="ico-bttn" data-i18n-title="header.sidebar"></button>
     </header>
 
     <div id="app">
@@ -28,20 +28,20 @@
             <div id="left-resize-handle" class="left-sidebar-item resize-handle"></div>
             <div id="left-sidebar-menu" class="left-sidebar-item">
                 <button id="location-button" class="menu-element ico-bttn" data-panel="location-panel"
-                    data-i18n-title="title-locations"></button>
+                    data-i18n-title="loc.manageLocations"></button>
                 <button id="tags-button" class="menu-element ico-bttn" data-panel="tags-panel"
-                    data-i18n-title="title-tags"></button>    
+                    data-i18n-title="tag.manageTags"></button>    
                 <button id="file-tags-button" class="menu-element ico-bttn" data-panel="file-tags-panel"
-                    data-i18n-title="title-file-info"></button>
+                    data-i18n-title="fileInfo"></button>
             </div>
             <div id="tags-panel" class="left-sidebar-item">
-                <button id="add-tag" class="ico-bttn" data-i18n-title="tag-add"></button>
+                <button id="add-tag" class="ico-bttn" data-i18n-title="modal.tag.add"></button>
                 <div id="tags-container" class="tags-view"></div>
             </div>
             <div id="location-panel" class="left-sidebar-item">        
                 <div id="location-menu">
-                    <button id="add-location" class="ico-bttn" data-i18n-title="loc-add"></button>
-                    <button id="find-files" class="ico-bttn" data-i18n-title="find-files"></button>
+                    <button id="add-location" class="ico-bttn" data-i18n-title="modal.loc.add"></button>
+                    <button id="find-files" class="ico-bttn" data-i18n-title="loc.findFiles"></button>
                     <progress id="find-files-loading-bar" class="hidden" value="0" max="100"></progress>
                 </div>         
                 <div id="location-container" class="location-view"></div>
@@ -49,32 +49,32 @@
                 <div id="directory-container"></div>
             </div>
             <div id="file-tags-panel" class="left-sidebar-item">
+                <button id="file-name-save" class="ico-bttn" data-i18n-title="common.save" disabled></button>
                 <section id="file-info">
                     <ul id="fileinfo-container">
                         <li>
-                            <span readonly data-i18n="title-file-name"></span>
-                            <button id="file-name-save" class="ico-bttn" data-i18n-title="save" disabled></button>
-                            <input id="file-name" data-i18n-title="title-file-name"></input>
+                            <span readonly data-i18n="fileInfo.name"></span>
+                            <input id="file-name" data-i18n-title="fileInfo.name"></input>
                         </li>
                         <li>
-                            <span readonly data-i18n="title-file-path"></span>
-                            <input id="file-path" readonly data-i18n-title="title-file-path"></input>
+                            <span readonly data-i18n="fileInfo.path"></span>
+                            <input id="file-path" readonly data-i18n-title="fileInfo.path"></input>
                         </li>
                         <li>
-                            <span readonly data-i18n="title-file-id"></span>
-                            <input id="file-id" readonly data-i18n-title="title-file-id"></input>
+                            <span readonly data-i18n="fileInfo.id"></span>
+                            <input id="file-id" readonly data-i18n-title="fileInfo.id"></input>
                         </li>
                         <li>
-                            <span readonly data-i18n="title-file-size"></span>
-                            <input id="file-size" readonly data-i18n-title="title-file-size"></input>
+                            <span readonly data-i18n="fileInfo.size"></span>
+                            <input id="file-size" readonly data-i18n-title="fileInfo.size"></input>
                         </li>
                         <li>
-                            <span readonly data-i18n="title-file-creation-date"></span>
-                            <input id="file-creation-date" readonly data-i18n-title="title-file-creation-date"></input>
+                            <span readonly data-i18n="fileInfo.creationDate"></span>
+                            <input id="file-creation-date" readonly data-i18n-title="fileInfo.creationDate"></input>
                         </li>
                         <li>
-                            <span readonly data-i18n="title-file-modified-date"></span>
-                            <input id="file-modified-date" readonly data-i18n-title="title-file-modified-date"></input>
+                            <span readonly data-i18n="fileInfo.modifiedDate"></span>
+                            <input id="file-modified-date" readonly data-i18n-title="fileInfo.modifiedDate"></input>
                         </li>
                     </ul>
                 </section>
@@ -85,20 +85,20 @@
         <section id="content">
             <section id="files-bar">
                 <div class="files-bar-group">
-                    <button id="prev-button" class="ico-bttn" data-i18n-title="back"></button>
-                    <button id="next-button" class="ico-bttn" data-i18n-title="next"></button>
+                    <button id="prev-button" class="ico-bttn" data-i18n-title="common.back"></button>
+                    <button id="next-button" class="ico-bttn" data-i18n-title="common.next"></button>
                 </div>
                 
                 <div class="files-bar-group">
-                    <button id="sort-by-name" class="ico-bttn" data-i18n-title="title-sort-by-name"></button>
-                    <button id="sort-by-date" class="ico-bttn" data-i18n-title="title-sort-by-date"></button>
+                    <button id="sort-by-name" class="ico-bttn" data-i18n-title="content.sortName"></button>
+                    <button id="sort-by-date" class="ico-bttn" data-i18n-title="content.sortDate"></button>
                 </div>
                 
                 <div class="files-bar-group">
-                    <button id="parent-directory" class="ico-bttn" data-i18n-title="title-up-dir" disabled></button>
-                    <button id="prev-page" class="ico-bttn" data-i18n-title="title-prev-page"></button>
+                    <button id="parent-directory" class="ico-bttn" data-i18n-title="content.upDir" disabled></button>
+                    <button id="prev-page" class="ico-bttn" data-i18n-title="content.prevPage"></button>
                     <select id="file-pages"></select>
-                    <button id="next-page" class="ico-bttn" data-i18n-title="title-next-page"></button>
+                    <button id="next-page" class="ico-bttn" data-i18n-title="content.nextPage"></button>
                 </div>
                 
                 <div class="files-bar-group files-bar-info">
@@ -123,7 +123,7 @@
 
     <div id="settings-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="modal-close" id="close-settings-modal" data-i18n-title="close" tabindex="0">&times;</span>
+            <span class="modal-close" id="close-settings-modal" data-i18n-title="common.close" tabindex="0">&times;</span>
             <h2 class="modal-title" data-i18n="settings"></h2>
             <div class="modal-body">
                 <ul id="settings-container">
@@ -223,67 +223,67 @@
 
     <div id="tag-form-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="modal-close" data-i18n-title="close" tabindex="0">&times;</span>
+            <span class="modal-close" data-i18n-title="common.close" tabindex="0">&times;</span>
             <h2 class="modal-title" id="tag-modal-title"></h2>
             <div class="modal-body">
-                <span data-i18n="tag-name"></span>
-                <input type="text" id="tag-name" data-i18n-placeholder="tag-name-placeholder"/>
-                <span data-i18n="tag-parent-name"></span>
+                <span data-i18n="modal.tag.name"></span>
+                <input type="text" id="tag-name" data-i18n-placeholder="modal.tag.namePlaceholder"/>
+                <span data-i18n="modal.tag.parentName"></span>
                 <div id="parent-tag-search-container">
-                    <input type="text" id="parent-name" data-i18n-placeholder="tag-parent-name-placeholder">
+                    <input type="text" id="parent-name" data-i18n-placeholder="modal.tag.parentNamePlaceholder">
                     <ul id="parent-name-suggestions" class="suggestions-container hidden"></ul>
                 </div>
                 <div id="parent-tag"></div>
-                <button id="clear-parent-tag" data-i18n="tag-clear-parent"></button>     
-                <span data-i18n="tag-color"></span>
+                <button id="clear-parent-tag" data-i18n="modal.tag.parentClear"></button>     
+                <span data-i18n="modal.tag.bgColor"></span>
                 <input type="color" id="color">
-                <span data-i18n="tag-text-color"></span>
+                <span data-i18n="modal.tag.textColor"></span>
                 <input type="color" id="textcolor">
             </div>
             <div class="modal-footer">
-                <button class="modal-cancel" id="tag-modal-cancel" data-i18n-title="cancel">✗</button>
-                <button class="modal-confirm" id="tag-modal-ok" data-i18n-title="save">✓</button>
+                <button class="modal-cancel" id="tag-modal-cancel" data-i18n-title="common.cancel">✗</button>
+                <button class="modal-confirm" id="tag-modal-ok" data-i18n-title="common.save">✓</button>
             </div>
         </div>
     </div>
 
     <div id="location-form-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="modal-close" data-i18n-title="close" tabindex="0">&times;</span>
+            <span class="modal-close" data-i18n-title="common.close" tabindex="0">&times;</span>
             <h2 id="loc-modal-title" class="modal-title"></h2>
             <div class="modal-body">
-                <span data-i18n="loc-name"></span>
-                <input type="text" id="loc-name" data-i18n-placeholder="loc-name-placeholder">
-                <span data-i18n="loc-path"></span>
+                <span data-i18n="modal.loc.name"></span>
+                <input type="text" id="loc-name" data-i18n-placeholder="modal.loc.namePlaceholder">
+                <span data-i18n="modal.loc.path"></span>
                 <div class="loc-path-container">
-                    <input type="text" id="loc-path" data-i18n-placeholder="loc-path-placeholder" readonly>
-                    <button id="loc-path-btn" data-i18n="browse"></button>
+                    <input type="text" id="loc-path" data-i18n-placeholder="modal.loc.pathPlaceholder" readonly>
+                    <button id="loc-path-btn" data-i18n="common.browse"></button>
                 </div>
             </div>
             <div class="modal-footer">           
-                <button id="loc-modal-cancel" class="modal-cancel" data-i18n-title="cancel">✗</button>
-                <button id="loc-modal-ok" class="modal-confirm" data-i18n-title="save">✓</button>
+                <button id="loc-modal-cancel" class="modal-cancel" data-i18n-title="common.cancel">✗</button>
+                <button id="loc-modal-ok" class="modal-confirm" data-i18n-title="common.save">✓</button>
             </div>
         </div>
     </div>
 
     <div id="file-tag-form-modal" class="modal hidden">
         <div class="modal-content">
-            <span id="close-file-tag-modal-button" class="modal-close" data-i18n-title="close" tabindex="0">&times;</span>
-            <h2 class="modal-title" data-i18n="file-tag-title"></h2>
+            <span id="close-file-tag-modal-button" class="modal-close" data-i18n-title="common.close" tabindex="0">&times;</span>
+            <h2 class="modal-title" data-i18n="modal.fileTag.edit"></h2>
             <div class="modal-body">
                 <div id="modal-file-tags-container"></div>
-                <span data-i18n="file-tag-search"></span>
-                <input type="text" id="file-tag-search" data-i18n-placeholder="file-tag-search-placeholder">
+                <span data-i18n="modal.fileTag.search"></span>
+                <input type="text" id="file-tag-search" data-i18n-placeholder="modal.fileTag.searchPlaceholder">
                 <div>
                     <input type="checkbox" id="show-child-tags">
-                    <span data-i18n="file-tag-show-child-tags"></span>
+                    <span data-i18n="modal.fileTag.showChildTags"></span>
                 </div>
                 <div id="modal-file-tags-tree"></div>
             </div>
             <div class="modal-footer">              
-                <button id="remove-tags-button" class="modal-cancel" data-i18n-title="file-tag-remove">–</button>
-                <button id="add-tags-button" class="modal-confirm" data-i18n-title="file-tag-add">+</button>
+                <button id="remove-tags-button" class="modal-cancel" data-i18n-title="modal.fileTag.remove">–</button>
+                <button id="add-tags-button" class="modal-confirm" data-i18n-title="modal.fileTag.add">+</button>
             </div>
         </div>
     </div>

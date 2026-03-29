@@ -1,7 +1,7 @@
 #files-bar {
     display: flex;
     flex-shrink: 0;
-    padding: 0.5rem 1rem;
+    padding: var(--spacing-xl);
     border-bottom: var(--border);
     box-sizing: border-box;
     overflow: auto;

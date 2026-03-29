@@ -49,34 +49,46 @@
                 <div id="directory-container"></div>
             </div>
             <div id="file-tags-panel" class="left-sidebar-item">
-                <button id="file-name-save" class="ico-bttn" data-i18n-title="common.save" disabled></button>
                 <section id="file-info">
-                    <ul id="fileinfo-container">
-                        <li>
-                            <span readonly data-i18n="fileInfo.name"></span>
-                            <input id="file-name" data-i18n-title="fileInfo.name"></input>
-                        </li>
-                        <li>
-                            <span readonly data-i18n="fileInfo.path"></span>
-                            <input id="file-path" readonly data-i18n-title="fileInfo.path"></input>
-                        </li>
-                        <li>
-                            <span readonly data-i18n="fileInfo.id"></span>
-                            <input id="file-id" readonly data-i18n-title="fileInfo.id"></input>
-                        </li>
-                        <li>
-                            <span readonly data-i18n="fileInfo.size"></span>
-                            <input id="file-size" readonly data-i18n-title="fileInfo.size"></input>
-                        </li>
-                        <li>
-                            <span readonly data-i18n="fileInfo.creationDate"></span>
-                            <input id="file-creation-date" readonly data-i18n-title="fileInfo.creationDate"></input>
-                        </li>
-                        <li>
-                            <span readonly data-i18n="fileInfo.modifiedDate"></span>
-                            <input id="file-modified-date" readonly data-i18n-title="fileInfo.modifiedDate"></input>
-                        </li>
-                    </ul>
+                    <table id="fileinfo-container">
+                        <tr>
+                            <td readonly data-i18n="fileInfo.name"></td>
+                            <td>
+                                <button id="file-name-save" data-i18n-title="common.save" disabled></button>
+                                <input id="file-name"></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td readonly data-i18n="fileInfo.path"></td>
+                            <td>
+                                <input id="file-path" readonly></input>
+                            </td>                    
+                        </tr>
+                        <tr>
+                            <td readonly data-i18n="fileInfo.id"></td>
+                            <td>
+                                <input id="file-id" readonly></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td readonly data-i18n="fileInfo.size"></td>
+                            <td>
+                                <input id="file-size" readonly></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td readonly data-i18n="fileInfo.creationDate"></td>
+                            <td>
+                                <input id="file-creation-date" readonly></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td readonly data-i18n="fileInfo.modifiedDate"></td>
+                            <td>
+                                <input id="file-modified-date" readonly></input>
+                            </td>
+                        </tr>
+                    </table>
                 </section>
                 <div id="file-tags-container" class="tags-view"></div>
             </div>

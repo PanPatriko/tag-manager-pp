@@ -28,7 +28,6 @@ export const  filePreviewController = {
         });
 
         filePreviewView.onFileNameInput(() => {
-            filePreviewView.resizeFileNameInput();
             if (!fileExists) return;
             if (filePreviewView.getFileNameValue().trim() 
                 === filesModel.currentPreviewFile?.name) {

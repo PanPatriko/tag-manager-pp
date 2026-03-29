@@ -1,4 +1,4 @@
-import { inputAutoResize, formatSize, formatBirthtime } from '../utils.js';
+import { formatSize, formatBirthtime } from '../utils.js';
 
 export const filePreviewView = {
     info: null,
@@ -41,36 +41,23 @@ export const filePreviewView = {
     },
 
     setFileInfo(file) {
+        this.hideFileNameSaveButton();
         this.fileNameInput.value = file.name || '';
         this.filePathInput.value = file.path || '';
         this.fileIdInput.value = file.id || '';
         this.fileSizeInput.value = formatSize(file.size) || '';
         this.fileCreatedInput.value = formatBirthtime(file.created_at) || '';
         this.fileModifiedInput.value = formatBirthtime(file.last_modified) || '';
-        this.resizeFileInputs();
     },
 
     clearFileInfo() {
+        this.hideFileNameSaveButton();
         this.fileNameInput.value = '';
         this.filePathInput.value = '';
         this.fileIdInput.value = '';
         this.fileSizeInput.value = '';
         this.fileCreatedInput.value = '';
         this.fileModifiedInput.value = '';
-        this.resizeFileInputs();
-    },
-
-    resizeFileInputs() {
-        inputAutoResize(this.fileIdInput);
-        inputAutoResize(this.fileSizeInput);
-        inputAutoResize(this.fileCreatedInput);
-        inputAutoResize(this.fileModifiedInput);
-        inputAutoResize(this.filePathInput);
-        inputAutoResize(this.fileNameInput);
-    },
-
-    resizeFileNameInput() {
-        inputAutoResize(this.fileNameInput);
     },
 
     clearTags() {

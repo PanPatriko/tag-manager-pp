@@ -4,34 +4,79 @@
 }
 
 #fileinfo-container {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+    width: 100%;
+    border-collapse: separate;
 }
 
-#fileinfo-container li {
+/* each row is a two-column grid: label | control */
+#fileinfo-container tr {
+    display: grid;
+    grid-template-columns: 32% 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+#fileinfo-container td,
+#fileinfo-container th {
+    border: none;
+    padding: 5px 8px;
+    vertical-align: middle;
+    background: transparent;
+}
+
+/* label cell */
+#fileinfo-container td:first-child {
+    font-weight: 600;
+}
+
+/* control cell (inputs / buttons) */
+#fileinfo-container td:last-child {
     display: flex;
     align-items: center;
-    padding: 8px 0;
-}
-
-#fileinfo-container span {
-    flex: 0 0 auto;
-    width: 90px;
-    margin-left: 5px;
-    font-weight: bold;
+    gap: 8px;
 }
 
 #fileinfo-container input {
-    margin: 0 5px 0 5px;
     width: 100%;
-    border-radius: 15px;
-    padding: 5px;
-    font-size: medium;
-    text-align: center;
+    height: 36px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    outline: none;
+    transition: box-shadow 120ms ease, border-color 120ms ease;
 }
 
+/* Save button */
 #file-name-save {
-    margin-right: 5px;
+    height: 36px;
+    width: 36px;
+    border-radius: 6px;
+    border: none;
     background-image: url('../../../images/save-disk.png');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsiveness: stack label above control on narrow screens */
+@media (max-width: 560px) {
+    #fileinfo-container tr {
+        grid-template-columns: 1fr;
+    }
+
+    #fileinfo-container td:first-child {
+        padding-bottom: 4px;
+        color: var(--text-secondary, #333);
+    }
+
+    #fileinfo-container td:last-child {
+        width: 100%;
+    }
+
+    #file-name-save {
+        height: 34px;
+        width: 34px;
+    }
 }

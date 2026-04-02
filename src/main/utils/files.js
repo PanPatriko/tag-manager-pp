@@ -359,21 +359,23 @@ async function processEntry(directoryPath, entry, indexes) {
             };
         }
 
-        // STEP 2 — path lookup
-        if (pathIndex.has(fullPath)) {
+        // STEP 2 — resolve ambiguous metadata match by path + metadata
+        if (candidates.length > 1 && pathIndex.has(fullPath)) {
             const dbFile = pathIndex.get(fullPath);
 
-            return {
-                name: entry.name,
-                path: fullPath,
-                isDirectory: entry.isDirectory(),
-                id: dbFile.id,
-                size: fileSize,
-                fingerprint: dbFile.fingerprint,
-                created_at: birthtimeMs,
-                last_modified: mtimeMs,
-                fromCache: true
-            };
+            if (dbFile.size === fileSize && dbFile.last_modified === mtimeMs) {
+                return {
+                    name: entry.name,
+                    path: fullPath,
+                    isDirectory: entry.isDirectory(),
+                    id: dbFile.id,
+                    size: fileSize,
+                    fingerprint: dbFile.fingerprint,
+                    created_at: birthtimeMs,
+                    last_modified: mtimeMs,
+                    fromCache: true
+                };
+            }
         }
 
         // STEP 3 — new file

@@ -74,6 +74,15 @@ export const settingsController = {
             settingsModel.thumbGen = checked;
         });
 
+        settingsView.onThumbsClearClick(async () => {
+            const { success, message } = await window.api.clearThumbnailCache();
+            if (success) {
+                showPopup(i18nModel.t('settings.files.thumbnailClearSuccess'), 'success');
+            } else {
+                showPopup(message, 'error');
+            }
+        });
+
         settingsView.onSearchBarModeChange((value) => {
             settingsModel.searchBarMode = value;
         });

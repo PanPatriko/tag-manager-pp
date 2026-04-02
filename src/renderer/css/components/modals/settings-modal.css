@@ -34,3 +34,9 @@
     height: 20px;
     border-radius: 4px;
 }
+
+#settings-container li button {
+    flex: 1 1 50%;
+    height: 20px;
+    border-radius: 4px;
+}

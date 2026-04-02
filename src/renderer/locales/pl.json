@@ -101,6 +101,8 @@
     "settings.files": "Panel plików",
     "settings.files.iconSize": "Rozmiar ikony plików",
     "settings.files.maxFiles": "Maksymalna liczba plików na stronie",
+    "settings.files.thumbnailClear": "Wyczyść pamięć podręczną miniatur",    
+    "settings.files.thumbnailClearSuccess": "Pomyślnie wyczyszczono pamięć podręczną miniatur",
     "settings.files.thumbnailGeneration": "Generowanie miniatur",
     "settings.video": "Video",
     "settings.video.autoPlay": "Automatyczne odtwarzanie",

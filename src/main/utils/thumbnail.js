@@ -12,6 +12,30 @@ async function ensureThumbnailDir() {
     await fsp.mkdir(THUMBNAIL_DIR, { recursive: true });
 }
 
+async function clearThumbnailCache() {
+    try {
+        if (typeof fsp.rm === 'function') {
+            await fsp.rm(THUMBNAIL_DIR, { recursive: true, force: true });
+        } else {
+            // older Node versions
+            await fsp.rmdir(THUMBNAIL_DIR, { recursive: true });
+        }
+        // recreate thumbnail dir
+        await ensureThumbnailDir();
+        console.log('Thumbnail cache cleared');      
+        return {
+            success: true,
+            message: 'ok'
+        };
+    } catch (err) {
+        console.error('Error clearing thumbnail cache', err);
+        return {
+            success: false,
+            message: err.message || 'Unknown error'
+        };
+    }
+}
+
 async function getVideoDimensions(filePath) {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(filePath, (err, metadata) => {
@@ -134,5 +158,6 @@ async function generateOrGetThumbnail(file, generateIfMissing = true) {
 }
 
 module.exports = {
-    generateOrGetThumbnail
+    generateOrGetThumbnail,
+    clearThumbnailCache
 };

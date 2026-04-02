@@ -5,6 +5,7 @@ export const settingsView = {
     iconSize: null,
     maxFiles: null,
     thumbGenCheckbox: null,
+    clearThumbsButton: null,
     searchBarModeSelect: null,
     tagModalModeSelect: null,
     fileTagModalModeSelect: null,
@@ -26,6 +27,7 @@ export const settingsView = {
         this.videoLoopCheckbox = document.getElementById('vid-loop');
         this.defaultTagColor = document.getElementById('def-tag-bgcolor');
         this.defaultTagTextColor = document.getElementById('def-tag-textcolor');
+        this.clearThumbsButton = document.getElementById('clear-thumb-cache');
     },
 
     setLanguage(value) {
@@ -109,6 +111,10 @@ export const settingsView = {
 
     onThumbGenChange(handler) {
         this.thumbGenCheckbox.addEventListener('change', (e) => handler(e.target.checked));
+    },
+
+    onThumbsClearClick(handler) {
+        this.clearThumbsButton.addEventListener('click', () => handler());
     },
 
     onSearchBarModeChange(handler) {

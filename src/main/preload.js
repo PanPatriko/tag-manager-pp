@@ -48,6 +48,7 @@ contextBridge.exposeInMainWorld('api', {
     getDirectoryHierarchy: (path) => ipcRenderer.invoke('files:getDirectoryHierarchy', path),
     getDirectoryParent: (path) => ipcRenderer.invoke('files:getDirectoryParent', path),
     generateThumbnail: (file, generateIfMissing) => ipcRenderer.invoke('files:generateThumbnail', file, generateIfMissing),
+    clearThumbnailCache: () => ipcRenderer.invoke('files:clearThumbnailCache'),
     on: (channel, callback) => {
         // Optional: whitelist allowed channels for security
         const validChannels = ['scan:progress', 'scan:complete', 'getFiles:progress', 'getFiles:complete'];

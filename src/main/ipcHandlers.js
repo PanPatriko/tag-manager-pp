@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { getDirectoryHierarchy, getDirectoryParent, locateMissingFiles, getFilesInPath } = require('./utils/files.js');
-const { generateOrGetThumbnail } = require('./utils/thumbnail.js');
+const { generateOrGetThumbnail, clearThumbnailCache } = require('./utils/thumbnail.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
 const { getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
@@ -196,6 +196,15 @@ ipcMain.handle('files:fileExists', async (event, filePath) => {
 ipcMain.handle('files:generateThumbnail', async (event, file, generateIfMissing) => {
   try {
     return await generateOrGetThumbnail(file, generateIfMissing);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+});
+
+ipcMain.handle('files:clearThumbnailCache', async (event) => {
+  try {
+    return await clearThumbnailCache();
   } catch (error) {
     console.error(error);
     return null;

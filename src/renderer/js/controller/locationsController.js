@@ -136,12 +136,13 @@ async function onFindFilesClick() {
         return;
     }
 
-    const unsubscribe = window.api.on('scan:progress', (data) => {
+    const unsubProgress = window.api.on('scan:progress', (data) => {
         console.log('Progress:', data.progress, data.scanned, data.total);
         locationsView.updateLoadingBar(data.progress);
     });
 
-    window.api.on('scan:complete', (data) => {
+    let unsubComplete = () => {};
+    unsubComplete = window.api.on('scan:complete', (data) => {
         console.log('Scan done!', data.found, data.totalMissing);
         locationsView.hideLoadingBar();
         const text = formatString(i18nModel.t('alert.findFilesComplete'), {
@@ -149,10 +150,16 @@ async function onFindFilesClick() {
             totalMissing: data.totalMissing
         });
         showPopup(text, 'success');
-        unsubscribe();
+        unsubProgress();
+        unsubComplete();
     });
 
-    await window.api.locateMissingByFingerprint(missingFingerprints, path);
+    try {
+        await window.api.locateMissingByFingerprint(missingFingerprints, path);
+    } finally {
+        unsubProgress();
+        unsubComplete();
+    }
 };
 
 function onMouseMove(e) {

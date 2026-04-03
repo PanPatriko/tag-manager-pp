@@ -121,30 +121,37 @@ export const filesController = {
 
         filesView.showLoadingBar();
 
-        const unsubscribe = window.api.on('getFiles:progress', async (data) => {
+        const unsubProgress = window.api.on('getFiles:progress', (data) => {
             filesView.updateLoadingBar(data.progress);
         });
-    
-        window.api.on('getFiles:complete', (data) => {
-            unsubscribe();
+
+        let unsubComplete = () => { };
+        unsubComplete = window.api.on('getFiles:complete', () => {
+            unsubProgress();
+            unsubComplete();
             filesView.hideLoadingBar();
         });
-        
-        const dirFiles = await window.api.getFilesInPath(dirPath);
 
-        if (dirFiles.error) {
-            console.error('displayDirectory: error', dirFiles.error);
-            showPopup(dirFiles.error, 'error');
-            return;
+        try {
+            const dirFiles = await window.api.getFilesInPath(dirPath);
+
+            if (dirFiles.error) {
+                console.error('displayDirectory: error', dirFiles.error);
+                showPopup(dirFiles.error, 'error');
+                return;
+            }
+
+            paginationView.disableParentDir(locationsModel.root === dirPath);
+            paginationView.setDirectoryName(await path.basename(dirPath));
+
+            locationsModel.currentDirectory = dirPath;
+            filesModel.files = dirFiles;
+            await filesModel.sortFiles();
+            await this.displayFiles();
+        } finally {
+            unsubProgress();
+            unsubComplete();
         }
-
-        paginationView.disableParentDir(locationsModel.root === dirPath);
-        paginationView.setDirectoryName(await path.basename(dirPath));
-
-        locationsModel.currentDirectory = dirPath;
-        filesModel.files = dirFiles;
-        await filesModel.sortFiles();
-        await this.displayFiles();
     },
 
     async displayFiles() {

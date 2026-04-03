@@ -67,6 +67,9 @@ export const filePreviewView = {
     clearPreview() {
         if (!this.preview) this.init();
 
+        Array.from(this.preview.children).forEach((child) => {
+            this._disposePreviewElement(child);
+        });
         this.preview.innerHTML = '';
         this.preview.dataset.i18n = '';
         this.preview.textContent = '';
@@ -117,6 +120,21 @@ export const filePreviewView = {
                 this.preview.style.position = 'relative';
             }
         }
+    },
+
+    _disposePreviewElement(el) {
+        if (!(el instanceof HTMLMediaElement)) return;
+
+        el.pause();
+        el.removeAttribute('src');
+
+        while (el.firstChild) {
+            el.removeChild(el.firstChild);
+        }
+
+        // Calling load() after removing the source makes the browser tear down
+        // the media pipeline and release any file handle it still holds.
+        el.load();
     },
 
     setTransform(el, scale) {

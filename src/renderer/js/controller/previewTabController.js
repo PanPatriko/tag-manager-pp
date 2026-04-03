@@ -54,6 +54,10 @@ export const previewTabController = {
             await filePreviewController.renderFilePreview(file);
         }
 
+        if (type === 'release-preview') {
+            filePreviewController.releasePreviewResources();
+        }
+
         if (type === 'update-lang' && language) {
             await i18nModel.load(language);
             previewTabView.setPageTitle(i18nModel.t('previewTab.title') || 'File Preview');
@@ -84,5 +88,9 @@ export const previewTabController = {
         if (this.previewWindow && !this.previewWindow.closed) {
             this.previewWindow.postMessage({ type, ...data }, '*');
         }
+    },
+
+    releasePreview() {
+        this.sendPostMessage('release-preview', {});
     }
 };

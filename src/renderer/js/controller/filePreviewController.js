@@ -9,6 +9,7 @@ import { rightSidebarView } from '../view/rightSidebarView.js';
 import { tagsView, TagClass } from '../view/tagsView.js';
 
 import { filesController } from './filesController.js';
+import { previewTabController } from './previewTabController.js';
 
 let currentDetach = null;
 let isResizing = false;
@@ -135,6 +136,15 @@ export const  filePreviewController = {
             console.error('renderFilePreview error', err);
             filePreviewView.setError('fileInfo.formatErr', i18nModel.t('fileInfo.formatErr'));
         }
+    },
+
+    releasePreviewResources() {
+        if (typeof currentDetach === 'function') {
+            currentDetach();
+            currentDetach = null;
+        }
+
+        filePreviewView.clearPreview();
     }
 };
 
@@ -209,33 +219,49 @@ async function handleFileNameSave() {
     const newFileName = filePreviewView.getFileNameValue().trim();
     const fileId = current.id;
     const oldFilePath = current.path;
+    const fileEntry = filesModel.getFileByPath(oldFilePath);
 
     try {
+        filePreviewController.releasePreviewResources();
+        previewTabController.releasePreview();
+
+        // Give Chromium a moment to tear down video decoding/file handles
+        // before the main process attempts the filesystem rename.
+        await new Promise(resolve => setTimeout(resolve, 50));
+
         // choose API once
         const result = await window.api.updateFile(fileId, newFileName, oldFilePath)
 
         if (!result || !result.success) {
             const errMsg = result?.error ?? 'Unknown';
+            await filePreviewController.renderFilePreview(current);
+            previewTabController.sendPostMessage('update-preview', { file: current });
             showPopup(i18nModel.t('alert.changeFileNameErr') + errMsg, 'error');
             return;
         }
 
         // apply success changes
         const newPath = result.newFilePath ?? oldFilePath;
+        current.name = newFileName;
+        current.path = newPath;
         filePreviewView.setFilePathValue(newPath);
         filePreviewView.hideFileNameSaveButton();
 
         // update in-memory filesModel entry if present
-        const fileEntry = filesModel.getFileByPath(oldFilePath);
-        
         if (fileEntry) {
             fileEntry.name = newFileName;
             fileEntry.path = newPath;
         }
 
+        await filePreviewController.renderFileInfo(current);
+        await filePreviewController.renderFilePreview(current);
+        previewTabController.sendPostMessage('update-preview', { file: current });
+
         // refresh preview info and file list UI
         filesController.displayFiles();
     } catch (err) {
+        await filePreviewController.renderFilePreview(current);
+        previewTabController.sendPostMessage('update-preview', { file: current });
         showPopup(i18nModel.t('alert.changeFileNameErr') + err, 'error');
     }
 }

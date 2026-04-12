@@ -13,6 +13,7 @@
     "alert.noTagsSelected": "No tags selected",
     "alert.notAllowedParentTag": "You can't set a child tag as parent tag",
     "alert.noFilesToCheck": "No files to check",
+    "alert.noMetadataLoaded": "File has no metadata loaded. Please wait until metadata is loaded and try again",
     "alert.noMissingFiles": "No missing files found",
     "alert.confirm.deleteFile": "Are you sure you want to delete this file from database?",
     "alert.confirm.deleteLoc": "Are you sure you want to delete this location?",

@@ -13,7 +13,8 @@ contextBridge.exposeInMainWorld('api', {
     getFiles: () => ipcRenderer.invoke('dbfiles:get-files'),
     getFileById: (id) => ipcRenderer.invoke('dbfiles:get-file-by-id', id),
     getFileByPath: (path) => ipcRenderer.invoke('dbfiles:get-file-by-path', path),
-    createFile: (fileData) => ipcRenderer.invoke('dbfiles:create-file', fileData),
+    getAllFilesInDirectory: (directoryPath) => ipcRenderer.invoke('dbfiles:get-all-files-in-directory', directoryPath),
+    addFile: (file) => ipcRenderer.invoke('dbfiles:add-file', file),
     searchFiles: (andTags, orTags, notTags) => ipcRenderer.invoke('dbfiles:search-files', andTags, orTags, notTags),
     updateFile: (fileId, newFileName, oldFilePath) => ipcRenderer.invoke('dbfiles:update-file', fileId, newFileName, oldFilePath),
     deleteFileById: (id) => ipcRenderer.invoke('dbfiles:delete-file', id),
@@ -44,14 +45,15 @@ contextBridge.exposeInMainWorld('api', {
 
     fileExists: (path) => ipcRenderer.invoke('files:fileExists', path),
     getFilesInPath: (path) => ipcRenderer.invoke('files:getFilesInPath', path),
+    enrichFileWithMetadata: (file, pathIndex) => ipcRenderer.invoke('files:enrichFileWithMetadata', file, pathIndex),
     locateMissingByFingerprint: (fingerprints, path) => ipcRenderer.invoke('files:locateMissingByFingerprint', fingerprints, path),
     getDirectoryHierarchy: (path) => ipcRenderer.invoke('files:getDirectoryHierarchy', path),
     getDirectoryParent: (path) => ipcRenderer.invoke('files:getDirectoryParent', path),
-    generateThumbnail: (file, generateIfMissing) => ipcRenderer.invoke('files:generateThumbnail', file, generateIfMissing),
+    generateOrGetThumbnail: (file, generateIfMissing) => ipcRenderer.invoke('files:generateOrGetThumbnail', file, generateIfMissing),
     clearThumbnailCache: () => ipcRenderer.invoke('files:clearThumbnailCache'),
     on: (channel, callback) => {
         // Optional: whitelist allowed channels for security
-        const validChannels = ['scan:progress', 'scan:complete', 'getFiles:progress', 'getFiles:complete'];
+        const validChannels = ['scan:progress'];
 
         if (validChannels.includes(channel)) {
             // Deliberately strip event object to prevent exposure of Electron internals

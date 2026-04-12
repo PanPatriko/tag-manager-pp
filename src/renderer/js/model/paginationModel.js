@@ -17,6 +17,24 @@ export const paginationModel = {
 
     getCurrentPage() {
         return currentPage;
-    }
+    },
+
+    getCurrentPageFiles() {
+        const { start, end } = this.getCurrentPageRange();
+        const currentPageFiles = filesModel.files.slice(start, end);
+        return currentPageFiles;
+    },
+
+    getCurrentPageRange() {
+        let start, end;
+        if (filesModel.files.length === 0) {
+            start = 0;
+            end = 0;
+        } else {
+            start = (paginationModel.getCurrentPage() - 1) * settingsModel.maxFilesPerPage;
+            end = Math.min(start + settingsModel.maxFilesPerPage, filesModel.files.length);
+        }
+        return { start, end };
+    },
 
 }

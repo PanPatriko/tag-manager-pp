@@ -72,7 +72,7 @@ async function addTags() {
         let fileId = file.id;
 
         if (fileId === 'null' || !fileId) {
-            const createdFile = await filesModel.createFile(file);
+            const createdFile = await filesModel.addFileToDB(file);
             filesView.addIdToContainer(createdFile);
             fileId = createdFile.id;
         }

@@ -101,7 +101,7 @@ export const paginationController = {
     },
 
     updateCurrentFiles() {
-        let { start, end } = filesModel.getCurrentPageRange();
+        let { start, end } = paginationModel.getCurrentPageRange();
         if (filesModel.files.length > 0) {
             start += 1;
         }
@@ -111,5 +111,11 @@ export const paginationController = {
         });
 
         paginationView.setCurrentFilesRange(text);
+    },
+
+    updatePagination() {
+        this.updateFilePages();
+        this.updateFileCount();
+        this.updateCurrentFiles();
     }
 }

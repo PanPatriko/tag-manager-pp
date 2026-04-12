@@ -1,3 +1,4 @@
+import { filesModel } from '../model/filesModel.js';
 import { i18nModel } from '../model/i18nModel.js';
 import { paginationModel } from '../model/paginationModel.js';
 import { settingsModel } from '../model/settingsModel.js';
@@ -25,7 +26,6 @@ export const settingsController = {
 
         const maxFiles = settingsModel.maxFilesPerPage;
         settingsView.setMaxFiles(maxFiles);
-        await applyMaxFiles();
 
         settingsView.setThumGen(settingsModel.thumbGen);
 
@@ -67,7 +67,10 @@ export const settingsController = {
 
         settingsView.onMaxFilesChange(async (value) => {
             settingsModel.maxFilesPerPage = value;
-            await applyMaxFiles();
+            paginationModel.setCurrentPage(1);
+            if (filesModel.files.length > 0) {
+                await filesController.displayFiles();
+            }
         });
 
         settingsView.onThumbGenChange((checked) => {
@@ -116,11 +119,5 @@ export const settingsController = {
 async function setLanguage(locale) {
     await i18nModel.load(locale);
     i18nView.applyTranslations(i18nModel.translations);
-    paginationController.updateFileCount();
-}
-
-async function applyMaxFiles() {
-    paginationModel.setCurrentPage(1);
-    paginationController.updateFilePages();
-    await filesController.displayFiles();
+    paginationController.updatePagination();
 }

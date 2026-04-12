@@ -7,7 +7,7 @@ export const filesView = {
     init() {
         this.sortByName = document.getElementById('sort-by-name');
         this.sortByDate = document.getElementById('sort-by-date');
-        this.loadingBar = document.getElementById('thumbs-loading-bar');
+        this.loadingBar = document.getElementById('sort-loading-bar');
         this.panel = document.getElementById('files-panel');
     },
 
@@ -86,7 +86,7 @@ export const filesView = {
     },
 
     createFileElement(file, options = {}) {
-        const { thumbnailSrc = '', fullSize = false, missing = false, containerSize } = options;
+        const { thumbnailSrc = '', containerSize } = options;
 
         const containerWrapper = document.createElement('div');
         containerWrapper.className = 'file-container-wrapper';
@@ -107,8 +107,28 @@ export const filesView = {
         thumbnail.className = 'file-thumbnail';
         thumbnail.alt = file.name;
         thumbnail.src = thumbnailSrc;
+        thumbnail.style.width = '75%';
+        thumbnail.style.height = '75%';   
 
-        // sizing based on computed fullness
+        container.appendChild(thumbnail);
+        containerWrapper.appendChild(container);
+        containerWrapper.appendChild(span);
+
+        this.panel.appendChild(containerWrapper);
+    },
+
+    updateFileElementThumbnail(file, options = {}) {
+        const { thumbnailSrc = '', fullSize = false, missing = false } = options;
+
+        const container = this.findFileContainerByPath(file.path);
+        if (!container) return;
+
+        const thumbnail = container.querySelector('.file-thumbnail');
+
+        thumbnail.src = thumbnailSrc;
+        thumbnail.style.width = '100%';
+        thumbnail.style.height = '100%';
+
         if (fullSize) {
             thumbnail.style.width = '100%';
             thumbnail.style.height = '100%';
@@ -120,13 +140,8 @@ export const filesView = {
         if (missing) {
             container.style.backgroundColor = 'pink';
         }
-
-        container.appendChild(thumbnail);
-        containerWrapper.appendChild(container);
-        containerWrapper.appendChild(span);
-
-        this.panel.appendChild(containerWrapper);
     },
+
 
     getClosestFileContainer(target) {
         return target.closest('.file-container');

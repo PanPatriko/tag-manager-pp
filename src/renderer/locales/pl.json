@@ -13,6 +13,7 @@
     "alert.noTagsSelected": "Nie wybrano tagów",
     "alert.notAllowedParentTag": "Nie możesz ustawić tagu podrzędnego jak tag nadrzędny",
     "alert.noFilesToCheck": "Brak plików do sprawdzenia",
+    "alert.noMetadataLoaded": "Plik nie ma załadowanych metadanych. Poczekaj aż dane się załadują i spróbój ponownie",
     "alert.noMissingFiles": "Nie znaleziono brakujących plików",
     "alert.confirm.deleteFile": "Czy na pewno chcesz usunąć ten plik z bazy?",
     "alert.confirm.deleteLoc": "Czy na pewno chcesz usunąć tą lokalizację?",

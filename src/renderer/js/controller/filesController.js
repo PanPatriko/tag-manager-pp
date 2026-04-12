@@ -1,5 +1,6 @@
 import { filesModel } from '../model/filesModel.js';
 import { locationsModel } from '../model/locationsModel.js';
+import { paginationModel } from '../model/paginationModel.js';
 import { settingsModel } from '../model/settingsModel.js';
 
 import { filesView } from '../view/filesView.js';
@@ -12,7 +13,6 @@ import { previewTabController } from './previewTabController.js';
 
 let lastSelectedIndex = null;
 let displayAbortController = null;
-let thumbnailCache = new Map();
 
 const path = window.api.path;
 
@@ -27,13 +27,13 @@ export const filesController = {
     init() {
         filesView.init();
 
-        filesView.onSortClick(() => {
+        filesView.onSortClick(async () => {
             filesModel.setSortBy('name');
             filesModel.changeSortByNameOrder();
             filesView.updateSortByNameDirectionIndicator(filesModel.sortByNameOrder);
 
-            filesModel.sortFiles();
-            this.displayFiles();
+            await filesModel.sortFiles();
+            await this.displayFiles();
         });
 
         filesView.onSortDateClick(async () => {
@@ -41,8 +41,13 @@ export const filesController = {
             filesModel.changeSortByDateOrder();
             filesView.updateSortByDateDirectionIndicator(filesModel.sortByDateOrder);
 
-            await filesModel.sortFiles();
-            this.displayFiles();
+            filesView.showLoadingBar();
+            await filesModel.sortFiles({
+                onProgress: ({ progress }) => filesView.updateLoadingBar(progress)
+            });
+            filesView.hideLoadingBar();
+
+            await this.displayFiles();
         });
 
         filesView.onPanelClick(async (event) => {
@@ -83,75 +88,65 @@ export const filesController = {
     },
 
     selectAllFiles() {
-        filesModel.selectCurrentPageFiles();
+        filesModel.selectPageFiles();
         filesView.selectAllFiles();
         paginationController.updateSelectedFileCount();
     },
 
     async selectNextFile() {
-        const visible = filesModel.getCurrentPageFiles();
-        if (visible.length === 0) return;
+        const currentFiles = paginationModel.getCurrentPageFiles();
+        if (currentFiles.length === 0) return;
 
         if (lastSelectedIndex === null) {
             lastSelectedIndex = 0;
         } else {
-            lastSelectedIndex = (lastSelectedIndex + 1) % visible.length;
+            lastSelectedIndex = (lastSelectedIndex + 1) % currentFiles.length;
         }
 
-        const fileToSelect = visible[lastSelectedIndex];
+        const fileToSelect = currentFiles[lastSelectedIndex];
         await selectFile(fileToSelect);
     },
 
     async selectPreviousFile() {
-        const visible = filesModel.getCurrentPageFiles();
-        if (visible.length === 0) return;
+        const currentFiles = paginationModel.getCurrentPageFiles();
+        if (currentFiles.length === 0) return;
 
         if (lastSelectedIndex === null) {
-            lastSelectedIndex = visible.length - 1;
+            lastSelectedIndex = currentFiles.length - 1;
         } else {
-            lastSelectedIndex = (lastSelectedIndex - 1 + visible.length) % visible.length;
+            lastSelectedIndex = (lastSelectedIndex - 1 + currentFiles.length) % currentFiles.length;
         }
 
-        const fileToSelect = visible[lastSelectedIndex];
+        const fileToSelect = currentFiles[lastSelectedIndex];
         await selectFile(fileToSelect);
     },
 
     async displayDirectory(dirPath) {
         this.abortDisplay();
 
-        filesView.showLoadingBar();
+        const dirFiles = await window.api.getFilesInPath(dirPath);
 
-        const unsubProgress = window.api.on('getFiles:progress', (data) => {
-            filesView.updateLoadingBar(data.progress);
-        });
-
-        let unsubComplete = () => { };
-        unsubComplete = window.api.on('getFiles:complete', () => {
-            unsubProgress();
-            unsubComplete();
-            filesView.hideLoadingBar();
-        });
-
-        try {
-            const dirFiles = await window.api.getFilesInPath(dirPath);
-
-            if (dirFiles.error) {
-                console.error('displayDirectory: error', dirFiles.error);
-                showPopup(dirFiles.error, 'error');
-                return;
-            }
-
-            paginationView.disableParentDir(locationsModel.root === dirPath);
-            paginationView.setDirectoryName(await path.basename(dirPath));
-
-            locationsModel.currentDirectory = dirPath;
-            filesModel.files = dirFiles;
-            await filesModel.sortFiles();
-            await this.displayFiles();
-        } finally {
-            unsubProgress();
-            unsubComplete();
+        if (dirFiles.error) {
+            console.error('displayDirectory: error', dirFiles.error);
+            showPopup(dirFiles.error, 'error');
+            return;
         }
+
+        paginationView.disableParentDir(locationsModel.root === dirPath);
+        paginationView.setDirectoryName(await path.basename(dirPath));
+
+        locationsModel.currentDirectory = dirPath;
+
+        filesModel.enrichFilesFlag = true;
+        filesModel.files = dirFiles;
+
+        filesView.showLoadingBar();
+        await filesModel.sortFiles({
+            onProgress: ({ progress }) => filesView.updateLoadingBar(progress)
+        });
+        filesView.hideLoadingBar();
+
+        await this.displayFiles();
     },
 
     async displayFiles() {
@@ -164,35 +159,66 @@ export const filesController = {
         filesModel.resetSelection();
         filesView.clearPanel();
 
-        paginationController.updateFilePages();
-        paginationController.updateFileCount();
+        paginationController.updatePagination();
 
-        const currentFiles = filesModel.getCurrentPageFiles();
-        paginationController.updateCurrentFiles();
+        const currentFiles = paginationModel.getCurrentPageFiles();
 
         if (signal.aborted) return;
 
-        filesView.showLoadingBar();
         for (const file of currentFiles) {
             if (signal.aborted) {
-                filesView.hideLoadingBar();
                 return;
             }
-            
-            const { thumbnailSrc, fullSize, missing } = await resolveThumbnailForFile(file);
-            const containerSize = settingsModel.iconSize;
 
             filesView.createFileElement(file, {
-                thumbnailSrc,
-                fullSize,
-                missing,
-                containerSize
+                thumbnailSrc: 'images/file-256.png',
+                containerSize: settingsModel.iconSize
             });
-            const progress = Math.round(((currentFiles.indexOf(file) + 1) / currentFiles.length) * 100);
-            filesView.updateLoadingBar(progress);
         };
-        filesView.hideLoadingBar();
+
+        await generateThumbnails(currentFiles);
     },
+}
+
+async function enrichFileMetadata(file, pathIndex) {
+
+    // Skip files that already have a fingerprint (metadata) to avoid unnecessary processing
+    if (file.fingerprint !== null) {
+        return;
+    }
+
+    const enrichedFile = await window.api.enrichFileWithMetadata(file, pathIndex);
+    Object.assign(file, enrichedFile);  
+}
+
+async function generateThumbnails(files) {
+    const signal = displayAbortController.signal;
+    const pathIndex = new Map();
+
+    if(filesModel.enrichFilesFlag) {
+        const dbFiles = await window.api.getAllFilesInDirectory(locationsModel.currentDirectory);
+
+        for (const file of dbFiles) {
+            pathIndex.set(file.path, file);
+        }
+    }
+
+    for (const file of files) {
+        if (signal.aborted) {
+            return;
+        }
+
+        if (filesModel.enrichFilesFlag) {
+            await enrichFileMetadata(file, pathIndex);  
+        }
+
+        const { thumbnailSrc, fullSize, missing } = await window.api.generateOrGetThumbnail(file, settingsModel.thumbGen);
+        filesView.updateFileElementThumbnail(file, {
+            thumbnailSrc,
+            fullSize,
+            missing
+        });
+    }
 }
 
 function toggleSelection(container, isCtrlPressed, isShiftPressed) {
@@ -243,44 +269,6 @@ async function selectFile(file) {
 
     previewTabController.sendPostMessage('update-preview', { file: file });
 
-    const visible = filesModel.getCurrentPageFiles();
-    lastSelectedIndex = visible.findIndex(f => f.path === file.path);
-}
-
-async function resolveThumbnailForFile(file) {
-
-    // directory
-    if (file.isDirectory) {
-        return { thumbnailSrc: 'images/folder-256.png', fullSize: false, missing: false };
-    }
-
-    const filePath = file.path;
-
-    // file missing
-    if (!await window.api.fileExists(filePath)) {
-        return { thumbnailSrc: 'images/cross.png', fullSize: false, missing: true };
-    }
-
-    // If we have a cached thumbnail path, use it
-    if (thumbnailCache && thumbnailCache.has(filePath)) {
-        const cached = thumbnailCache.get(filePath);
-        if (cached) return { thumbnailSrc: cached, fullSize: true, missing: false };
-        return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
-    }
-
-    // If thumbnail generation is enabled, try to generate (main will return path if successful) and save to cache
-
-    try {
-        const genPath = await window.api.generateThumbnail(file, settingsModel.thumbGen);
-        if (genPath) {
-            thumbnailCache.set(filePath, genPath);
-            return { thumbnailSrc: genPath, fullSize: true, missing: false };
-        }
-    } catch (err) {
-        console.error('resolveThumbnailForFile (generate): error', err);
-    }    
-
-
-    // No thumbnail available
-    return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
+    const currentFiles = paginationModel.getCurrentPageFiles();
+    lastSelectedIndex = currentFiles.findIndex(f => f.path === file.path);
 }

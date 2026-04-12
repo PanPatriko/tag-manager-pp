@@ -17,6 +17,7 @@ export const searchModel = {
         for (const file of files) {
             file.isDirectory = file.is_directory === 1; // Convert to boolean
         }
+        filesModel.enrichFilesFlag = false;
         filesModel.files = files;
         await filesModel.sortFiles();
     },

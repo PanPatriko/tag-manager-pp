@@ -2,10 +2,10 @@ const { ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-const { getDirectoryHierarchy, getDirectoryParent, locateMissingFiles, getFilesInPath } = require('./utils/files.js');
+const { getDirectoryHierarchy, getDirectoryParent, locateMissingFiles, getFilesInPath, enrichFileWithMetadata } = require('./utils/files.js');
 const { generateOrGetThumbnail, clearThumbnailCache } = require('./utils/thumbnail.js');
 const { getTags, getTagById, createTag, updateTag, deleteTag } = require('./db/tags.js');
-const { getFiles, getFileById, getFileByPath, searchFiles, createFile, updateFile, deleteFile } = require('./db/files.js');
+const { getFiles, getFileById, getFileByPath, getAllFilesInDirectory, searchFiles, addFile, updateFile, deleteFile } = require('./db/files.js');
 const { getFileTags, addFileTag, deleteFileTag } = require('./db/filetags.js');
 const { getLocations, createLocation, updateLocation, deleteLocation } = require('./db/locations.js');
 
@@ -43,8 +43,12 @@ ipcMain.handle('dbfiles:get-file-by-path', async (event, path) => {
   return await getFileByPath(path);
 });
 
-ipcMain.handle('dbfiles:create-file', async (event, fileData) => {
-  return await createFile(fileData);
+ipcMain.handle('dbfiles:get-all-files-in-directory', async (event, directoryPath) => {
+  return await getAllFilesInDirectory(directoryPath);
+});
+
+ipcMain.handle('dbfiles:add-file', async (event, fileData) => {
+  return await addFile(fileData);
 });
 
 ipcMain.handle('dbfiles:search-files', async (event, andTags, orTags, notTags) => {
@@ -148,11 +152,19 @@ ipcMain.handle('dialog:show-dialog', async (event, options) => {
 
 ipcMain.handle('files:getFilesInPath', async (event, directoryPath) => {
   try {
-    const files = await getFilesInPath(event, directoryPath);
-    return files;
+    return await getFilesInPath(directoryPath);
   } catch (err) {
     console.error(`Error getting files in path ${directoryPath}:`, err);
     return { error: 'Unable to get files in path', message: err.message };
+  }
+});
+
+ipcMain.handle('files:enrichFileWithMetadata', async (event, file, pathIndex) => {
+  try {
+    return await enrichFileWithMetadata(file, pathIndex);
+  } catch (err) {
+    console.error(`Error enriching file ${file.name}:`, err);
+    return { error: 'Unable to enrich file', message: err.message };
   }
 });
 
@@ -193,7 +205,7 @@ ipcMain.handle('files:fileExists', async (event, filePath) => {
   }
 });
 
-ipcMain.handle('files:generateThumbnail', async (event, file, generateIfMissing) => {
+ipcMain.handle('files:generateOrGetThumbnail', async (event, file, generateIfMissing) => {
   try {
     return await generateOrGetThumbnail(file, generateIfMissing);
   } catch (error) {

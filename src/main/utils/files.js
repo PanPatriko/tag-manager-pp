@@ -3,11 +3,9 @@ const fs = require('fs')
 const fsp = require('fs').promises;
 const path = require('path');
 
-const { findMissingFiles, getAllFilesInDirectory } = require('../db/files.js');
-const { updateFile } = require('../db/files.js');
+const { findMissingFiles, getFileByFingerprint, updateFile } = require('../db/files.js');
 
 const SCAN_CONCURRENCY = 4;
-const PROGRESS_UPDATE_EVERY = 25;
 
 function createLimit(concurrency) {
     let activeCount = 0;
@@ -122,15 +120,8 @@ async function locateMissingFiles(event, missingFingerprints, scanPath) {
 
         await Promise.all(tasks);
 
-        event.sender.send("scan:complete", {
-            found,
-            totalMissing: missingFingerprints.length,
-            updates
-        });
-
         return {
             success: true,
-            message: `Located ${found} out of ${missingFingerprints.length} missing files`,
             updates
         };
 
@@ -168,11 +159,11 @@ async function walkDirectory(dirPath, maxDepth = 10) {
     return results;
 }
 
-function buildIndexes(missingFiles) {
+function buildIndexes(files) {
     const metadataIndex = new Map();
     const sizeSet = new Set();
 
-    for (const file of missingFiles) {
+    for (const file of files) {
         const key = `${file.size}-${file.last_modified}`;
 
         if (!metadataIndex.has(key)) {
@@ -250,9 +241,8 @@ async function processFile(filePath, indexes) {
     }
 }
 
-async function getFilesInPath(event, directoryPath) {
+async function getFilesInPath(directoryPath) { 
     try {
-
         const dirEntries = await fs.promises.readdir(directoryPath, { withFileTypes: true });
 
         const filtered = dirEntries.filter(entry =>
@@ -260,76 +250,40 @@ async function getFilesInPath(event, directoryPath) {
             entry.name !== 'Thumbs.db'
         );
 
-        const total = filtered.length;
-        let processed = 0;
-
-        // Load DB files and build indexes once
-        const dbFiles = await getAllFilesInDirectory(directoryPath);
-
-        const indexes = { metadataIndex: new Map(), pathIndex: new Map() };
-
-        for (const file of dbFiles) {
-            const key = `${file.size}-${Math.floor(file.last_modified)}`;
-            if (!indexes.metadataIndex.has(key)) indexes.metadataIndex.set(key, []);
-            indexes.metadataIndex.get(key).push(file);
-            indexes.pathIndex.set(file.path, file);
-        }
-
-        const results = [];
-        const limit = createLimit(Math.min(SCAN_CONCURRENCY, Math.max(1, filtered.length)));
-
-        const sendProgress = () => {
-            event.sender.send("getFiles:progress", {
-                directory: directoryPath,
-                processed,
-                total,
-                progress: total === 0 ? 100 : Math.round((processed / total) * 100),
+        return filtered
+            .map(file => {
+                const fullPath = path.join(directoryPath, file.name);
+                return {
+                    name: file.name,
+                    path: fullPath,
+                    isDirectory: file.isDirectory(),
+                    id: null,
+                    size: null,
+                    fingerprint: null,
+                    created_at: null,
+                    last_modified: null,
+                };
             });
-        };
-
-        sendProgress();
-
-        const tasks = filtered.map(entry =>
-            limit(async () => {
-                const result = await processEntry(directoryPath, entry, indexes);
-
-                results.push(result);
-                processed++;
-
-                if (processed % PROGRESS_UPDATE_EVERY === 0 || processed === total) {
-                    sendProgress();
-                }
-            })
-        );
-
-        await Promise.all(tasks);
-
-        event.sender.send("getFiles:complete", {
-            directory: directoryPath,
-            total
-        });
-
-        return results;
-
-    } catch (err) {
-
-        console.error(`Error reading directory ${directoryPath}:`, err);
-
-        return {
-            error: 'Unable to read directory',
-            message: err.message
-        };
+    } catch (error) {
+        console.error(`Error reading directory ${directoryPath}:`, error);
+        return { error: 'Unable to read directory' };
     }
 }
 
-async function processEntry(directoryPath, entry, indexes) {
-    const { metadataIndex, pathIndex } = indexes;
+async function enrichFileWithMetadata(file, pathIndex) {
 
-    const fullPath = path.join(directoryPath, entry.name);
+    if (file.fingerprint !== null) {
+        // Already enriched
+        return file;
+    }
+
+    const path = file.path;
+    const isDirectory = file.isDirectory;
 
     try {
 
-        const stat = await fs.promises.stat(fullPath);
+        const stat = await fs.promises.stat(path);
+        let dbFile = pathIndex.get(path); // Use index for faster lookup
 
         const fileSize = stat.size;
         const mtimeMs = Math.floor(stat.mtimeMs);
@@ -338,68 +292,60 @@ async function processEntry(directoryPath, entry, indexes) {
                 ? Math.floor(stat.birthtimeMs)
                 : null;
 
-        const metaKey = `${fileSize}-${mtimeMs}`;
-        const candidates = metadataIndex.get(metaKey) || [];
-
-        // STEP 1 — metadata match
-
-        if (candidates.length === 1) {
-            const dbFile = candidates[0];
-
+        if (
+            dbFile &&
+            dbFile.size === stat.size &&
+            dbFile.last_modified === mtimeMs &&
+            dbFile.created_at === birthtimeMs
+        ) {
             return {
-                name: entry.name,
-                path: fullPath,
-                isDirectory: entry.isDirectory(),
                 id: dbFile.id,
+                name: file.name,
+                path,
+                isDirectory,
                 size: fileSize,
                 fingerprint: dbFile.fingerprint,
                 created_at: birthtimeMs,
                 last_modified: mtimeMs,
-                fromCache: true
             };
         }
 
-        // STEP 2 — resolve ambiguous metadata match by path + metadata
-        if (candidates.length > 1 && pathIndex.has(fullPath)) {
-            const dbFile = pathIndex.get(fullPath);
+        const fingerprint = isDirectory ? null : await getFastFileFingerprint(path, stat);
+        dbFile = await getFileByFingerprint(fingerprint);
 
-            if (dbFile.size === fileSize && dbFile.last_modified === mtimeMs) {
-                return {
-                    name: entry.name,
-                    path: fullPath,
-                    isDirectory: entry.isDirectory(),
-                    id: dbFile.id,
-                    size: fileSize,
-                    fingerprint: dbFile.fingerprint,
-                    created_at: birthtimeMs,
-                    last_modified: mtimeMs,
-                    fromCache: true
-                };
-            }
+        if (dbFile) {
+            return {
+                id: dbFile.id,
+                name: file.name,
+                path,
+                isDirectory,
+                size: fileSize,
+                fingerprint,
+                created_at: birthtimeMs,
+                last_modified: mtimeMs,
+            };
         }
-
-        // STEP 3 — new file
+        
         return {
-            name: entry.name,
-            path: fullPath,
-            isDirectory: entry.isDirectory(),
             id: null,
+            name: file.name,
+            path,
+            isDirectory,
             size: fileSize,
-            fingerprint: null,
+            fingerprint,
             created_at: birthtimeMs,
             last_modified: mtimeMs,
-            fromCache: false
         };
 
     } catch (err) {
 
-        console.warn(`Cannot process ${fullPath}:`, err.message);
+        console.warn(`Cannot process ${path}:`, err.message);
 
         return {
-            name: entry.name,
-            path: fullPath,
-            isDirectory: entry.isDirectory(),
             id: null,
+            name: file.name,
+            path,
+            isDirectory,
             size: null,
             fingerprint: null,
             created_at: null,
@@ -461,4 +407,5 @@ module.exports = {
     getFilesInPath,
     walkDirectory,
     getFastFileFingerprint,
+    enrichFileWithMetadata
 };

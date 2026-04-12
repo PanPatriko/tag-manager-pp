@@ -4,7 +4,6 @@ const sharp = require('sharp');
 const path = require('path');
 
 const { app } = require('electron');
-const { getFastFileFingerprint } = require('./files.js');
 
 const THUMBNAIL_DIR = path.join(app.getPath('userData'), 'thumbnails');
 
@@ -50,18 +49,22 @@ async function getVideoDimensions(filePath) {
     });
 }
 
-async function getThumbnailKey(file) {
-    if (file?.fingerprint) {
-        return file.fingerprint;
-    }
-
-    return getFastFileFingerprint(file.path);
-}
-
 async function generateOrGetThumbnail(file, generateIfMissing = true) {
     await ensureThumbnailDir();
-    const filePath = file.path;
 
+    // directory
+    if (file.isDirectory) {
+        return { thumbnailSrc: 'images/folder-256.png', fullSize: false, missing: false };
+    }
+
+    // missing file
+    try {
+        await fsp.access(file.path);    
+    } catch {
+        return { thumbnailSrc: 'images/cross.png', fullSize: false, missing: true };
+    }
+
+    const filePath = file.path;
     const extension = path.extname(filePath).slice(1).toLowerCase();
 
     // Supported types
@@ -70,33 +73,24 @@ async function generateOrGetThumbnail(file, generateIfMissing = true) {
 
     if (!isImage && !isVideo) {
         console.warn(`Thumbnail: unsupported type → ${extension}`);
-        return null;
-    }
-
-    // Use the DB fingerprint when available; otherwise compute one on demand.
-    let thumbnailKey;
-    try {
-        thumbnailKey = await getThumbnailKey(file);
-    } catch (err) {
-        console.error(`Cannot compute thumbnail key for ${filePath}`, err);
-        return null;
+        return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
     }
 
     // Decide output format – jpeg is most compatible; webp is smaller/faster
     const thumbExt = 'webp';           // ← or 'webp' if you want smaller files
-    const thumbFilename = `${thumbnailKey}.${thumbExt}`;
+    const thumbFilename = `${file.fingerprint}.${thumbExt}`;
     const thumbnailPath = path.join(THUMBNAIL_DIR, thumbFilename);
 
     // 3. Already exists → just return path (fast path!)
     try {
         await fsp.access(thumbnailPath);
-        return thumbnailPath;
+        return { thumbnailSrc: thumbnailPath, fullSize: true, missing: false };
     } catch {
         // doesn't exist → we need to generate it
     }
 
     if (!generateIfMissing) {
-        return null;
+        return { thumbnailSrc: 'images/file-256.png', fullSize: false, missing: false };
     }
 
     // ────────────────────────────────────────────────
@@ -150,7 +144,7 @@ async function generateOrGetThumbnail(file, generateIfMissing = true) {
         }
 
         // Success → return path
-        return thumbnailPath;
+        return { thumbnailSrc: thumbnailPath, fullSize: true, missing: false };
     } catch (err) {
         console.error(`Failed to generate thumbnail for ${filePath}`, err);
         return null;

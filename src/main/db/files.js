@@ -16,13 +16,20 @@ async function getFiles() {
 
 async function getAllFilesInDirectory(directoryPath) {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM files WHERE path LIKE ? ORDER BY LOWER(name) ASC', [directoryPath + '%'], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
+        const normalizedPath = directoryPath.replace(/[\\/]+$/, '');
+        const prefix = normalizedPath + '\\%';
+
+        db.all(
+            'SELECT * FROM files WHERE path = ? OR path LIKE ? ORDER BY LOWER(name) ASC',
+            [normalizedPath, prefix],
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
             }
-        });
+        );
     });
 }
 
@@ -78,24 +85,11 @@ async function findMissingFiles(missingFingerprints) {
     });
 }
 
-async function createFile(fileData) {
-    const { name, path, isDirectory} = fileData;
-    const { getFastFileFingerprint } = await import('../utils/files.js');
-    const stat = fs.statSync(path);
-
-    const fingerprint = isDirectory ? null : await getFastFileFingerprint(path, stat);
-
-    if (fingerprint) {
-        const existing = await getFileByFingerprint(fingerprint);
-        if (existing) {
-            return existing;
-        }
-    }
-
+async function addFile(file) {
     return new Promise((resolve, reject) => {
         db.run(
             'INSERT INTO files (name, path, fingerprint, size, last_modified, created_at, is_directory) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [name, path, fingerprint, stat.size, Math.floor(stat.mtimeMs), Math.floor(stat.birthtimeMs), isDirectory ? 1 : 0],
+            [file.name, file.path, file.fingerprint, file.size, file.last_modified, file.created_at, file.isDirectory ? 1 : 0],
             function (err) {
                 if (err) {
                     reject(err);
@@ -223,4 +217,4 @@ async function searchFiles(andTags, orTags, notTags) {
     }
 }
 
-module.exports = { getFiles, getAllFilesInDirectory, getFileById, getFileByPath, getFileByFingerprint, findMissingFiles, searchFiles, createFile, updateFile, deleteFile}
+module.exports = { getFiles, getAllFilesInDirectory, getFileById, getFileByPath, getFileByFingerprint, findMissingFiles, searchFiles, addFile, updateFile, deleteFile}

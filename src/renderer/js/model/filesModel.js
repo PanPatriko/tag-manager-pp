@@ -1,5 +1,4 @@
 import { paginationModel } from "./paginationModel.js";
-import { settingsModel } from "./settingsModel.js";
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
@@ -8,7 +7,7 @@ let currentPreviewFile = null;
 let sortByNameOrder = 'asc';
 let sortByDateOrder = 'asc';
 let sortBy = 'name';   // Default sort by name
-let start, end;
+let enrichFilesFlag = true;
 
 function toggleSelectFile(file) {
     if (file.selected === true) {
@@ -26,16 +25,24 @@ export const filesModel = {
     set currentPreviewFile(file) { currentPreviewFile = file; },
     get sortByNameOrder() { return sortByNameOrder; },
     get sortByDateOrder() { return sortByDateOrder; },
+    get enrichFilesFlag() { return enrichFilesFlag; },
+    set enrichFilesFlag(value) { enrichFilesFlag = value; },
 
-    async createFile(fileData) {
-        const newFile = await window.api.createFile({ name: fileData.name, path: fileData.path, isDirectory: fileData.isDirectory });
-        const file = files.find(file => file.path === newFile.path);
-        if (file) {
-            file.id = newFile.id;
+    async addFileToDB(file) {
+        if (file.fingerprint === null) {
+            showPopup(i18nModel.t('alert.noMetadataLoaded'), 'warning');
+            return;
         }
+
+        const newFile = await window.api.addFile(file);
+        newFile.isDirectory = newFile.is_directory === 1;
+
+        Object.assign(file, newFile);
+
         if (file.path === currentPreviewFile.path) {
-            currentPreviewFile.id = newFile.id;
+            Object.assign(currentPreviewFile, newFile);
         }
+
         return file;
     },
 
@@ -59,22 +66,6 @@ export const filesModel = {
         return files.filter(file => file.selected);
     },
 
-    getCurrentPageFiles() {
-        if (files.length === 0) {
-            start, end = 0, 0;
-            return [];
-        }
-
-        start = (paginationModel.getCurrentPage() - 1) * settingsModel.maxFilesPerPage;
-        end = Math.min(start + settingsModel.maxFilesPerPage, files.length);
-        const currentPageFiles = files.slice(start, end);
-        return currentPageFiles;
-    },
-
-    getCurrentPageRange() {
-        return { start, end };
-    },
-
     getFilesCount() {
         const directories = files.filter(file => file.isDirectory).length;
         return {
@@ -95,16 +86,15 @@ export const filesModel = {
         return toggleSelectFile(file);
     },
 
-    selectCurrentPageFiles() {
-        const currentFiles = this.getCurrentPageFiles();
-        files.forEach(file => {
-            if (currentFiles.includes(file)) {
-                file.selected = true;
-            }});
-    },
+    selectPageFiles() {
+        const currentFiles = paginationModel.getCurrentPageFiles();
 
-    selectAllVisibleFiles(visibleFiles) {
-        visibleFiles.forEach(file => file.selected = true);
+        currentFiles.forEach(pageFile => {
+            const file = files.find(f => f.path === pageFile.path);
+            if (file) {
+                file.selected = true;
+            }
+        });
     },
 
     resetSelection() {
@@ -123,8 +113,25 @@ export const filesModel = {
         sortBy = by;
     },
 
-    async sortFiles() {
+    async sortFiles({ onProgress } = {}) {
         if (files.length < 2) return;
+
+        if (sortBy === 'date') {
+            const filesMissingCreatedAt = files.filter(file => file.created_at == null);
+            const total = filesMissingCreatedAt.length;
+
+            for (let i = 0; i < total; i++) {
+                const enrichedFile = await window.api.enrichFileWithMetadata(filesMissingCreatedAt[i]);
+                Object.assign(filesMissingCreatedAt[i], enrichedFile);
+
+                onProgress?.({
+                    current: i + 1,
+                    total,
+                    progress: total === 0 ? 100 : Math.round(((i + 1) / total) * 100),
+                    stage: 'enrich'
+                });
+            }
+        }
 
         files = files.sort((a, b) => {
             if (a.isDirectory && !b.isDirectory) { return -1; }
@@ -137,7 +144,9 @@ export const filesModel = {
                 return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
             } else if (sortBy === 'date') {
                 if (a.created_at !== b.created_at) {
-                    return sortByDateOrder === 'asc' ? a.created_at - b.created_at : b.created_at - a.created_at;
+                    const createdAtA = a.created_at ?? 0;
+                    const createdAtB = b.created_at ?? 0;
+                    return sortByDateOrder === 'asc' ? createdAtA - createdAtB : createdAtB - createdAtA;
                 }
                 return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
             }

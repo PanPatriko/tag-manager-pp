@@ -34,7 +34,7 @@
     text-align: center;
 }
 
-#file-pages {
+#files-bar select {
     border-radius: var(--border-radius-lg);
     min-width: 3em;
     height: 3em;

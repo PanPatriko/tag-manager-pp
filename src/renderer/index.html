@@ -102,8 +102,16 @@
                 </div>
                 
                 <div class="files-bar-group">
-                    <button id="sort-by-name" class="ico-bttn" data-i18n-title="content.sortName"></button>
-                    <button id="sort-by-date" class="ico-bttn" data-i18n-title="content.sortDate"></button>
+                    <select id="sort-by-select">
+                        <option value="name" data-i18n="content.sort.name"></option>
+                        <option value="createDate" data-i18n="content.sort.createDate"></option>
+                        <option value="modDate" data-i18n="content.sort.modDate"></option>
+                        <option value="size" data-i18n="content.sort.size"></option>
+                    </select>
+                    <select id="sort-order-select">
+                        <option value="asc" data-i18n="content.sort.asc"></option>
+                        <option value="desc" data-i18n="content.sort.desc"></option>
+                    </select>
                     <progress id="sort-loading-bar" class="hidden" value="0" max="100"></progress>
                 </div>
                 

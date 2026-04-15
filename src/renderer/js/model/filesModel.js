@@ -4,9 +4,8 @@ const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'bas
 
 let files = [];
 let currentPreviewFile = null;
-let sortByNameOrder = 'asc';
-let sortByDateOrder = 'asc';
-let sortBy = 'name';   // Default sort by name
+let sortOrder = 'asc';
+let sortBy = 'name';
 let enrichFilesFlag = true;
 
 function toggleSelectFile(file) {
@@ -101,12 +100,8 @@ export const filesModel = {
         files.forEach(file => file.selected = false);
     },
 
-    changeSortByNameOrder() {
-        sortByNameOrder = sortByNameOrder === 'asc' ? 'desc' : 'asc';
-    },
-
-    changeSortByDateOrder() {
-        sortByDateOrder = sortByDateOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(order) {
+        sortOrder = order;
     },
 
     setSortBy(by) {
@@ -116,13 +111,13 @@ export const filesModel = {
     async sortFiles({ onProgress } = {}) {
         if (files.length < 2) return;
 
-        if (sortBy === 'date') {
-            const filesMissingCreatedAt = files.filter(file => file.created_at == null);
-            const total = filesMissingCreatedAt.length;
+        if (sortBy !== 'name') {
+            const filesMissingMetaData = files.filter(file => file.fingerprint == null);
+            const total = filesMissingMetaData.length;
 
             for (let i = 0; i < total; i++) {
-                const enrichedFile = await window.api.enrichFileWithMetadata(filesMissingCreatedAt[i]);
-                Object.assign(filesMissingCreatedAt[i], enrichedFile);
+                const enrichedFile = await window.api.enrichFileWithMetadata(filesMissingMetaData[i], new Map());
+                Object.assign(filesMissingMetaData[i], enrichedFile);
 
                 onProgress?.({
                     current: i + 1,
@@ -141,14 +136,28 @@ export const filesModel = {
             const nameB = b.name.toLowerCase();
 
             if (sortBy === 'name') {
-                return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
-            } else if (sortBy === 'date') {
+                return sortOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
+            } else if (sortBy === 'createDate') {
                 if (a.created_at !== b.created_at) {
                     const createdAtA = a.created_at ?? 0;
                     const createdAtB = b.created_at ?? 0;
-                    return sortByDateOrder === 'asc' ? createdAtA - createdAtB : createdAtB - createdAtA;
+                    return sortOrder === 'asc' ? createdAtA - createdAtB : createdAtB - createdAtA;
                 }
-                return sortByNameOrder === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
+                return sortBy === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
+            } else if (sortBy === 'modDate') {
+                if (a.last_modified !== b.last_modified) {
+                    const modifiedAtA = a.last_modified ?? 0;
+                    const modifiedAtB = b.last_modified ?? 0;
+                    return sortOrder === 'asc' ? modifiedAtA - modifiedAtB : modifiedAtB - modifiedAtA;
+                }
+                return sortBy === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
+            } else if (sortBy === 'size') {
+                if (a.size !== b.size) {
+                    const sizeA = a.size ?? 0;
+                    const sizeB = b.size ?? 0;
+                    return sortOrder === 'asc' ? sizeA - sizeB : sizeB - sizeA;
+                }
+                return sortBy === 'asc' ? collator.compare(nameA, nameB) : collator.compare(nameB, nameA);
             }
         });
     },

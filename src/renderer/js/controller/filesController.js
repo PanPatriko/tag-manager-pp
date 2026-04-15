@@ -27,19 +27,24 @@ export const filesController = {
     init() {
         filesView.init();
 
-        filesView.onSortClick(async () => {
-            filesModel.setSortBy('name');
-            filesModel.changeSortByNameOrder();
-            filesView.updateSortByNameDirectionIndicator(filesModel.sortByNameOrder);
+        filesView.onSortByChange(async (value) => {
+            if (filesModel.files.length < 2) return;
+            
+            filesModel.setSortBy(value);
 
-            await filesModel.sortFiles();
+            filesView.showLoadingBar();
+            await filesModel.sortFiles({
+                onProgress: ({ progress }) => filesView.updateLoadingBar(progress)
+            });
+            filesView.hideLoadingBar();
+
             await this.displayFiles();
         });
 
-        filesView.onSortDateClick(async () => {
-            filesModel.setSortBy('date');
-            filesModel.changeSortByDateOrder();
-            filesView.updateSortByDateDirectionIndicator(filesModel.sortByDateOrder);
+        filesView.onSortOrderChange(async (value) => {
+            if (filesModel.files.length < 2) return;
+
+            filesModel.setSortOrder(value);
 
             filesView.showLoadingBar();
             await filesModel.sortFiles({

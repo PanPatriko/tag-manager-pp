@@ -1,30 +1,14 @@
 export const filesView = {
-    sortByName: null,
-    sortByDate: null,
+    sortBy: null,
+    sortOrder: null,
     loadingBar: null,
     panel: null,
 
     init() {
-        this.sortByName = document.getElementById('sort-by-name');
-        this.sortByDate = document.getElementById('sort-by-date');
+        this.sortBy = document.getElementById('sort-by-select');
+        this.sortOrder = document.getElementById('sort-order-select');
         this.loadingBar = document.getElementById('sort-loading-bar');
         this.panel = document.getElementById('files-panel');
-    },
-
-    updateSortByNameDirectionIndicator(sortOrder) {
-        if (sortOrder === 'asc') {
-            this.sortByName.style.backgroundImage = "url('images/sort-down-az.png')"
-        } else {
-            this.sortByName.style.backgroundImage = "url('images/sort-up-az.png')"
-        }
-    },
-
-    updateSortByDateDirectionIndicator(sortOrder) {
-        if (sortOrder === 'asc') {
-            this.sortByDate.style.backgroundImage = "url('images/sort-down-date.png')"
-        } else {
-            this.sortByDate.style.backgroundImage = "url('images/sort-up-date.png')"
-        }
     },
 
     addIdToContainer(file) {
@@ -147,12 +131,12 @@ export const filesView = {
         return target.closest('.file-container');
     },
 
-    onSortClick(handler) {
-        this.sortByName.addEventListener('click', () => handler());
+    onSortByChange(handler) {
+        this.sortBy.addEventListener('change', (e) => handler(e.target.value));
     },
 
-    onSortDateClick(handler) {
-        this.sortByDate.addEventListener('click', () => handler());
+    onSortOrderChange(handler) {
+        this.sortOrder.addEventListener('change', (e) => handler(e.target.value));
     },
     
     onPanelClick(handler) {

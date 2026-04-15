@@ -3,7 +3,7 @@ const fs = require('fs')
 const fsp = require('fs').promises;
 const path = require('path');
 
-const { findMissingFiles, getFileByFingerprint, updateFile } = require('../db/files.js');
+const { findMissingFiles, getFileByFingerprint, updateFile, getFileByPath } = require('../db/files.js');
 
 const SCAN_CONCURRENCY = 4;
 
@@ -311,7 +311,7 @@ async function enrichFileWithMetadata(file, pathIndex) {
         }
 
         const fingerprint = isDirectory ? null : await getFastFileFingerprint(path, stat);
-        dbFile = await getFileByFingerprint(fingerprint);
+        dbFile = isDirectory ? await getFileByPath(path) : await getFileByFingerprint(fingerprint);
 
         if (dbFile) {
             return {

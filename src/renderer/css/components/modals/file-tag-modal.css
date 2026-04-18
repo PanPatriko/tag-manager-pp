@@ -1,3 +1,7 @@
+#file-tag-form-modal .modal-content {
+    width: 50vw;
+}
+
 #modal-file-tags-container {
     display: flex;
     flex-wrap: wrap;
@@ -28,20 +32,8 @@ body.dark-theme .tag:hover {
     overflow-y: auto;
     padding: 5px;
     flex-shrink: 0;
-    max-height: 250px;
+    max-height: 50vh;
     border: var(--border);
-}
-
-#modal-file-tags-tree ul {
-    margin-left: 10px;
-    padding-left: 10px;
-}
-
-#modal-file-tags-tree li {
-    margin: 5px;
-    cursor: pointer;
-    word-wrap: break-word;
-    max-width: 350px;
 }
 
 #add-tags-button,

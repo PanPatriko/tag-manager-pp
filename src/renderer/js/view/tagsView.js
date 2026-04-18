@@ -115,7 +115,8 @@ export const tagsView = {
                 if (tag.children && tag.children.length > 0) {
                     const childrenUl = createTagList(tag.children);
                     childrenUl.style.display = childrenInitiallyVisible ? "block" : "none";
-                    if (!childrenInitiallyVisible) li.classList.add("parent-li");
+                    li.classList.add("parent-li");
+                    if (childrenInitiallyVisible) li.classList.add("expanded");
                     li.appendChild(childrenUl);
                 }
 

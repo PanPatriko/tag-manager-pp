@@ -1,5 +1,3 @@
-import { thumbnailDir } from "../utils.js"
-
 const path = window.api.path;
 
 export const locationsView = {
@@ -96,11 +94,6 @@ export const locationsView = {
         if (!expandBtn._childrenLoaded) {
             expandBtn.disabled = true;
             if (directoryHierarchy.children && directoryHierarchy.children.length > 0) {
-                if (directoryHierarchy.children.length === 1 && directoryHierarchy.children[0].name === thumbnailDir) {
-                    // No children: hide the expand button
-                    hideExpandButton();
-                    return;
-                }
                 const loadedUl = document.createElement('ul');
                 loadedUl.style.display = 'block'; // show by default after load
                 for (const grandChild of directoryHierarchy.children) {
@@ -135,8 +128,6 @@ export const locationsView = {
         if (!parentElement) parentElement = this.directoryContainer;
         parentElement.innerHTML = "";
         const pathName = await path.basename(locationPath);
-        
-        if (pathName === thumbnailDir) return;
 
         const ul = document.createElement('ul');
         const li = document.createElement('li');

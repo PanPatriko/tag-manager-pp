@@ -1,5 +1,3 @@
-export const thumbnailDir = '.t'
-
 export function highlightText(query, containerId, spanSelector) { 
     const container = document.getElementById(containerId);
     const spans = container.querySelectorAll(spanSelector);

@@ -1,4 +1,6 @@
 const ffmpeg = require('fluent-ffmpeg');
+const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
+const ffprobeInstaller = require('@ffprobe-installer/ffprobe');
 const fsp = require('fs').promises;
 const sharp = require('sharp');
 const path = require('path');
@@ -6,6 +8,12 @@ const path = require('path');
 const { app } = require('electron');
 
 const THUMBNAIL_DIR = path.join(app.getPath('userData'), 'thumbnails');
+
+const ffmpegPath = ffmpegInstaller.path.replace('app.asar', 'app.asar.unpacked');
+const ffprobePath = ffprobeInstaller.path.replace('app.asar', 'app.asar.unpacked');
+
+ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
 
 async function ensureThumbnailDir() {
     await fsp.mkdir(THUMBNAIL_DIR, { recursive: true });

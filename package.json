@@ -11,7 +11,7 @@
     "build:linux": "npm run webpack && electron-builder --linux AppImage deb",
     "webpack": "webpack --config webpack.config.js"
   },
-  "author": "Patriko P",
+  "author": "Patriko P <ppanasiuk58@gmail.com>",
   "license": "ISC",
   "babel": {
     "presets": [

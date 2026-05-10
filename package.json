@@ -7,9 +7,11 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run webpack && electron-builder",
+    "build:win": "npm run webpack && electron-builder --win nsis",
+    "build:linux": "npm run webpack && electron-builder --linux AppImage deb",
     "webpack": "webpack --config webpack.config.js"
   },
-  "author": "Patriko P",
+  "author": "Patriko P <ppanasiuk58@gmail.com>",
   "license": "ISC",
   "babel": {
     "presets": [
@@ -46,9 +48,20 @@
       "src/**/*",
       "package.json"
     ],
+    "asarUnpack": [
+      "node_modules/@ffmpeg-installer/**/*"
+    ],
     "win": {
       "target": "nsis",
       "icon": "src/renderer/images/TagManagerPP.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "icon": "src/renderer/images/TagManagerPP.png"
     }
   }
 }

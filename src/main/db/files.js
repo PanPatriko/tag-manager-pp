@@ -1,6 +1,19 @@
 const db = require('../database.js');
 const fs = require('fs');
+const path = require('path');
 const { getAllChildTags } = require('./tags.js');
+
+function normalizeDirectoryPath(directoryPath) {
+    const parsedPath = path.parse(directoryPath);
+    const normalizedPath = directoryPath.replace(/[\\/]+$/, '');
+
+    // Keep filesystem roots intact, e.g. "/" and "C:\"
+    if (!normalizedPath) {
+        return parsedPath.root || directoryPath;
+    }
+
+    return normalizedPath;
+}
 
 async function getFiles() {
     return new Promise((resolve, reject) => {
@@ -16,8 +29,8 @@ async function getFiles() {
 
 async function getAllFilesInDirectory(directoryPath) {
     return new Promise((resolve, reject) => {
-        const normalizedPath = directoryPath.replace(/[\\/]+$/, '');
-        const prefix = normalizedPath + '\\%';
+        const normalizedPath = normalizeDirectoryPath(directoryPath);
+        const prefix = normalizedPath + path.sep + '%';
 
         db.all(
             'SELECT * FROM files WHERE path = ? OR path LIKE ? ORDER BY LOWER(name) ASC',

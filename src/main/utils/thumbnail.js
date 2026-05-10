@@ -1,4 +1,5 @@
 const ffmpeg = require('fluent-ffmpeg');
+const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 const fsp = require('fs').promises;
 const sharp = require('sharp');
 const path = require('path');
@@ -6,6 +7,10 @@ const path = require('path');
 const { app } = require('electron');
 
 const THUMBNAIL_DIR = path.join(app.getPath('userData'), 'thumbnails');
+
+const ffmpegPath = ffmpegInstaller.path.replace('app.asar', 'app.asar.unpacked');
+
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 async function ensureThumbnailDir() {
     await fsp.mkdir(THUMBNAIL_DIR, { recursive: true });
@@ -33,20 +38,6 @@ async function clearThumbnailCache() {
             message: err.message || 'Unknown error'
         };
     }
-}
-
-async function getVideoDimensions(filePath) {
-    return new Promise((resolve, reject) => {
-        ffmpeg.ffprobe(filePath, (err, metadata) => {
-            if (err) return reject(err);
-            const stream = metadata.streams.find(s => s.width && s.height);
-            if (stream) {
-                resolve({ width: stream.width, height: stream.height });
-            } else {
-                reject(new Error('No video stream found'));
-            }
-        });
-    });
 }
 
 async function generateOrGetThumbnail(file, generateIfMissing = true) {
@@ -105,35 +96,16 @@ async function generateOrGetThumbnail(file, generateIfMissing = true) {
         }
         else if (isVideo) {
 
-            let size = '400x225';
-
-            try {
-                const { width, height } = await getVideoDimensions(filePath);
-                let newWidth = width;
-                let newHeight = height;
-
-                if (width > 400 || height > 225) {
-                    const ratio = width / height;
-                    if (width / 400 > height / 225) {
-                        newWidth = 400;
-                        newHeight = Math.round(400 / ratio);
-                    } else {
-                        newHeight = 225;
-                        newWidth = Math.round(225 * ratio);
-                    }
-                }
-                size = `${newWidth}x${newHeight}`;
-            } catch (e) {
-                console.warn('Could not get video dimensions, using fallback size', e);
-            }
+            const tempFilename = `${file.fingerprint}.frame.png`;
+            const tempPath = path.join(THUMBNAIL_DIR, tempFilename);
 
             await new Promise((resolve, reject) => {
                 ffmpeg(filePath)
                     .screenshots({
                         timestamps: ['0'],          // first frame; can be ['5%'] or '00:00:03'
-                        filename: thumbFilename,
+                        filename: tempFilename,
                         folder: THUMBNAIL_DIR,      // ← central folder
-                        size
+                        size: '400x?'
                     })
                     .on('end', resolve)
                     .on('error', (err) => {
@@ -141,6 +113,13 @@ async function generateOrGetThumbnail(file, generateIfMissing = true) {
                         reject(err);
                     });
             });
+
+            await sharp(tempPath)
+                .resize(400, 225, { fit: 'inside', withoutEnlargement: true })
+                .webp({ quality: 80 })
+                .toFile(thumbnailPath);
+
+            await fsp.unlink(tempPath).catch(() => {});
         }
 
         // Success → return path

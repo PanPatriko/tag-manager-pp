@@ -1,11 +1,13 @@
 # TagManagerPP
+**A lightweight, personal file tagging application** designed to help you organize and quickly find your files using custom tags.
 
-TagManagerPP is a lightweight, personal file tagging application designed to help you organize and quickly find your files using custom tags.
+## Screenshots
+*(TODO Add 3-4 screenshots here)*
 
-In a world full of files, finding what you need quickly can be painful. Whether you have thousands of documents, photos, research papers, or code snippets, manually searching through folders is inefficient.
-TagManagerPP solves this by letting you attach meaningful tags to your files - so you can search, filter, and browse your collection with ease.
+## About
+TagManagerPP helps you attach meaningful tags to files so you can search and browse your collection efficiently...
 
-Built for learning - This project was created primarily to help me improve my coding skills while building something practical. There are several such solutions on the market (much more professional than this one, by the way), but they have certain features I didn’t like, such as the lack of a dark/light mode, a limit on the number of files that can be tagged, or tagging using sidecar files instead of saving tags in a database. I wondered if building my own app would be difficult. And so, using the knowledge I already had and, I won’t deny it, with a lot of AI help that’s how TagManagerPP came to be.
+Built for learning — This project was created primarily to help me improve my coding skills while building something practical. There are several similar solutions on the market (much more professional than this one, by the way), but they had certain features I didn’t like, such as the lack of a dark/light mode, limits on the number of files that can be tagged, or using sidecar files instead of storing tags in a database. I wondered if building my own app would be difficult. So, using the knowledge I already had — and, I won’t deny it, with a lot of AI help — that’s how TagManagerPP came to be.
 
 ## Features
 
@@ -15,20 +17,34 @@ Built for learning - This project was created primarily to help me improve my co
 - 🔍 **Advanced Search** - Search files by multiple tag combinations (OR, AND, NOT operators)
 - 📄 **File Preview** - Built-in preview for images and videos
 - 🏗️ **SQLite Database** - Persistent storage of file metadata and relationships
-- 🌍 **Multi-language Support** - English and Polish language support, it's easy to add more languages if needed
-- 🎨 **Dark/Light Theme** - Toggle between day and night modes
-- 🚫🌐 **Offline** – 100% offline; no internet connection required
-- 🖥️ **Cross-platform** – Runs on Windows and Linux
+- 🌍 **Multilingual Support** - English and Polish language support, it's easy to add more languages if needed
+- 🎨 **Dark/Light Themes** - Toggle between day and night modes
+- 🚫🌐 **Offline** - Works 100% offline; no internet connection required
+- 🖥️ **Cross-platform** - Runs on Windows and Linux
+
+## How to Install
+- ⬇️ Download latest release [GitHub Releases Page](https://github.com/PanPatriko/tag-manager-pp/releases).  
+- 🛠️ Or build from source, see [Developer Guide](#Developer-Guide)
+
+## User Guide
+TODO Screenshots and basic guide
+
+### Basic Workflow
+
+1. **Add Locations** - Define file directories to manage
+2. **Create Tags** - Organize your tagging hierarchy
+3. **Tag Files** - Right-click on files to assign tags
+4. **Search & Filter** - Use tags and search to find files quickly
+5. **Preview** - View file details and preview content
 
 ## ⚠️ Current Limitations
-I think this is an important topic, which is why it’s listed near the top of the readme file.
 
 ### File Recognition Method:
 This application currently identifies files by content partial hash (fingerprint), not by file path.
 What this means:
 
 Advantages:
-- Tags stay attached even if you move or rename files (it is not automatic yet but you can use 'find missing files' feature)
+- Tags stay attached even if you move or rename files (it is not automatic yet, but you can use the 'Find Missing Files' feature)
 - Automatically recognizes duplicate files (same content in different locations) and assigns tags to them
 - Works well with external drives, backups, and file reorganizations
 
@@ -47,16 +63,16 @@ Who this app is not for:
 
 An attempt will be made to resolve this issue in the future, but for now, this is how it works.
 
-### File view only
+### View-Only Mode
 The app only allows you to view files. You cannot edit, delete, or copy them to other folders. 
 You can rename the file directly in the app.
 
-### File preview
+### File Preview
 In the preview window, you can zoom in and move elements, but this only works for images and videos.
 Previewing other file types is not yet supported.
 
 ### Performance
-In the case of a database, the application is limited by the limitations of SQLite3 - https://sqlite.org/limits.html
+The application is limited by SQLite's inherent constraints — https://sqlite.org/limits.html
 The limits are so high that it seems unrealistic to achieve them at home on a local PC.
 
 When it comes to browsing files, the app seems to perform just as well as the system's built-in file explorer. 
@@ -64,23 +80,12 @@ It may be a bit slower because it has to calculate the fingerprint needed to gen
 
 Potential issues may arise when a user opens a folder containing a large number of files (several thousand) and tries, for example, to sort them by date. The app hasn't been thoroughly tested in this regard.
 
-## Usage
-TODO Screenshots and basic guide
-
-### Basic Workflow
-
-1. **Add Locations** - Define file directories to manage
-2. **Create Tags** - Organize your tagging hierarchy
-3. **Tag Files** - Right-click on files to assign tags
-4. **Search & Filter** - Use tags and search to find files quickly
-5. **Preview** - View file details and preview content
-
 ## Developer Guide
 
 ### Tech Stack
 
 - **Framework**: Electron
-- **Frontend**: HTML5, CSS3, JavaScript (plan for the future - React)
+- **Frontend**: HTML5, CSS3, JavaScript (plan for the future — React)
 - **Backend**: Node.js
 - **Database**: SQLite3
 - **Build Tools**: Webpack, Babel
@@ -132,43 +137,43 @@ The compiled application will be available in the `dist/` folder.
 ```
 tag-manager-pp/
 ├── src/
-│   ├── main/                # Electron main process
-│   │   └── db/              # Database models
+│   ├── main/                     # Electron main process
+│   │   └── db/                   # Database models
 │   │       ├── files.js
 │   │       ├── filetags.js
 │   │       ├── locations.js
 │   │       └── tags.js
-│   │   └── utils/           # Utility functions
+│   │   └── utils/                # Utility functions
 │   │       ├── files.js     
-│   │       ├── thumbanil.js
-│   │   ├── database.js      # Database initialization
-│   │   ├── ipcHandlers.js   # IPC event handlers
-│   │   ├── main.js          # Application entry point
-│   │   ├── preload.js       # IPC preload script
-│   └── renderer/            # Electron renderer process (UI)
-│       ├── css/             # Stylesheets
-│       │   ├── base/        # Base styles
-│       │   ├── components/  # Component styles
-│       │   ├── features/    # Feature-specific styles
-│       │   └── layout/      # Layout styles
-│       │   └── main.css     # Main css file
-│       ├── images/          # Application images and icons
-│       ├── js/              # Frontend JavaScript
-│       │   ├── controller/  # MVC controllers
-│       │   ├── model/       # MVC models
-│       │   ├── view/        # MVC views
-│       │   ├── main.js      # Init script for main window
-│       │   ├── previewTab.js # Init script for preview window
-│       │   ├── rendererEntry.js # Entry for webpack build
-│       │   ├── showPopup.js # SweetAlert2 pop-ups
-│       │   ├── utils.js     # Utility functions
-│       ├── locales/         # i18n translation files
-│       ├── index.html       # Main application html code
-│       ├── preview.html     # Preview tab html code
-├── db-migrate.js            # Migration script 1.3.0 -> 2.0.0
-├── package.json             # Dependencies and scripts
-├── README.md                # This file
-└── webpack.config.js        # Webpack configuration
+│   │       ├── thumbnail.js
+│   │   ├── database.js           # Database initialization
+│   │   ├── ipcHandlers.js        # IPC event handlers
+│   │   ├── main.js               # Application entry point
+│   │   ├── preload.js            # IPC preload script
+│   └── renderer/                 # Electron renderer process (UI)
+│       ├── css/                  # Stylesheets
+│       │   ├── base/             # Base styles
+│       │   ├── components/       # Component styles
+│       │   ├── features/         # Feature-specific styles
+│       │   └── layout/           # Layout styles
+│       │   └── main.css          # Main CSS file
+│       ├── images/               # Application images and icons
+│       ├── js/                   # Frontend JavaScript
+│       │   ├── controller/       # MVC controllers
+│       │   ├── model/            # MVC models
+│       │   ├── view/             # MVC views
+│       │   ├── main.js           # Init script for main window
+│       │   ├── previewTab.js     # Init script for preview window
+│       │   ├── rendererEntry.js  # Entry for webpack build
+│       │   ├── showPopup.js      # SweetAlert2 pop-ups
+│       │   ├── utils.js          # Utility functions
+│       ├── locales/              # i18n translation files
+│       ├── index.html            # Main application HTML code
+│       ├── preview.html          # Preview tab HTML code
+├── db-migrate.js                 # Migration script 1.3.0 -> 2.0.0
+├── package.json                  # Dependencies and scripts
+├── README.md                     # This file
+└── webpack.config.js             # Webpack configuration
 ```
 
 ### Architecture
@@ -190,16 +195,17 @@ Add new strings and use `i18nModel.t('key')` to retrieve translations.
 
 There's definitely something there, but I don't know it yet ...
 
-## Roadmap
+## Future Plans
 
 - [ ] Background file scanner that automatically detects modified or moved files to ensure they retain their tags
 - [ ] Finding duplicates
 - [ ] File preview for more file types (pdf, txt)
 - [ ] Customizable color themes (beyond day/night modes)
-- [ ] Drag-and-drop tag organization
+- [ ] Drag-And-Drop tag organization
 - [ ] Tags context menu with quick search integration
 - [ ] React component migration
 - [ ] Unit tests
+- [ ] Intergration with local LLM, automatic file recognition and tagging
 
 ## Contributing
 
@@ -207,7 +213,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License — See [LICENSE](LICENSE) file for details
 
 ## Author
 
